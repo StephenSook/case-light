@@ -1,0 +1,21 @@
+# BEGIN Lens Studio managed Agents-Docs block
+.mcp.json
+.cursor/mcp.json
+.vscode/mcp.json
+.codex/config.toml
+.claude/settings.local.json
+# END Lens Studio managed Agents-Docs block
+
+# Local agent guardrails (not shared)
+CLAUDE.local.md
+Cache/
+Support/
+.virtual-scene.json
+Workspaces/
+PluginsUserPreferences/
+
+# Added by Lens Studio (LEAF plugin)
+leaf_plugin_settings.json
+# Local junk
+*.esproj.*.lock
+*.wakatime
