@@ -19,3 +19,8 @@ leaf_plugin_settings.json
 # Local junk
 *.esproj.*.lock
 *.wakatime
+
+# Private keys (Lens Studio writes spk_debug_key.pem into the project folder)
+*.pem
+*.key
+*.p12
