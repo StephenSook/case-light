@@ -1,0 +1,321 @@
+SchemaVersion: 1
+Nodes:
+  ChildNodes:
+    Node0:
+      DependencyIndex: 0
+      LevelID: 1
+      NodeCount: 0
+      NodeType: 1
+      Ports:
+        Channels:
+          ItemIndex: 1
+          ItemList: "xyzw : rgba : xyz : rgb : xy : x"
+        Default:
+          Variable: [0.55, 0.88, 1.0, 1.0]
+        EnableMax:
+          Variable: false
+        EnableMin:
+          Variable: false
+        Group:
+          String: ""
+        Max:
+          Variable: 1.0
+        Min:
+          Variable: 0.0
+        Output:
+          IOType: 1
+          Variable: [0.0, 0.0, 0.0, 0.0]
+        ScriptName:
+          String: glowColor
+        SortIndex:
+          Variable: 0
+        Step:
+          Variable: 0.009999999776482582
+        Title:
+          String: Glow Color
+        Tooltip:
+          String: "Bright colour of the lit cell (keep it light: dark renders transparent on Specs)"
+      PositionX: -360
+      PositionY: 0
+      TemplateID: nodes_inputs_parameters_float
+      Title1: Float Parameter
+      Title2: Glow Color
+    Node1:
+      DependencyIndex: 1
+      LevelID: 5
+      NodeCount: 0
+      NodeType: 1
+      Ports:
+        Channels:
+          ItemIndex: 5
+          ItemList: "xyzw : rgba : xyz : rgb : xy : x"
+        Default:
+          Variable: 0.8
+        EnableMax:
+          Variable: true
+        EnableMin:
+          Variable: true
+        Group:
+          String: ""
+        Max:
+          Variable: 4.0
+        Min:
+          Variable: 0.0
+        Output:
+          IOType: 1
+          Variable: 0.0
+        ScriptName:
+          String: pulseHz
+        SortIndex:
+          Variable: 1
+        Step:
+          Variable: 0.05
+        Title:
+          String: Pulse Hz
+        Tooltip:
+          String: "Soft pulses per second"
+      PositionX: -360
+      PositionY: 140
+      TemplateID: nodes_inputs_parameters_float
+      Title1: Float Parameter
+      Title2: Pulse Hz
+    Node2:
+      DependencyIndex: 2
+      LevelID: 6
+      NodeCount: 0
+      NodeType: 1
+      Ports:
+        Channels:
+          ItemIndex: 5
+          ItemList: "xyzw : rgba : xyz : rgb : xy : x"
+        Default:
+          Variable: 0.3
+        EnableMax:
+          Variable: true
+        EnableMin:
+          Variable: true
+        Group:
+          String: ""
+        Max:
+          Variable: 0.6
+        Min:
+          Variable: 0.0
+        Output:
+          IOType: 1
+          Variable: 0.0
+        ScriptName:
+          String: pulseAmount
+        SortIndex:
+          Variable: 2
+        Step:
+          Variable: 0.01
+        Title:
+          String: Pulse Amount
+        Tooltip:
+          String: "How much the glow dims at the low point of a pulse (0 = steady)"
+      PositionX: -360
+      PositionY: 260
+      TemplateID: nodes_inputs_parameters_float
+      Title1: Float Parameter
+      Title2: Pulse Amount
+    Node3:
+      DependencyIndex: 3
+      LevelID: 7
+      NodeCount: 0
+      NodeType: 1
+      Ports:
+        Channels:
+          ItemIndex: 5
+          ItemList: "xyzw : rgba : xyz : rgb : xy : x"
+        Default:
+          Variable: 4.57
+        EnableMax:
+          Variable: false
+        EnableMin:
+          Variable: true
+        Group:
+          String: ""
+        Max:
+          Variable: 10.0
+        Min:
+          Variable: 0.1
+        Output:
+          IOType: 1
+          Variable: 0.0
+        ScriptName:
+          String: cellAspect
+        SortIndex:
+          Variable: 3
+        Step:
+          Variable: 0.01
+        Title:
+          String: Cell Aspect
+        Tooltip:
+          String: "Height / width of the glowing quad, so the soft rim has the same width on every side"
+      PositionX: -360
+      PositionY: 380
+      TemplateID: nodes_inputs_parameters_float
+      Title1: Float Parameter
+      Title2: Cell Aspect
+    Node4:
+      DependencyIndex: 4
+      LevelID: 0
+      NodeCount: 0
+      NodeType: 1
+      Ports:
+        Code:
+          ClassType1: TEXT
+          String: |-
+            input_vec4 glowColor;
+            input_float pulseHz;
+            input_float pulseAmount;
+            input_float cellAspect;
+            output_vec4 result;
+
+            void main()
+            {
+            	vec2 uv = system.getSurfaceUVCoord0();
+            	// Distance to the nearest edge, in cell widths (x spans 1, y spans cellAspect).
+            	float dx = min(uv.x, 1.0 - uv.x);
+            	float dy = min(uv.y, 1.0 - uv.y) * cellAspect;
+            	float d = min(dx, dy);
+            	// Bright soft rim easing into a lighter fill; the minimum stays well above black.
+            	float rim = 1.0 - smoothstep(0.0, 0.32, d);
+            	float level = mix(0.45, 1.0, rim);
+            	float t = system.getTimeElapsed();
+            	float pulse = 1.0 - pulseAmount * 0.5 * (1.0 - cos(6.2831853 * pulseHz * t));
+            	result = vec4(glowColor.rgb * level * pulse, 1.0);
+            }
+        CustomCodeNodeAsset:
+          ClassType1: REFUID
+          String: ""
+        Description:
+          ClassType1: TEXT
+          String: ""
+        Examples:
+          ItemIndex: 0
+          ItemList: "Custom : Input/Output/Global Types : Extra Functions : Procedural Execution : Lighting Loop : System Built-In Values/Functions"
+        ID:
+          Variable: 0
+        Locked:
+          Variable: false
+        Stage:
+          ItemIndex: 1
+          ItemList: "Vertex : Pixel"
+        Title:
+          String: Cell Glow
+        UseExternalFile:
+          Variable: false
+        cellAspect:
+          Connection0:
+            NodeLevelID: 7
+            PortID: Output
+          Variable: 0.0
+        glowColor:
+          Connection0:
+            NodeLevelID: 1
+            PortID: Output
+          Variable: [0.0, 0.0, 0.0, 0.0]
+        ngs_Height:
+          Variable: 420
+        ngs_Version:
+          String: 0.1.0
+        pulseAmount:
+          Connection0:
+            NodeLevelID: 6
+            PortID: Output
+          Variable: 0.0
+        pulseHz:
+          Connection0:
+            NodeLevelID: 5
+            PortID: Output
+          Variable: 0.0
+        result:
+          IOType: 1
+          Variable: [0.0, 0.0, 0.0, 0.0]
+      PositionX: -40
+      PositionY: 120
+      TemplateID: node_util_custom
+      TemplateVersionMinor: 2
+      Title1: Cell Glow
+    Node5:
+      CommentSizeX: 0
+      CommentSizeY: 0
+      DependencyIndex: 5
+      LevelID: 4
+      NodeCount: 0
+      NodeType: 1
+      Ports:
+        Depth:
+          Variable: 1.0
+        DepthMode:
+          ItemIndex: 0
+          ItemList: "Non-Linear - Normalized [0 to 1] : Linear - Normalized [-1 to 1] : View Space - Non-Normalized [-near to -far]"
+        DontFreezeSpec:
+          Variable: false
+        FinalColor:
+          ClassType1: COLOR
+          Connection0:
+            NodeLevelID: 0
+            PortID: result
+          Variable: [1.0, 1.0, 1.0, 1.0]
+        FinalColor1:
+          ClassType1: COLOR
+          Variable: [1.0, 1.0, 1.0, 1.0]
+        FinalColor2:
+          ClassType1: COLOR
+          Variable: [1.0, 1.0, 1.0, 1.0]
+        FinalColor3:
+          ClassType1: COLOR
+          Variable: [1.0, 1.0, 1.0, 1.0]
+        GSplatPointSize:
+          Variable: 0.0
+        GSplatRotation:
+          Variable: [0.0, 0.0, 0.0, 1.0]
+        GSplatScale:
+          Variable: [0.0, 0.0, 0.0]
+        Motion Vector Pass:
+          ItemIndex: 0
+          ItemList: "Write Velocity and Depth : Discard Velocity but Write Depth : Discard Velocity and Depth"
+        Negative:
+          Variable: false
+        PrevWorldPosition:
+          Variable: [0.0, 0.0, 0.0]
+        RayDirection:
+          Variable: [0.0, 1.0, 0.0]
+        RayOrigin:
+          Variable: [0.0, 0.0, 0.0]
+        ShowPrevPos:
+          Variable: false
+        Targets:
+          ItemIndex: 0
+          ItemList: "1 : 2 : 3 : 4"
+        Type:
+          ItemIndex: 0
+          ItemList: "3D : Post Effect : Hair : Gaussian Splatting"
+        WorldNormal:
+          Variable: [0.0, 1.0, 0.0]
+        WorldPosition:
+          Variable: [0.0, 0.0, 0.0]
+        WorldTangent:
+          Variable: [0.0, 0.0, 1.0]
+        WriteDepth:
+          Variable: false
+      PositionX: 240
+      PositionY: 120
+      TemplateID: nodes_main_graph
+      Title1: Shader
+      Title2: 3D
+  IsSubGraph0: true
+  IsSubGraph1: true
+  IsSubGraph2: true
+  IsSubGraph3: true
+  IsSubGraph4: true
+  IsSubGraph5: true
+  LevelID: 0
+  NodeType: 3
+  PositionX: 0
+  PositionY: 0
+  TemplateID: nodes_main_subgraph
+  Title1: ""
+SystemID: dev.snap.shaders

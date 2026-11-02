@@ -1,0 +1,63 @@
+- !<AssetImportMetadata/cfa20971-e610-44a4-92c5-b8e6fd8b47ea>
+  ImportedAssetIds:
+    TypeScriptAsset: !<reference> 0efa78b9-d50c-417c-8a30-a99521135781
+  ImporterName: TypeScriptAssetImporter
+  PrimaryAsset: !<reference> 0efa78b9-d50c-417c-8a30-a99521135781
+  PackageType: NotAPackage
+  LegacyPackagePolicy: ~
+  ExtraData:
+    {}
+  AssetDataMap:
+    TypeScriptAsset: !<own> 5e2adf2f-e8f4-4503-ab4d-58e535553701
+  DependentFiles:
+    []
+  ImporterSettings: !<AssetImporterSettings>
+    {}
+  CompressionSettings: !<own> 00000000-0000-0000-0000-000000000000
+- !<TypeScriptAssetData/5e2adf2f-e8f4-4503-ab4d-58e535553701>
+  SvgIcon: ""
+  SetupScript:
+    code: ""
+  Description: ""
+  VersionMajor: 0
+  VersionMinor: 0
+  VersionPatch: 0
+  VersionPrerelease: ""
+  UpdateOrder: 0
+  ComponentUid: b78f2bcf-1b14-4a5c-be0e-da0ea89db856
+  ExportUid: 00000000-0000-0000-0000-000000000000
+  PackagePolicy: CanBeUnpacked
+  ScriptInputsHidden:
+    faintLineColor: false
+    heavyLineColor: false
+    holdLineColor: false
+    lineThicknessCm: false
+    playableLineColor: false
+  ScriptTypesHidden:
+    {}
+  ReadMe: !<reference> 00000000-0000-0000-0000-000000000000
+  DeclarationFile: !<reference> 00000000-0000-0000-0000-000000000000
+  Tags:
+    []
+  Attachments:
+    []
+  DefaultScriptInputs:
+    - playableLineColor: !<Vec4> {x: 0.720000, y: 0.760000, z: 0.840000, w: 1.000000}
+      faintLineColor: !<Vec4> {x: 0.260000, y: 0.280000, z: 0.320000, w: 1.000000}
+      heavyLineColor: !<Vec4> {x: 0.950000, y: 0.960000, z: 1.000000, w: 1.000000}
+      holdLineColor: !<Vec4> {x: 1.000000, y: 0.700000, z: 0.350000, w: 1.000000}
+      lineThicknessCm: 0.150000
+  ScriptTypes:
+    -
+      {}
+  InputLines:
+    - '// @ui {"widget":"label", "label":"<span style=\"color: #60A5FA;\">CaseLightCaseMesh - line-art practice case (MeshBuilder)</span>"}'
+    - '// @ui {"widget":"separator"}'
+    - '// @ui {"widget":"label", "label":"<span style=\"color: #60A5FA;\">Settings</span>"}'
+    - '// @ui {"widget":"group_start", "label":"Settings"}'
+    - "// @input vec4 playableLineColor = \"{0.72,0.76,0.84,1}\" {\"hint\":\"Colour of the playable shelves' lines (keep light: dark shades vanish on the additive display)\", \"widget\":\"color\"}"
+    - '// @input vec4 faintLineColor = "{0.26,0.28,0.32,1}" {"hint":"Colour of the faint, unplayable shelves and the case frame", "widget":"color"}'
+    - '// @input vec4 heavyLineColor = "{0.95,0.96,1,1}" {"hint":"Colour of the heavy lines: shelf ends and the line between two streets", "widget":"color"}'
+    - '// @input vec4 holdLineColor = "{1,0.7,0.35,1}" {"hint":"Colour of the HOLD block outline", "widget":"color"}'
+    - '// @input float lineThicknessCm = 0.15 {"hint":"Thickness of a normal line, in cm", "widget":"slider", "min":0.05, "max":0.5, "step":0.01}'
+    - '// @ui {"widget":"group_end"}'

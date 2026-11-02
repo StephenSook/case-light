@@ -1,0 +1,72 @@
+- !<AssetImportMetadata/c45241f6-ec0c-49b5-a235-04cde9995172>
+  ImportedAssetIds:
+    TypeScriptAsset: !<reference> 04c48478-8832-4e03-91e9-d02a224949c1
+  ImporterName: TypeScriptAssetImporter
+  PrimaryAsset: !<reference> 04c48478-8832-4e03-91e9-d02a224949c1
+  PackageType: NotAPackage
+  LegacyPackagePolicy: ~
+  ExtraData:
+    {}
+  AssetDataMap:
+    TypeScriptAsset: !<own> 99336198-18ce-4112-a4f5-106bc433f441
+  DependentFiles:
+    []
+  ImporterSettings: !<AssetImporterSettings>
+    {}
+  CompressionSettings: !<own> 00000000-0000-0000-0000-000000000000
+- !<TypeScriptAssetData/99336198-18ce-4112-a4f5-106bc433f441>
+  SvgIcon: ""
+  SetupScript:
+    code: ""
+  Description: ""
+  VersionMajor: 0
+  VersionMinor: 0
+  VersionPatch: 0
+  VersionPrerelease: ""
+  UpdateOrder: 0
+  ComponentUid: d46d14d1-a9a7-4100-bc50-59c66a260463
+  ExportUid: 00000000-0000-0000-0000-000000000000
+  PackagePolicy: CanBeUnpacked
+  ScriptInputsHidden:
+    buttonHeightCm: false
+    buttonWidthCm: false
+    hintLine2Text: false
+    hintText: false
+    paceButtonLabel: false
+    practiceLabel: false
+    recallLabel: false
+    viewDistanceCm: false
+  ScriptTypesHidden:
+    {}
+  ReadMe: !<reference> 00000000-0000-0000-0000-000000000000
+  DeclarationFile: !<reference> 00000000-0000-0000-0000-000000000000
+  Tags:
+    []
+  Attachments:
+    []
+  DefaultScriptInputs:
+    - practiceLabel: Start practice
+      recallLabel: Start recall
+      buttonWidthCm: !<float> 10.000000
+      buttonHeightCm: !<float> 5.000000
+      viewDistanceCm: !<float> 75.000000
+      hintText: Pinch Start practice
+      hintLine2Text: "Practice, then the case goes dark."
+      paceButtonLabel: Drill pace
+  ScriptTypes:
+    -
+      {}
+  InputLines:
+    - '// @ui {"widget":"label", "label":"<span style=\"color: #60A5FA;\">CaseLightControlsUI - Start practice / Start recall buttons</span>"}'
+    - '// @ui {"widget":"separator"}'
+    - '// @ui {"widget":"label", "label":"<span style=\"color: #60A5FA;\">Settings</span>"}'
+    - '// @ui {"widget":"group_start", "label":"Settings"}'
+    - '// @input string practiceLabel = "Start practice" {"hint":"Label on the button that starts a practice pass (slots lit)"}'
+    - '// @input string recallLabel = "Start recall" {"hint":"Label on the button that starts a recall pass (case dark)"}'
+    - '// @input float buttonWidthCm = 6 {"hint":"Width of each Start button, in cm (the row of three must stay inside the view)", "widget":"slider", "min":4, "max":16, "step":0.5}'
+    - '// @input float buttonHeightCm = 2.5 {"hint":"Height of the button row, in cm (the row, the hint and the bundle share the view above the case)", "widget":"slider", "min":3, "max":8, "step":0.1}'
+    - '// @input float viewDistanceCm = 55 {"hint":"Typical distance from the eye to these buttons, in cm (scales the label size)", "widget":"slider", "min":30, "max":110, "step":1}'
+    - '// @input string hintText = "Pinch Start practice" {"hint":"One-time hint shown just above the buttons until a Start button is pressed (the Lens starts idle)"}'
+    - '// @input string hintLine2Text = "Practice, then the case goes dark." {"hint":"Second line under the hint (what practice and recall are), shown and hidden with it"}'
+    - '// @input string paceButtonLabel = "Drill pace" {"hint":"Label on the small toggle that turns the optional drill pace light on and off"}'
+    - '// @ui {"widget":"group_end"}'

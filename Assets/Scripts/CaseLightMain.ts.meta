@@ -1,0 +1,109 @@
+- !<AssetImportMetadata/335c5fef-3b86-4da8-bb67-e7933e37ba10>
+  ImportedAssetIds:
+    TypeScriptAsset: !<reference> 910274f0-9cb0-44cb-8747-a09b3d1548ec
+  ImporterName: TypeScriptAssetImporter
+  PrimaryAsset: !<reference> 910274f0-9cb0-44cb-8747-a09b3d1548ec
+  PackageType: NotAPackage
+  LegacyPackagePolicy: ~
+  ExtraData:
+    {}
+  AssetDataMap:
+    TypeScriptAsset: !<own> effbff28-5aea-4194-b2c7-8a07c289ef3c
+  DependentFiles:
+    []
+  ImporterSettings: !<AssetImporterSettings>
+    {}
+  CompressionSettings: !<own> 00000000-0000-0000-0000-000000000000
+- !<TypeScriptAssetData/effbff28-5aea-4194-b2c7-8a07c289ef3c>
+  SvgIcon: ""
+  SetupScript:
+    code: ""
+  Description: ""
+  VersionMajor: 0
+  VersionMinor: 0
+  VersionPatch: 0
+  VersionPrerelease: ""
+  UpdateOrder: 0
+  ComponentUid: a725f6b3-4b0d-4778-a294-245f82876bb3
+  ExportUid: 00000000-0000-0000-0000-000000000000
+  PackagePolicy: CanBeUnpacked
+  ScriptInputsHidden:
+    bundle: false
+    bundleCount: false
+    caseLabels: false
+    caseMesh: false
+    caseRoot: false
+    controls: false
+    exitControls: false
+    highlights: false
+    lineMaterial: false
+    mixUpLines: false
+    mixUps: false
+    pace: false
+    practiceLadder: false
+    resultSeconds: false
+    ripples: false
+    shelfCount: false
+    sounds: false
+    startGuardSeconds: false
+    viewCue: false
+  ScriptTypesHidden:
+    {}
+  ReadMe: !<reference> 00000000-0000-0000-0000-000000000000
+  DeclarationFile: !<reference> 00000000-0000-0000-0000-000000000000
+  Tags:
+    []
+  Attachments:
+    []
+  DefaultScriptInputs:
+    - caseRoot: !<reference.SceneObject> 00000000-0000-0000-0000-000000000000
+      caseMesh: !<MappingBased.AssignableType_1> 00000000-0000-0000-0000-000000000000
+      caseLabels: !<MappingBased.AssignableType_2> 00000000-0000-0000-0000-000000000000
+      highlights: !<MappingBased.AssignableType_3> 00000000-0000-0000-0000-000000000000
+      bundle: !<MappingBased.AssignableType_4> 00000000-0000-0000-0000-000000000000
+      controls: !<MappingBased.AssignableType_5> 00000000-0000-0000-0000-000000000000
+      viewCue: !<MappingBased.AssignableType_6> 00000000-0000-0000-0000-000000000000
+      ripples: !<MappingBased.AssignableType_7> 00000000-0000-0000-0000-000000000000
+      sounds: !<MappingBased.AssignableType_8> 00000000-0000-0000-0000-000000000000
+      pace: !<MappingBased.AssignableType_9> 00000000-0000-0000-0000-000000000000
+      exitControls: !<MappingBased.AssignableType_10> 00000000-0000-0000-0000-000000000000
+      mixUps: !<MappingBased.AssignableType_11> 00000000-0000-0000-0000-000000000000
+      lineMaterial: !<reference.Material> 00000000-0000-0000-0000-000000000000
+      shelfCount: !<float> 6.000000
+      bundleCount: !<float> 8.000000
+      resultSeconds: !<float> 5.000000
+      practiceLadder: false
+      mixUpLines: true
+      startGuardSeconds: 0.600000
+  ScriptTypes:
+    -
+      {}
+  InputLines:
+    - '// @ui {"widget":"label", "label":"<span style=\"color: #60A5FA;\">CaseLightMain - practice / recall drill at a real-size case</span>"}'
+    - '// @ui {"widget":"separator"}'
+    - '// @ui {"widget":"label", "label":"<span style=\"color: #60A5FA;\">References</span>"}'
+    - '// @ui {"widget":"group_start", "label":"References"}'
+    - '// @input SceneObject caseRoot {"hint":"Case root: the world-fixed practice case (move this to move the case, tray and buttons)"}'
+    - '// @input AssignableType_1 caseMesh {"hint":"Case line art (MeshBuilder)"}'
+    - '// @input AssignableType_2 caseLabels {"hint":"Label strips, caption and session result text"}'
+    - '// @input AssignableType_3 highlights {"hint":"Answer glow and snap outline"}'
+    - '// @input AssignableType_4 bundle {"hint":"Bundle tray and sample letters"}'
+    - '// @input AssignableType_5 controls {"hint":"Start practice / Start recall buttons"}'
+    - '// @input AssignableType_6 viewCue {"hint":"Display rectangle and edge arrow"}'
+    - '// @input AssignableType_7 ripples {"hint":"Ring ripple where a pinch lands and where a letter snaps in (optional)"}'
+    - '// @input AssignableType_8 sounds {"hint":"Chime on a right drop, low tone on a miss, played from the cell they refer to (optional)"}'
+    - '// @input AssignableType_9 pace {"hint":"Optional drill pace light, switched by the Drill pace toggle (off by default)"}'
+    - '// @input AssignableType_10 exitControls {"hint":"Again / Done buttons shown with the score card at the end of a recall pass"}'
+    - '// @input AssignableType_11 mixUps {"hint":"Mix-up lines drawn on the score view after a recall pass (needs mixUpLines on)"}'
+    - '// @input Asset.Material lineMaterial {"hint":"Unlit vertex-colour material used for all line art (SimpleVertexBaseColor)"}'
+    - '// @ui {"widget":"group_end"}'
+    - '// @ui {"widget":"separator"}'
+    - '// @ui {"widget":"label", "label":"<span style=\"color: #60A5FA;\">Settings</span>"}'
+    - '// @ui {"widget":"group_start", "label":"Settings"}'
+    - '// @input float shelfCount = 6 {"hint":"Total shelves in the case (two are playable; the rest are faint outlines). A standard city case has 6.", "widget":"slider", "min":4, "max":8, "step":1}'
+    - '// @input float bundleCount = 8 {"hint":"Pieces in the sample bundle (always includes the hold piece)", "widget":"slider", "min":2, "max":12, "step":1}'
+    - '// @input float resultSeconds = 5 {"hint":"Seconds the end-of-recall result stays on the case", "widget":"slider", "min":1, "max":20, "step":0.5}'
+    - "// @input bool practiceLadder {\"hint\":\"Practice cue ladder: each address's practice cue fades a rung after a right placement (slot, then row, then shelf band) and comes back a rung after a miss. Off = the exact separation glows on every practice pass\"}"
+    - "// @input bool mixUpLines = true {\"hint\":\"After a recall pass, draw a thin line from each missed address's wrong cell to its right cell, outline both cells and label them (cleared by Again, Done or any Start)\"}"
+    - '// @input float startGuardSeconds = 0.6 {"hint":"A Start button press this soon after Again or Done is ignored, so one pinch can never press an exit button and then a Start button (0 = off)", "widget":"slider", "min":0, "max":2, "step":0.05}'
+    - '// @ui {"widget":"group_end"}'
