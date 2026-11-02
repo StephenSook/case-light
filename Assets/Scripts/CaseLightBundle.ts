@@ -70,8 +70,8 @@ export class CaseLightBundle extends BaseScriptComponent {
   @ui.group_start("Settings")
   @input
   @widget(new SliderWidget(0.6, 2, 0.05))
-  @hint("Height of the capital letters in the held letter's address, in cm (one size for every letter; 1.25 keeps the longest sample address inside the print area)")
-  addressCapHeightCm: number = 1.25
+  @hint("Height of the capital letters in the held letter's address, in cm (one size for every letter; 0.85 keeps the longest real address, 17 characters, inside the print area)")
+  addressCapHeightCm: number = 0.85
 
   @input("vec4", "{0.82,0.84,0.9,1}")
   @widget(new ColorWidget())

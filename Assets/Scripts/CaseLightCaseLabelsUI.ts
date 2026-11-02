@@ -4,9 +4,10 @@
 
 /**
  * Label strip under each playable separation: two house numbers per cell (left-side address on
- * top, right-side below), each street in its own light colour, the street name in larger type at
- * the start of each block, and "HOLD" under the HOLD block. The caption "Preview: sample letters"
- * and the end-of-recall score card ("From memory: X of Y this session" by default; the template
+ * top, right-side below; one number when a cell has one delivery), each street in its own light
+ * colour, the street name in larger type at the start of each street's run of cells on a shelf, and
+ * "HOLD" under the HOLD block. The caption "Practice mail, real house numbers" with its small print
+ * ("Not a USPS route. Address data (c) OpenStreetMap contributors"), and the end-of-recall score card ("From memory: X of Y this session" by default; the template
  * is an Inspector setting) sit on authored anchors (CaptionAnchor, ResultAnchor), placed inside
  * the glasses' view at the start position. After a recall pass, the mix-up end labels ("<address>
  * was put here", "goes here") are printed at the spots CaseLightMixUp lays out, on a light tint.
@@ -21,7 +22,7 @@
 import { RoundedRectangle } from "SpectaclesUIKit.lspkg/Scripts/Visuals/RoundedRectangle/RoundedRectangle"
 import { addBacking, DEFAULT_BACKING_COLOR, setBackingSize } from "./CaseLightBackingUI"
 import { CaseGeometry, HOLD_BLOCK_SLOT, HOLD_CELLS, LABEL_STRIP_CM, NO_SLOT, SEP_PITCH_CM, SEPS_PER_SHELF } from "./CaseLightGeometry"
-import { BLOCKS, cellLabels, STREETS } from "./CaseLightRoute"
+import { cellLabels, STREETS, streetRuns } from "./CaseLightRoute"
 import { MIXUP_LABEL_CAP_CM, MixUpLabelSpot } from "./CaseLightMixUp"
 import { CASELIGHT_VERSION } from "./CaseLightVersion"
 
@@ -34,8 +35,17 @@ const VERSION_OFFSET_X_CM = 8.9
 const RESULT_WIDTH_CM = 9.2
 const RESULT_HEIGHT_CM = 2.4
 /** Backing sizes (cm): a little larger than the text they sit behind. */
-const CAPTION_BACKING_W = 12.8
-const CAPTION_BACKING_H = 1.5
+const CAPTION_BACKING_W = 18.4
+const CAPTION_BACKING_H = 2.0
+/** Caption block centre, left of centre so it clears the version label (cm, relative to the anchor). */
+const CAPTION_OFFSET_X_CM = -1.9
+const CAPTION_BACKING_Y_CM = 0.2
+const CAPTION_LINE_Y_CM = 0.615
+const CREDIT_LINE_Y_CM = -0.395
+const CAPTION_CAP_CM = 0.6
+const CREDIT_CAP_CM = 0.4
+/** Small print under the caption: the route disclaimer and the OpenStreetMap credit (ODbL). */
+const CREDIT_TEXT = "Not a USPS route. Address data (c) OpenStreetMap contributors"
 const VERSION_BACKING_W = 2.2
 const VERSION_BACKING_H = 1.15
 const RESULT_BACKING_PAD = 0.5
@@ -76,8 +86,8 @@ export class CaseLightCaseLabelsUI extends BaseScriptComponent {
   @ui.label('<span style="color: #60A5FA;">Settings</span>')
   @ui.group_start("Settings")
   @input
-  @hint("Caption that says this is a preview with sample letters")
-  captionText: string = "Preview: sample letters"
+  @hint("Caption that says what the letters are (the small print under it says it is not a USPS route and credits OpenStreetMap)")
+  captionText: string = "Practice mail, real house numbers"
 
   @input
   @hint("End-of-recall card text; {x} = letters placed from memory (helped letters never count), {y} = letters placed. The earlier wording was \"Unaided: {x}/{y} this session\"")
@@ -85,22 +95,22 @@ export class CaseLightCaseLabelsUI extends BaseScriptComponent {
 
   @input("vec4", "{0.6,0.82,1,1}")
   @widget(new ColorWidget())
-  @hint("Label colour for the sample street MAIN ST")
+  @hint("Label colour for street 0 (FAIRWAYS CT)")
   street0Color: vec4
 
   @input("vec4", "{0.6,0.96,0.64,1}")
   @widget(new ColorWidget())
-  @hint("Label colour for the sample street ELM AVE")
+  @hint("Label colour for street 1 (LEE CT)")
   street1Color: vec4
 
   @input("vec4", "{1,0.9,0.55,1}")
   @widget(new ColorWidget())
-  @hint("Label colour for the sample street BIRCH LN")
+  @hint("Label colour for street 2 (FREY LAKE RD)")
   street2Color: vec4
 
   @input("vec4", "{0.96,0.7,0.96,1}")
   @widget(new ColorWidget())
-  @hint("Label colour for the sample street OAK CT")
+  @hint("Label colour for street 3 (TRIBUTARY CT)")
   street3Color: vec4
 
   @input("vec4", "{1,0.72,0.38,1}")
@@ -128,6 +138,7 @@ export class CaseLightCaseLabelsUI extends BaseScriptComponent {
   private litSlot = NO_SLOT
   private repeatCount = 0
   private captionTextComp: Text | null = null
+  private creditTextComp: Text | null = null
   private versionTextComp: Text | null = null
   private resultBacking: RoundedRectangle | null = null
   private cellLabelCount = 0
@@ -187,6 +198,11 @@ export class CaseLightCaseLabelsUI extends BaseScriptComponent {
 
   get captionString(): string {
     return this.captionTextComp ? this.captionTextComp.text : ""
+  }
+
+  /** The small print under the caption (route disclaimer and OpenStreetMap credit). */
+  get creditString(): string {
+    return this.creditTextComp ? this.creditTextComp.text : ""
   }
 
   /** The small version label's text, e.g. "v0.3". */
@@ -272,14 +288,16 @@ export class CaseLightCaseLabelsUI extends BaseScriptComponent {
       const c = geo.slotCenterLocal(cell.slot)
       // Two house numbers, 0.74 cm capitals: the largest four digits that fit a one-inch cell.
       const y = geo.boardTopY(shelf) - 1.2
-      const t = this.makeText(`Label_${cell.slot}`, `${cell.left}\n${cell.right}`, sizeForCap(0.74), new vec3(c.x, y, LABEL_Z), SEP_PITCH_CM - 0.12, 2.3, HorizontalAlignment.Center, colors[cell.street], 500)
+      const numbers = cell.right === null ? `${cell.left}` : `${cell.left}\n${cell.right}`
+      const t = this.makeText(`Label_${cell.slot}`, numbers, sizeForCap(0.74), new vec3(c.x, y, LABEL_Z), SEP_PITCH_CM - 0.12, 2.3, HorizontalAlignment.Center, colors[cell.street], 500)
       this.labelTexts.set(cell.slot, { text: t, color: colors[cell.street] })
       this.cellLabelCount++
     }
 
-    // Street name in larger type at the start of each block, under the block's cells.
-    for (let i = 0; i < BLOCKS.length; i++) {
-      const b = BLOCKS[i]
+    // Street name in larger type at the start of each street's run of cells on a shelf, under those cells.
+    const runs = streetRuns()
+    for (let i = 0; i < runs.length; i++) {
+      const b = runs[i]
       const shelf = geo.shelfOfSlot(b.firstSlot)
       const col = b.firstSlot % SEPS_PER_SHELF
       // Start clear of the heavy street line drawn on the block's left divider.
@@ -289,9 +307,9 @@ export class CaseLightCaseLabelsUI extends BaseScriptComponent {
       this.makeText(`StreetName_${i}`, STREETS[b.street].name, sizeForCap(0.82), new vec3(left + width / 2, y, LABEL_Z), width, 1.2, HorizontalAlignment.Left, colors[b.street], 700)
 
       // Smaller repeats along the block, so a view turned onto the middle of a block still shows
-      // the street. Only where the name fits inside the block (about two cells).
+      // the street. Only where three cells remain, so the longest name (12 characters) fits at full size.
       const every = Math.max(4, Math.round(this.streetNameRepeatCells))
-      for (let k = every; k + 2 <= b.cells; k += every) {
+      for (let k = every; k + 3 <= b.cells; k += every) {
         const rx = geo.dividerX(col + k) + 0.25
         const rw = Math.min(b.cells - k, 3) * SEP_PITCH_CM - 0.4
         this.makeText(`StreetNameRepeat_${b.firstSlot + k}`, STREETS[b.street].name, sizeForCap(0.6), new vec3(rx + rw / 2, geo.stripBottomY(shelf) + 0.55, LABEL_Z), rw, 1.0, HorizontalAlignment.Left, colors[b.street], 500)
@@ -308,8 +326,11 @@ export class CaseLightCaseLabelsUI extends BaseScriptComponent {
     // Caption (persistent). Default anchor: the unlabelled strip just above the upper playable
     // row, so it is printed on the case and inside the glasses' view at the start position.
     const capParent = this.captionAnchor ? this.captionAnchor : this.sceneObject
-    addBacking(capParent, "CaptionBacking", CAPTION_BACKING_W, CAPTION_BACKING_H, this.backingColor, new vec3(0, 0, -0.04))
-    this.captionTextComp = this.makeText("Caption", this.captionText, sizeForCap(0.8), vec3.zero(), 21, 1.6, HorizontalAlignment.Center, new vec4(0.9, 0.9, 0.92, 1), 500, capParent)
+    // Two lines on one backing, left of the version label: the caption, and under it in small type
+    // "Not a USPS route." plus the OpenStreetMap credit the address data needs (ODbL).
+    addBacking(capParent, "CaptionBacking", CAPTION_BACKING_W, CAPTION_BACKING_H, this.backingColor, new vec3(CAPTION_OFFSET_X_CM, CAPTION_BACKING_Y_CM, -0.04))
+    this.captionTextComp = this.makeText("Caption", this.captionText, sizeForCap(CAPTION_CAP_CM), new vec3(CAPTION_OFFSET_X_CM, CAPTION_LINE_Y_CM, 0), CAPTION_BACKING_W - 0.6, 1.1, HorizontalAlignment.Center, new vec4(0.9, 0.9, 0.92, 1), 500, capParent)
+    this.creditTextComp = this.makeText("CreditText", CREDIT_TEXT, sizeForCap(CREDIT_CAP_CM), new vec3(CAPTION_OFFSET_X_CM, CREDIT_LINE_Y_CM, 0), CAPTION_BACKING_W - 0.6, 0.8, HorizontalAlignment.Center, new vec4(0.82, 0.84, 0.88, 1), 500, capParent)
 
     // Small version label on the same strip, right of the caption, inside the start view.
     addBacking(capParent, "VersionBacking", VERSION_BACKING_W, VERSION_BACKING_H, this.backingColor, new vec3(VERSION_OFFSET_X_CM, 0, -0.04), 0.35)

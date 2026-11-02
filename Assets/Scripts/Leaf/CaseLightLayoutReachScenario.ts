@@ -1,4 +1,4 @@
-// Owns: the LEAF check of the layout: at open, the top letter is within a stated reach envelope with a short throw to the case, and all four of its corners, the start hint, both Start buttons and the case caption are inside the display rectangle without overlapping the letter; after a recall pass, the score card backing, Again and Done are inside it with 0.5 deg to spare and overlap neither each other, the Start row, nor the tray.
+// Owns: the LEAF check of the layout: at open, the top letter is within a stated reach envelope with a short throw to the case, and all four of its corners, the start hint, both Start buttons, the case caption and its small print (wording checked, OpenStreetMap credit included) are inside the display rectangle without overlapping the letter or the version label; after a recall pass, the score card backing, Again and Done are inside it with 0.5 deg to spare and overlap neither each other, the Start row, nor the tray.
 // Talks to: CaseLightLeafSupport (display rectangle from the brief, angle boxes, drawn vertex boxes, Text boxes), CaseLightMain read-only getters (slot positions, cell corners), WorldCameraFinderProvider, scene objects by name.
 // Must not: call CaseLightMain's test hooks or commands, or change product state except through real input (one recall pass, for the exit view).
 
@@ -109,11 +109,29 @@ export class CaseLightLayoutReachScenario extends Scenario {
       {name: "Start practice button", box: angleBox(roundedRectWorldCorners("StartPracticeButton"))},
       {name: "Start recall button", box: angleBox(roundedRectWorldCorners("StartRecallButton"))},
       {name: "case caption (text and backing)", box: angleBox([...textWorldCorners("Caption"), ...roundedRectWorldCorners("CaptionBacking")])},
+      {name: "small print under the caption", box: angleBox(textWorldCorners("CreditText"))},
     ]
     for (const it of items) {
       log(`LAYOUT ${it.name}: ${fmtBox(it.box)}`)
       expect(insideDisplay(it.box), `${it.name} inside the display (${fmtBox(it.box)})`).toBe(true)
       expect(anglesOverlap(it.box, top), `${it.name} does not overlap the top letter (${fmtBox(it.box)} vs ${fmtBox(top)})`).toBe(false)
+    }
+
+    // v0.5 disclosure and data credit, readable at open. The test holds the wording itself.
+    const captionText = mustFind("Caption").getComponent("Component.Text") as Text
+    const creditText = mustFind("CreditText").getComponent("Component.Text") as Text
+    log(`LAYOUT caption "${captionText.text}", small print "${creditText.text}"`)
+    expect(captionText.text, "caption wording").toBe("Practice mail, real house numbers")
+    expect(creditText.text, "small print: disclaimer and OpenStreetMap credit").toBe("Not a USPS route. Address data (c) OpenStreetMap contributors")
+    const captionInk = angleBox(charWorldCorners(captionText))
+    const creditInk = angleBox(charWorldCorners(creditText))
+    const versionBox = angleBox([...charWorldCorners(mustFind("VersionLabel").getComponent("Component.Text") as Text), ...roundedRectWorldCorners("VersionBacking")])
+    const captionBacking = angleBox(roundedRectWorldCorners("CaptionBacking"))
+    log(`LAYOUT caption ink ${fmtBox(captionInk)}; small print ink ${fmtBox(creditInk)}; version ${fmtBox(versionBox)}`)
+    expect(anglesOverlap(captionInk, creditInk), "caption and its small print do not overlap").toBe(false)
+    expect(anglesOverlap(captionBacking, versionBox), "caption backing does not overlap the version label").toBe(false)
+    for (const [name, b] of [["caption", captionInk], ["small print", creditInk]] as [string, AngleBox][]) {
+      expect(b.minYaw >= captionBacking.minYaw && b.maxYaw <= captionBacking.maxYaw && b.minPitch >= captionBacking.minPitch && b.maxPitch <= captionBacking.maxPitch, `${name} ink inside the caption backing (${fmtBox(b)} vs ${fmtBox(captionBacking)})`).toBe(true)
     }
     // --- Exit view after a recall pass (score card, Again, Done). ---
     const ix = new CaseLightLeafInteractor()

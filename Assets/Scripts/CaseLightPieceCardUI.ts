@@ -8,8 +8,8 @@
  * no Inspector fields here; sizes come in through configure(). The address never shrinks: the
  * letter is sized so the longest sample address fits at full size.
  *
- * Layout scales with the letter: positions are fractions of its height, the note and gloss are
- * fractions of the address capitals, and every text box is the letter's print width.
+ * Layout scales with the letter: positions are fractions of its height, the note and gloss have
+ * fixed capitals, and every text box is the letter's print width.
  *
  * Text sizing: Text.size is the em-square height, em cm = size / 43.886 (StudioLib.d.ts).
  * Capitals were assumed to be 0.7 em, so a requested capital height h uses size = h / 0.7 * 43.886;
@@ -28,9 +28,13 @@ const GLOSS_COLOR = new vec4(0.2, 0.22, 0.28, 1)
 const NOTE_Y_FRACTION = 0.33
 const GLOSS_Y_FRACTION = 0.17
 const ADDRESS_Y_FRACTION = -0.13
-/** Note and gloss capitals as fractions of the address capitals. */
-const NOTE_CAP_FRACTION = 0.46
-const GLOSS_CAP_FRACTION = 0.36
+/**
+ * Note and gloss capitals (cm). Fixed at their v0.4 sizes (0.46 and 0.36 of the old 1.25 cm address
+ * capitals): in v0.5 the address got smaller to fit the real street names, and the note and gloss,
+ * which still fit, were kept as they were.
+ */
+const NOTE_CAP_CM = 0.575
+const GLOSS_CAP_CM = 0.45
 
 @component
 export class CaseLightPieceCardUI extends BaseScriptComponent {
@@ -71,9 +75,9 @@ export class CaseLightPieceCardUI extends BaseScriptComponent {
     this.note = note
     const h = letterHeightCm
     this.addressText = this.makeText("AddressText", address, addressCapHeightCm, widthCm, new vec3(0, h * ADDRESS_Y_FRACTION, 0), ADDRESS_COLOR)
-    this.noteText = this.makeText("HoldNoteText", note ?? "", addressCapHeightCm * NOTE_CAP_FRACTION, widthCm, new vec3(0, h * NOTE_Y_FRACTION, 0), NOTE_COLOR)
+    this.noteText = this.makeText("HoldNoteText", note ?? "", NOTE_CAP_CM, widthCm, new vec3(0, h * NOTE_Y_FRACTION, 0), NOTE_COLOR)
     // The gloss only exists with a note, so it follows the note's show/hide rule exactly.
-    this.glossText = this.makeText("HoldGlossText", note ? gloss ?? "" : "", addressCapHeightCm * GLOSS_CAP_FRACTION, widthCm, new vec3(0, h * GLOSS_Y_FRACTION, 0), GLOSS_COLOR)
+    this.glossText = this.makeText("HoldGlossText", note ? gloss ?? "" : "", GLOSS_CAP_CM, widthCm, new vec3(0, h * GLOSS_Y_FRACTION, 0), GLOSS_COLOR)
     this.setHeld(false)
   }
 

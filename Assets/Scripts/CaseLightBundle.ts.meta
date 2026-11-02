@@ -57,7 +57,7 @@
     - '// @ui {"widget":"separator"}'
     - '// @ui {"widget":"label", "label":"<span style=\"color: #60A5FA;\">Settings</span>"}'
     - '// @ui {"widget":"group_start", "label":"Settings"}'
-    - "// @input float addressCapHeightCm = 1.25 {\"hint\":\"Height of the capital letters in the held letter's address, in cm (one size for every letter; 1.25 keeps the longest sample address inside the print area)\", \"widget\":\"slider\", \"min\":0.6, \"max\":2, \"step\":0.05}"
+    - "// @input float addressCapHeightCm = 0.85 {\"hint\":\"Height of the capital letters in the held letter's address, in cm (one size for every letter; 0.85 keeps the longest real address, 17 characters, inside the print area)\", \"widget\":\"slider\", \"min\":0.6, \"max\":2, \"step\":0.05}"
     - '// @input vec4 letterOutlineColor = "{0.82,0.84,0.9,1}" {"hint":"Outline colour of a letter", "widget":"color"}'
     - '// @input vec4 hoverOutlineColor = "{1,1,1,1}" {"hint":"Outline colour of the top letter while it is aimed at (keep it neutral: cyan is reserved for the target cell)", "widget":"color"}'
     - '// @input vec4 heldCardColor = "{0.94,0.94,0.92,1}" {"hint":"Colour of the letter in hand: a plain white card (its address prints dark on it)", "widget":"color"}'

@@ -72,3 +72,17 @@ Restored build:
 09:30:14.064 FAILED: extra-layout-fit-and-reach - AssertionError: score card backing does not overlap Again button (yaw -10.33..-0.26, pitch 5.76..9.39 deg vs yaw -5.47..-1.21, pitch 5.90..9.04 deg) Expected: "false" - Received: "true"
 09:32:09.402 FAILED: extra-one-pinch-one-press - AssertionError: Start press right after Again ignored (count +1) Expected: "1" - Received: "0"
 09:33:16.956 FAILED: extra-one-pinch-one-press - AssertionError: stray release ignored (ignoredStrayReleaseCount +1) Expected: "1" - Received: "0"
+
+## v0.5 (coordinator, 11): real house numbers from OpenStreetMap
+# breaks: (1) piece 0 in the route table 2195 -> 2185 FAIRWAYS CT; (2) version constant back to v0.4; (3) hold letter moved onto a real number, 3561 FREY LAKE RD, with the product's guard removed (2 lines); (4) hold letter 3553 -> 3557; (5) one cell label (slot 78) not printed; (6) address Text size x1.1; (7) small print without the OpenStreetMap credit; (8) caption block moved right onto the version label; (9) small print moved up onto the caption line; (10) caption backing 2.0 -> 1.2 cm tall; (11) scene caption text set back to "Preview: sample letters" (scene property, not saved; set back, saved, Scene.scene SHA-256 unchanged). Each script restored byte-identical (cmp), 37/37 script fingerprints OK.
+14:00:51 FAILED: c1-pickup-and-snap - AssertionError: address of piece 0 (a real house number from OpenStreetMap) Expected: "2195 FAIRWAYS CT" - Received: "2185 FAIRWAYS CT"
+14:01:16 FAILED: c1-pickup-and-snap - AssertionError: versionText Expected: "v0.5" - Received: "v0.4"
+14:01:34 FAILED: extra-print-fit - AssertionError: product answer for "3561 FREY LAKE RD" matches the printed case (independent 55) Expected: "55" - Received: "-2"
+14:01:57 FAILED: c4-hold-note-and-hold-block - AssertionError: hold piece address (a number that does not exist on FREY LAKE RD) Expected: "3553 FREY LAKE RD" - Received: "3557 FREY LAKE RD"
+14:02:24 FAILED: c4-hold-note-and-hold-block - AssertionError: after the hold piece is accepted: label baseline covers the labelled cells and HOLD Expected: "76" - Received: "75"
+14:02:41 FAILED: extra-print-fit - AssertionError: piece 2 AddressText "3581 FREY LAKE RD" inside the 12 cm print width (x -6.03..6.03, y -1.54..0.13) Expected: "true" - Received: "false"
+14:02:48 FAILED: extra-layout-fit-and-reach - AssertionError: small print: disclaimer and OpenStreetMap credit Expected: "Not a USPS route. Address data (c) OpenStreetMap contributors" - Received: "Not a USPS route."
+14:02:59 FAILED: extra-layout-fit-and-reach - AssertionError: caption backing does not overlap the version label Expected: "false" - Received: "true"
+14:03:10 FAILED: extra-layout-fit-and-reach - AssertionError: caption and its small print do not overlap Expected: "false" - Received: "true"
+14:03:27 FAILED: extra-layout-fit-and-reach - AssertionError: caption ink inside the caption backing (yaw -8.31..4.53, pitch 2.70..3.77 deg vs yaw -11.04..7.31, pitch 2.21..3.42 deg) Expected: "true" - Received: "false"
+14:03:49 FAILED: extra-layout-fit-and-reach - AssertionError: caption wording Expected: "Practice mail, real house numbers" - Received: "Preview: sample letters"

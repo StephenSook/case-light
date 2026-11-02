@@ -6,8 +6,8 @@
     - !<own> f5d74682-203a-4970-81ea-9fa7b88c96bb
     - !<own> de9b9b93-38d0-40e0-9e94-7e5719dbba0c
     - !<own> 5677e55c-d2e0-4b93-9c39-4e2b98edbd67
-    - !<own> 7ebb5a49-226a-4e53-8a81-fbdc774d21a4
     - !<own> f8cffc97-2710-4550-b720-da68b51f0688
+    - !<own> 5763885e-4215-4cef-84f2-da59f5032c88
   layers: !<Layers/267ee9a7-aff2-4f9d-9a49-f71214747d03>
     userLayers:
       - id: 1
@@ -595,7 +595,6 @@
   Enabled: true
   ScriptAsset: !<reference> cb96f5dd-c2da-4bf1-b422-831f75b2aef6
   ScriptInputsDefault:
-    captionText: true
     resultTemplate: true
     street0Color: true
     street1Color: true
@@ -610,7 +609,7 @@
     "":
       resultAnchor: !<reference.SceneObject> 706b7f1f-6971-4e14-9604-c105c59a69f2
       captionAnchor: !<reference.SceneObject> 725b5a4e-3ad0-478e-9891-713331d60b5f
-      captionText: "Preview: sample letters"
+      captionText: "Practice mail, real house numbers"
       resultTemplate: "From memory: {x} of {y} this session"
       street0Color: !<Vec4> {x: 0.600000, y: 0.820000, z: 1.000000, w: 1.000000}
       street1Color: !<Vec4> {x: 0.600000, y: 0.960000, z: 0.640000, w: 1.000000}
@@ -925,7 +924,7 @@
     {}
   ScriptInputs:
     "":
-      addressCapHeightCm: 1.250000
+      addressCapHeightCm: 0.850000
       letterOutlineColor: !<Vec4> {x: 0.820000, y: 0.840000, z: 0.900000, w: 1.000000}
       hoverOutlineColor: !<Vec4> {x: 1.000000, y: 1.000000, z: 1.000000, w: 1.000000}
       heldCardColor: !<Vec4> {x: 0.940000, y: 0.940000, z: 0.920000, w: 1.000000}
@@ -1303,6 +1302,21 @@
     []
   Components:
     - !<own> 4bbda018-5471-46cc-8496-754098857979
+- !<SceneObject/5763885e-4215-4cef-84f2-da59f5032c88>
+  PrefabRemaps:
+    []
+  Name: LEAF Plugin Bridge
+  Enabled: true
+  Layers: 1
+  LocalTransform: !<TransformEntity>
+    Position: {x: 0.000000, y: 0.000000, z: 0.000000}
+    Rotation: {x: 0.000000, y: 0.000000, z: 0.000000}
+    Scale: {x: 1.000000, y: 1.000000, z: 1.000000}
+    HasSegmentScaleCompensation: false
+  Children:
+    []
+  Components:
+    - !<own> df8d50b1-314b-48b4-ad69-a00513029e74
 - !<SceneObject/58ef319f-850e-40dd-8295-e6dc36ab4854>
   PrefabRemaps:
     []
@@ -1754,21 +1768,6 @@
     - !<own> 58ef319f-850e-40dd-8295-e6dc36ab4854
   Components:
     []
-- !<SceneObject/7ebb5a49-226a-4e53-8a81-fbdc774d21a4>
-  PrefabRemaps:
-    []
-  Name: LEAF Plugin Bridge
-  Enabled: true
-  Layers: 1
-  LocalTransform: !<TransformEntity>
-    Position: {x: 0.000000, y: 0.000000, z: 0.000000}
-    Rotation: {x: 0.000000, y: 0.000000, z: 0.000000}
-    Scale: {x: 1.000000, y: 1.000000, z: 1.000000}
-    HasSegmentScaleCompensation: false
-  Children:
-    []
-  Components:
-    - !<own> ff8dd065-a7d9-48dd-89ae-09a9e3546390
 - !<SceneObject/7fb3591f-54a2-4aee-b07d-fd10d56538c8>
   PrefabRemaps:
     []
@@ -2807,6 +2806,22 @@
     - !<own> 2f3c5396-b6dc-4bb5-80b9-f170da3f33c9
   Components:
     - !<own> 0a08adc4-2170-488a-946a-0744996f90e4
+- !<ScriptComponent/df8d50b1-314b-48b4-ad69-a00513029e74>
+  PrefabRemaps:
+    []
+  Name: MessagingBridge
+  Enabled: true
+  ScriptAsset: !<reference> 9aa407db-2872-4afc-a162-cf7faf2a0f29
+  ScriptInputsDefault:
+    {}
+  ScriptTypesDefault:
+    {}
+  ScriptInputs:
+    "":
+      {}
+  ScriptTypes:
+    "":
+      {}
 - !<RenderMeshVisual/e1031f7e-3474-489f-a529-282f7192f812>
   PrefabRemaps:
     []
@@ -3235,19 +3250,3 @@
     - !<own> bb75b5ea-8baf-4d8d-bcf8-49bd79873881
   Components:
     []
-- !<ScriptComponent/ff8dd065-a7d9-48dd-89ae-09a9e3546390>
-  PrefabRemaps:
-    []
-  Name: MessagingBridge
-  Enabled: true
-  ScriptAsset: !<reference> 9aa407db-2872-4afc-a162-cf7faf2a0f29
-  ScriptInputsDefault:
-    {}
-  ScriptTypesDefault:
-    {}
-  ScriptInputs:
-    "":
-      {}
-  ScriptTypes:
-    "":
-      {}

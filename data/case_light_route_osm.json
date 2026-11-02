@@ -1,0 +1,645 @@
+{
+ "attribution": "House numbers and street names from OpenStreetMap, (c) OpenStreetMap contributors, available under the Open Database License (ODbL 1.0): https://www.openstreetmap.org/copyright . Not a USPS route; no resident information. The hold piece uses a house number that does not exist on its street.",
+ "source": "OpenStreetMap API map call, bbox -84.600,34.028,-84.578,34.050, fetched 2026-11-02 about 13:35 ET",
+ "streets": [
+  "FAIRWAYS CT",
+  "LEE CT",
+  "FREY LAKE RD",
+  "TRIBUTARY CT"
+ ],
+ "osmNames": [
+  "Fairways Court",
+  "Lee Court",
+  "Frey Lake Road",
+  "Tributary Court"
+ ],
+ "deliveries": 149,
+ "cells": [
+  {
+   "slot": 0,
+   "street": 0,
+   "left": 2005,
+   "right": 2015,
+   "blockStart": true
+  },
+  {
+   "slot": 1,
+   "street": 0,
+   "left": 2025,
+   "right": 2035,
+   "blockStart": false
+  },
+  {
+   "slot": 2,
+   "street": 0,
+   "left": 2045,
+   "right": 2055,
+   "blockStart": false
+  },
+  {
+   "slot": 3,
+   "street": 0,
+   "left": 2065,
+   "right": 2075,
+   "blockStart": false
+  },
+  {
+   "slot": 4,
+   "street": 0,
+   "left": 2085,
+   "right": 2095,
+   "blockStart": false
+  },
+  {
+   "slot": 5,
+   "street": 0,
+   "left": 2105,
+   "right": 2115,
+   "blockStart": true
+  },
+  {
+   "slot": 6,
+   "street": 0,
+   "left": 2125,
+   "right": 2135,
+   "blockStart": false
+  },
+  {
+   "slot": 7,
+   "street": 0,
+   "left": 2145,
+   "right": 2155,
+   "blockStart": false
+  },
+  {
+   "slot": 8,
+   "street": 0,
+   "left": 2165,
+   "right": 2175,
+   "blockStart": false
+  },
+  {
+   "slot": 9,
+   "street": 0,
+   "left": 2185,
+   "right": 2195,
+   "blockStart": false
+  },
+  {
+   "slot": 10,
+   "street": 0,
+   "left": 2205,
+   "right": 2215,
+   "blockStart": true
+  },
+  {
+   "slot": 11,
+   "street": 0,
+   "left": 2225,
+   "right": 2235,
+   "blockStart": false
+  },
+  {
+   "slot": 12,
+   "street": 0,
+   "left": 2245,
+   "right": 2255,
+   "blockStart": false
+  },
+  {
+   "slot": 13,
+   "street": 0,
+   "left": 2265,
+   "right": 2275,
+   "blockStart": false
+  },
+  {
+   "slot": 14,
+   "street": 0,
+   "left": 2285,
+   "right": 2295,
+   "blockStart": false
+  },
+  {
+   "slot": 15,
+   "street": 0,
+   "left": 2305,
+   "right": 2315,
+   "blockStart": true
+  },
+  {
+   "slot": 16,
+   "street": 0,
+   "left": 2325,
+   "right": 2335,
+   "blockStart": false
+  },
+  {
+   "slot": 17,
+   "street": 0,
+   "left": 2345,
+   "right": 2355,
+   "blockStart": false
+  },
+  {
+   "slot": 18,
+   "street": 0,
+   "left": 2310,
+   "right": 2300,
+   "blockStart": true
+  },
+  {
+   "slot": 19,
+   "street": 0,
+   "left": 2290,
+   "right": 2280,
+   "blockStart": true
+  },
+  {
+   "slot": 20,
+   "street": 0,
+   "left": 2270,
+   "right": 2260,
+   "blockStart": false
+  },
+  {
+   "slot": 21,
+   "street": 0,
+   "left": 2250,
+   "right": 2240,
+   "blockStart": false
+  },
+  {
+   "slot": 22,
+   "street": 0,
+   "left": 2230,
+   "right": 2220,
+   "blockStart": false
+  },
+  {
+   "slot": 23,
+   "street": 0,
+   "left": 2210,
+   "right": 2200,
+   "blockStart": false
+  },
+  {
+   "slot": 24,
+   "street": 0,
+   "left": 2190,
+   "right": 2180,
+   "blockStart": true
+  },
+  {
+   "slot": 25,
+   "street": 0,
+   "left": 2170,
+   "right": 2160,
+   "blockStart": false
+  },
+  {
+   "slot": 26,
+   "street": 0,
+   "left": 2150,
+   "right": 2140,
+   "blockStart": false
+  },
+  {
+   "slot": 27,
+   "street": 0,
+   "left": 2130,
+   "right": 2120,
+   "blockStart": false
+  },
+  {
+   "slot": 28,
+   "street": 0,
+   "left": 2110,
+   "right": 2100,
+   "blockStart": false
+  },
+  {
+   "slot": 29,
+   "street": 0,
+   "left": 2090,
+   "right": 2080,
+   "blockStart": true
+  },
+  {
+   "slot": 30,
+   "street": 0,
+   "left": 2070,
+   "right": 2060,
+   "blockStart": false
+  },
+  {
+   "slot": 31,
+   "street": 0,
+   "left": 2050,
+   "right": 2040,
+   "blockStart": false
+  },
+  {
+   "slot": 32,
+   "street": 0,
+   "left": 2030,
+   "right": 2020,
+   "blockStart": false
+  },
+  {
+   "slot": 33,
+   "street": 0,
+   "left": 2010,
+   "right": 2000,
+   "blockStart": false
+  },
+  {
+   "slot": 34,
+   "street": 1,
+   "left": 3455,
+   "right": 3457,
+   "blockStart": true
+  },
+  {
+   "slot": 35,
+   "street": 1,
+   "left": 3459,
+   "right": 3461,
+   "blockStart": false
+  },
+  {
+   "slot": 40,
+   "street": 1,
+   "left": 3463,
+   "right": 3465,
+   "blockStart": false
+  },
+  {
+   "slot": 41,
+   "street": 1,
+   "left": 3467,
+   "right": 3469,
+   "blockStart": false
+  },
+  {
+   "slot": 42,
+   "street": 1,
+   "left": 3471,
+   "right": 3473,
+   "blockStart": false
+  },
+  {
+   "slot": 43,
+   "street": 1,
+   "left": 3475,
+   "right": 3477,
+   "blockStart": false
+  },
+  {
+   "slot": 44,
+   "street": 1,
+   "left": 3479,
+   "right": 3481,
+   "blockStart": false
+  },
+  {
+   "slot": 45,
+   "street": 1,
+   "left": 3504,
+   "right": 3502,
+   "blockStart": true
+  },
+  {
+   "slot": 46,
+   "street": 1,
+   "left": 3500,
+   "right": 3498,
+   "blockStart": false
+  },
+  {
+   "slot": 47,
+   "street": 1,
+   "left": 3496,
+   "right": 3494,
+   "blockStart": true
+  },
+  {
+   "slot": 48,
+   "street": 1,
+   "left": 3492,
+   "right": 3490,
+   "blockStart": false
+  },
+  {
+   "slot": 49,
+   "street": 1,
+   "left": 3488,
+   "right": 3486,
+   "blockStart": false
+  },
+  {
+   "slot": 50,
+   "street": 1,
+   "left": 3484,
+   "right": 3482,
+   "blockStart": false
+  },
+  {
+   "slot": 51,
+   "street": 1,
+   "left": 3480,
+   "right": 3478,
+   "blockStart": false
+  },
+  {
+   "slot": 52,
+   "street": 1,
+   "left": 3476,
+   "right": 3474,
+   "blockStart": false
+  },
+  {
+   "slot": 53,
+   "street": 1,
+   "left": 3470,
+   "right": 3466,
+   "blockStart": false
+  },
+  {
+   "slot": 54,
+   "street": 1,
+   "left": 3464,
+   "right": 3462,
+   "blockStart": false
+  },
+  {
+   "slot": 55,
+   "street": 2,
+   "left": 3551,
+   "right": 3561,
+   "blockStart": true
+  },
+  {
+   "slot": 56,
+   "street": 2,
+   "left": 3571,
+   "right": 3581,
+   "blockStart": false
+  },
+  {
+   "slot": 57,
+   "street": 2,
+   "left": 3591,
+   "right": 3611,
+   "blockStart": false
+  },
+  {
+   "slot": 58,
+   "street": 2,
+   "left": 3621,
+   "right": 3631,
+   "blockStart": true
+  },
+  {
+   "slot": 59,
+   "street": 2,
+   "left": 3641,
+   "right": 3651,
+   "blockStart": false
+  },
+  {
+   "slot": 60,
+   "street": 2,
+   "left": 3661,
+   "right": 3671,
+   "blockStart": false
+  },
+  {
+   "slot": 61,
+   "street": 2,
+   "left": 3681,
+   "right": 3691,
+   "blockStart": false
+  },
+  {
+   "slot": 62,
+   "street": 2,
+   "left": 3701,
+   "right": 3711,
+   "blockStart": true
+  },
+  {
+   "slot": 63,
+   "street": 2,
+   "left": 3721,
+   "right": 3731,
+   "blockStart": false
+  },
+  {
+   "slot": 64,
+   "street": 2,
+   "left": 3741,
+   "right": 3751,
+   "blockStart": false
+  },
+  {
+   "slot": 65,
+   "street": 2,
+   "left": 3761,
+   "right": 3771,
+   "blockStart": false
+  },
+  {
+   "slot": 66,
+   "street": 2,
+   "left": 3790,
+   "right": 3740,
+   "blockStart": true
+  },
+  {
+   "slot": 67,
+   "street": 2,
+   "left": 3730,
+   "right": 3720,
+   "blockStart": false
+  },
+  {
+   "slot": 68,
+   "street": 2,
+   "left": 3716,
+   "right": 3710,
+   "blockStart": false
+  },
+  {
+   "slot": 69,
+   "street": 2,
+   "left": 3700,
+   "right": 3694,
+   "blockStart": false
+  },
+  {
+   "slot": 70,
+   "street": 2,
+   "left": 3690,
+   "right": 3670,
+   "blockStart": true
+  },
+  {
+   "slot": 71,
+   "street": 2,
+   "left": 3660,
+   "right": 3610,
+   "blockStart": false
+  },
+  {
+   "slot": 72,
+   "street": 2,
+   "left": 3600,
+   "right": 3590,
+   "blockStart": false
+  },
+  {
+   "slot": 73,
+   "street": 3,
+   "left": 1453,
+   "right": 1455,
+   "blockStart": true
+  },
+  {
+   "slot": 74,
+   "street": 3,
+   "left": 1463,
+   "right": 1465,
+   "blockStart": false
+  },
+  {
+   "slot": 75,
+   "street": 3,
+   "left": 1464,
+   "right": 1462,
+   "blockStart": true
+  },
+  {
+   "slot": 76,
+   "street": 3,
+   "left": 1460,
+   "right": 1458,
+   "blockStart": false
+  },
+  {
+   "slot": 77,
+   "street": 3,
+   "left": 1456,
+   "right": 1454,
+   "blockStart": false
+  },
+  {
+   "slot": 78,
+   "street": 3,
+   "left": 1452,
+   "right": null,
+   "blockStart": false
+  }
+ ],
+ "pieces": [
+  {
+   "street": 0,
+   "number": 2195,
+   "hold": false,
+   "address": "2195 FAIRWAYS CT",
+   "slot": 9,
+   "side": 1
+  },
+  {
+   "street": 1,
+   "number": 3498,
+   "hold": false,
+   "address": "3498 LEE CT",
+   "slot": 46,
+   "side": 1
+  },
+  {
+   "street": 2,
+   "number": 3581,
+   "hold": false,
+   "address": "3581 FREY LAKE RD",
+   "slot": 56,
+   "side": 1
+  },
+  {
+   "street": 0,
+   "number": 2355,
+   "hold": false,
+   "address": "2355 FAIRWAYS CT",
+   "slot": 17,
+   "side": 1
+  },
+  {
+   "street": 3,
+   "number": 1460,
+   "hold": false,
+   "address": "1460 TRIBUTARY CT",
+   "slot": 76,
+   "side": 0
+  },
+  {
+   "street": 2,
+   "number": 3553,
+   "hold": true,
+   "address": "3553 FREY LAKE RD"
+  },
+  {
+   "street": 0,
+   "number": 2200,
+   "hold": false,
+   "address": "2200 FAIRWAYS CT",
+   "slot": 23,
+   "side": 1
+  },
+  {
+   "street": 0,
+   "number": 2035,
+   "hold": false,
+   "address": "2035 FAIRWAYS CT",
+   "slot": 1,
+   "side": 1
+  },
+  {
+   "street": 2,
+   "number": 3681,
+   "hold": false,
+   "address": "3681 FREY LAKE RD",
+   "slot": 61,
+   "side": 0
+  },
+  {
+   "street": 1,
+   "number": 3475,
+   "hold": false,
+   "address": "3475 LEE CT",
+   "slot": 43,
+   "side": 0
+  },
+  {
+   "street": 0,
+   "number": 2260,
+   "hold": false,
+   "address": "2260 FAIRWAYS CT",
+   "slot": 20,
+   "side": 1
+  },
+  {
+   "street": 2,
+   "number": 3730,
+   "hold": false,
+   "address": "3730 FREY LAKE RD",
+   "slot": 67,
+   "side": 0
+  }
+ ],
+ "holdNumber": 3553,
+ "longestAddress": "3551 FREY LAKE RD",
+ "droppedNonHomes": [
+  "3506 Lee Court"
+ ]
+}

@@ -17,7 +17,7 @@
  * letter size and print width come from CaseLightMain's getters, checked against the drawn letter
  * (letterDims); the rendered line box must be at least the requested capital height and sit
  * inside the print width. The brief's "about 3 cm" is logged beside the build's value.
- * Also: the version read-out and the VersionLabel text both read "v0.4".
+ * Also: the version read-out and the VersionLabel text both read "v0.5".
  */
 import {Scenario} from "Leaf.lspkg/Scenarios/scenario/Scenario"
 import {expect} from "Leaf.lspkg/Utils/common/Expect"
@@ -66,8 +66,8 @@ export class CaseLightC1PickUpSnapScenario extends Scenario {
     // Version: the read-out and the label on screen agree on the build.
     const versionLabel = mustFind("VersionLabel").getComponent("Component.Text") as Text
     log(`C1 versionText="${main.versionText}" VersionLabel="${versionLabel.text}"`)
-    expect(main.versionText, "versionText").toBe("v0.4")
-    expect(versionLabel.text, "VersionLabel text").toBe("v0.4")
+    expect(main.versionText, "versionText").toBe("v0.5")
+    expect(versionLabel.text, "VersionLabel text").toBe("v0.5")
 
     // Idle: both hint lines show (positive controls), the letters cannot be picked up yet.
     expect(main.mode, "idle at start").toBe("idle")
@@ -160,7 +160,7 @@ export class CaseLightC1PickUpSnapScenario extends Scenario {
     expect(addrEnabled, "AddressText enabled while in hand").toBe(true)
     expect(addrVisibleGetter, "isAddressVisible while in hand").toBe(true)
     expect(addrString, "address printed on the held piece").toBe(main.addressOf(top))
-    expect(addrString, "sample address of piece 0").toBe("1482 MAIN ST")
+    expect(addrString, "address of piece 0 (a real house number from OpenStreetMap)").toBe("2195 FAIRWAYS CT")
     expect(snapPreview, "thin snap outline on the separation under the piece").toBe(target)
     expect(snapOutlineOn, "SnapOutline scene object enabled while aimed").toBe(true)
 

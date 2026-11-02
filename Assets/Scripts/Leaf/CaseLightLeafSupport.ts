@@ -314,7 +314,8 @@ export function expectNoLabelLit(main: CaseLightMain, ctx: string): void {
   expect(main.litLabelSlot, `${ctx}: litLabelSlot`).toBe(-1)
   expect(mustFind("LabelHighlight").enabled, `${ctx}: LabelHighlight shown`).toBe(false)
   if (!labelBaseline) throw new Error("label colour baseline not recorded")
-  expect(labelBaseline.size, `${ctx}: label baseline covers the labelled cells and HOLD`).toBe(77)
+  // v0.5: 75 labelled cells (the route's 149 real numbers fill slots 0..35 and 40..78; 79 is empty) plus HOLD.
+  expect(labelBaseline.size, `${ctx}: label baseline covers the labelled cells and HOLD`).toBe(76)
   labelBaseline.forEach((normal, name) => {
     const t = mustFind(name).getComponent("Component.Text") as Text
     expect(sameColour(t.textFill.color, normal), `${ctx}: ${name} back to its normal colour`).toBe(true)

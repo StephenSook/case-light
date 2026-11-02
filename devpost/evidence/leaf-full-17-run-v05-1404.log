@@ -1,0 +1,38 @@
+# CaseLight LEAF full suite (v0.5, real house numbers from OpenStreetMap), coordinator run, 2026-11-02, Lens Studio 5.23.2 Preview, one scenario at a time after recompile + refresh, all 37 script files matching their v0.5 fingerprint
+# Source: Lens Studio log LensStudioLog-2026-11-02-13-42-27-186-a51b8.txt from byte 1832679.
+# extra-mixup-lines started at 14:07:47 and was cut off at 14:08:46 with no verdict: the MCP call timed out (the scenario takes about 90 s), and the next scenario was started while it was still running, which reset the Lens after its third recall pass. Rerun once on its own at 14:10:29.
+14:04:13.798 RUNS: c1-pickup-and-snap
+14:04:22.137 PASSED: c1-pickup-and-snap
+14:04:22.980 RUNS: c2-practice-glow-and-arrow
+14:04:26.948 PASSED: c2-practice-glow-and-arrow
+14:04:27.785 RUNS: c3-recall-miss-lights-answer
+14:04:38.406 PASSED: c3-recall-miss-lights-answer
+14:04:39.466 RUNS: c4-hold-note-and-hold-block
+14:04:47.176 PASSED: c4-hold-note-and-hold-block
+14:04:47.877 RUNS: c5-recall-unaided-score
+14:05:01.936 PASSED: c5-recall-unaided-score
+14:05:02.870 RUNS: extra-result-hides-and-session-total
+14:05:21.500 PASSED: extra-result-hides-and-session-total
+14:05:22.262 RUNS: extra-sound-cues
+14:05:32.127 PASSED: extra-sound-cues
+14:05:33.166 RUNS: extra-drill-pace
+14:06:23.751 PASSED: extra-drill-pace
+14:06:27.977 RUNS: extra-exit-again-done
+14:06:43.459 PASSED: extra-exit-again-done
+14:06:44.371 RUNS: extra-ladder-default-off
+14:07:02.542 PASSED: extra-ladder-default-off
+14:07:03.266 RUNS: extra-ladder-on
+14:07:44.068 PASSED: extra-ladder-on
+14:07:47.923 RUNS: extra-mixup-lines
+14:08:47.606 RUNS: extra-hold-cells
+14:09:25.703 PASSED: extra-hold-cells
+14:09:27.253 RUNS: extra-print-fit
+14:09:34.168 PASSED: extra-print-fit
+14:09:35.102 RUNS: extra-layout-fit-and-reach
+14:09:42.228 PASSED: extra-layout-fit-and-reach
+14:09:43.126 RUNS: extra-leaf-overlay-hidden
+14:09:43.646 PASSED: extra-leaf-overlay-hidden
+14:09:44.240 RUNS: extra-one-pinch-one-press
+14:09:59.752 PASSED: extra-one-pinch-one-press
+14:10:29.850 RUNS: extra-mixup-lines
+14:11:21.454 PASSED: extra-mixup-lines

@@ -66,7 +66,7 @@ export class CaseLightC4HoldNoteScenario extends Scenario {
     const ix = new CaseLightLeafInteractor()
     const hold = holdIndex(main)
     expect(hold, "hold piece index in the sample bundle").toBe(5)
-    expect(main.addressOf(hold), "hold piece address").toBe("238 ELM AVE")
+    expect(main.addressOf(hold), "hold piece address (a number that does not exist on FREY LAKE RD)").toBe("3553 FREY LAKE RD")
     expect(targetOf(main, hold), "hold piece target is the HOLD block").toBe(-2)
 
     await ix.pressButton("StartPracticeButton")
