@@ -1,0 +1,74 @@
+Break proofs: one product line changed on purpose, scenario run, FAILED line below, file restored byte-identical (SHA checked).
+Lines copied from the Lens Studio log output returned to the testing agent and to the coordinating agent.
+
+## Round 2 (tester, 8)
+02:29:45 FAILED: c1-pickup-and-snap - AssertionError: AddressText enabled while in hand Expected: "true" - Received: "false"
+02:30:18 FAILED: c2-practice-glow-and-arrow - AssertionError: piece 3 in hand, target 17 centreOut=false cellOut=true: isEdgeArrowVisible Expected: "true" - Received: 
+02:30:53 FAILED: c3-recall-miss-lights-answer - AssertionError: C3 piece #1: after the miss: litSlotIndex Expected: "76" - Received: "-1"
+02:31:33 FAILED: c4-hold-note-and-hold-block - AssertionError: hold piece refused in an ordinary cell Expected: "refused-hold" - Received: "correct"
+02:32:12 FAILED: c5-recall-unaided-score - AssertionError: helped piece 3 is NOT counted as unaided Expected: "0" - Received: "1"
+02:33:11 FAILED: extra-result-hides-and-session-total - AssertionError: 1 s after 5 s: isResultVisible Expected: "false" - Received: "true"
+02:34:09 FAILED: c3-recall-miss-lights-answer - AssertionError: C3 piece #1: in hand before the drop: litSlotIndex Expected: "-1" - Received: "76"
+02:34:49 FAILED: c4-hold-note-and-hold-block - AssertionError: hold note hidden while the hold piece sat on the bundle Expected: "false" - Received: "true"
+
+## Round 5 (tester, 15)
+04:13:36 FAILED: c1-pickup-and-snap - AssertionError: after the opening Start press: isHintLine2Visible Expected: "false" - Received: "true"
+04:16:40 FAILED: c4-hold-note-and-hold-block - AssertionError: hold gloss hidden while the hold piece sat on the bundle Expected: "false" - Received: "true"
+04:17:53 FAILED: c2-practice-glow-and-arrow - AssertionError: piece 0 in hand (1st grab): Label_9 text lit (white) Expected: "true" - Received: "false"
+04:18:45 FAILED: c1-pickup-and-snap - AssertionError: isHeldCardPlain while the letter is in hand Expected: "true" - Received: "false"
+04:27:39 FAILED: c3-recall-miss-lights-answer - AssertionError: C3 piece #1: held over a wrong cell 74 (waypoint 1/3), not yet let go: SnapOutline on cell 74 (off by 8
+04:28:36 FAILED: c3-recall-miss-lights-answer - AssertionError: C3 piece #1: in hand, dragging (frame 33): litSlotIndex Expected: "-1" - Received: "76"
+04:29:35 FAILED: extra-sound-cues - AssertionError: piece 1 dropped on 47: lastSoundSlot Expected: "46" - Received: "47"
+04:30:49 FAILED: extra-drill-pace - AssertionError: measured rate 21.586/min within 5% of 18 Expected: "true" - Received: "false"
+04:36:17 FAILED: extra-exit-again-done - AssertionError: Done: pace off Expected: "false" - Received: "true"
+04:37:17 FAILED: c1-pickup-and-snap - AssertionError: versionText Expected: "v0.3" - Received: "v0.2"
+04:41:29 FAILED: c1-pickup-and-snap - AssertionError: product answer for "1482 MAIN ST" matches the printed case (independent 9) Expected: "9" - Received: "10"
+04:42:23 FAILED: c2-practice-glow-and-arrow - AssertionError: piece 0 let go off the case: Label_9 back to its normal colour Expected: "true" - Received: "false"
+04:43:21 FAILED: c2-practice-glow-and-arrow - AssertionError: piece 0 in hand: arrow tip points toward the target (cos -0.3267) Expected: "true" - Received: "false"
+04:44:22 FAILED: c5-recall-unaided-score - Error: Result text "Unaided: 7 of 8 this session" is not the approved "From memory: X of Y this session"
+04:45:45 FAILED: extra-result-hides-and-session-total - AssertionError: 1 s after 5 s: isResultVisible Expected: "false" - Received: "true"
+
+## Round 6 (tester, 16)
+05:36:26 FAILED: extra-ladder-default-off - AssertionError: practice ladder off by default Expected: "false" - Received: "true"
+05:37:23 FAILED: extra-ladder-default-off - AssertionError: pass 1, piece 0 rung after a right placement (ladder off) Expected: "0" - Received: "1"
+05:38:18 FAILED: extra-ladder-on - AssertionError: practice pass 2, piece 0 (target 9) at rung 1, off: litSlotIndex Expected: "-1" - Received: "9"
+05:39:18 FAILED: extra-ladder-on - AssertionError: practice pass 2, piece 2 (target 56) at rung 1, miss: rungs after (only piece 2 may change) Expected: "[2,2,0,1,1,1,
+05:40:36 FAILED: extra-ladder-on - AssertionError: recall, piece 4 (target 76) in hand: cueKind Expected: "none" - Received: "shelf"
+05:41:47 FAILED: extra-mixup-lines - AssertionError: after recall 1 (positive control): mixUpPairs Expected: "23->-2,57->56,75->76" - Received: "23->-2,57->56,74->76"
+05:42:59 FAILED: extra-mixup-lines - AssertionError: no mix-up line recall pass, after recall 1 piece 4 1st wrong (miss): {"where":"recall pass, after recall 1 piece 4
+05:44:23 FAILED: extra-mixup-lines - AssertionError: after Done: mixUpLineCount Expected: "0" - Received: "1"
+05:45:19 FAILED: extra-hold-cells - AssertionError: practice 1: hold piece back on top after cell 76 Expected: "5" - Received: "6"
+05:46:43 FAILED: extra-hold-cells - AssertionError: recall 1: HOLD block lit after the refusal: litSlotIndex Expected: "-2" - Received: "-1"
+05:48:47 FAILED: extra-hold-cells - AssertionError: hold piece placed after a refusal counts as helped Expected: "1" - Received: "0"
+05:50:14 FAILED: extra-ladder-default-off - AssertionError: practice changed no unaided count Expected: "0" - Received: "16"
+05:51:12 FAILED: c1-pickup-and-snap - AssertionError: Piece_0 mesh after release is still the held look Expected: "false" - Received: "true"
+05:52:36 FAILED: extra-drill-pace - AssertionError: PaceLight at separation 40: off by x 0.000 y 15.000 cm (light (-49.53, -24.80, 0.00), cell (-49.53, -4.00, 0.00), h
+05:53:22 FAILED: extra-sound-cues - AssertionError: piece 0 right drop: chime source reports isPlaying() within 10 frames of the drop Expected: "true" - Received: "fal
+05:54:14 FAILED: extra-sound-cues - AssertionError: hold piece refused in cell 23: miss source reports isPlaying() within 10 frames of the drop Expected: "true" - Rece
+
+## Round 6 (coordinator, 3, all in extra-mixup-lines)
+06:19:10.325 FAILED: extra-mixup-lines - AssertionError: after recall 4 with mixUpLines off: mixUpLineCount Expected: "0" - Received: "1"
+06:20:31.257 FAILED: extra-mixup-lines - AssertionError: after Again: mixUpLineCount Expected: "0" - Received: "3"
+06:21:34.781 FAILED: extra-mixup-lines - AssertionError: no mix-up line after the practice pass with a miss: {"where":"after the practice pass with a miss","count":1,"visible":true,"pairs":1,"mesh":true} Expected: "true" - Received: "false"
+Restored build:
+06:23:02.768 PASSED: extra-mixup-lines
+
+## Round 7 (tester, 5)
+# breaks: PieceCardUI address Text.size x1.1; tray moved 10 cm left; tray raised 8 cm; tray raised 2.5 cm; LEAF overlay hide skipped. Each restored byte-identical (cmp), 18/18 product fingerprints OK.
+07:32:16.211 FAILED: extra-print-fit - AssertionError: piece 0 AddressText "1482 MAIN ST" inside the 12 cm print width (x -6.35..6.35, y -1.93..0.52) Expected: "true" - Received: "false"
+07:33:04.705 FAILED: extra-layout-fit-and-reach - AssertionError: all corners of the top letter inside the display (yaw -21.93..-4.37, pitch 4.75..12.80 deg) Expected: "true" - Received: "false"
+07:33:53.039 FAILED: extra-layout-fit-and-reach - AssertionError: top letter 14.5 cm from eye level, inside -25..+10 cm Expected: "true" - Received: "false"
+07:35:44.647 FAILED: extra-layout-fit-and-reach - AssertionError: Start practice button does not overlap the top letter (yaw -9.30..-2.88, pitch 12.84..15.44 deg vs yaw -9.05..9.05, pitch 8.19..15.56 deg) Expected: "false" - Received: "true"
+07:36:26.730 FAILED: extra-leaf-overlay-hidden - AssertionError: no LeafDiagnosticReportCamera left in the scene Expected: "false" - Received: "true"
+
+## Round 8 (tester, 9)
+# breaks: dropped label drops a character; right label placed at the dropped cell; right outline drawn white; labels not cleared on Again; label band margin -1.5 cm; score card moved 3 cm left; exit buttons moved 6 cm left; Start time guard off; button arming off. Each restored byte-identical (cmp), 18/18 product fingerprints OK. A tenth attempt (exit column gap -3) was dropped as a weak proof and is not counted.
+09:18:53.652 FAILED: extra-mixup-lines - AssertionError: after recall 1: MixUpLabel_0_dropped text (letter 4 reads "649 OAK CT") Expected: "649 OAK CT was put here" - Received: "49 OAK CT was put here"
+09:20:26.863 FAILED: extra-mixup-lines - AssertionError: after recall 1: MixUpLabel_2_right spans the centre of the HOLD block across (centre yaw 38.73, label 5.54..12.12) Expected: "true" - Received: "false"
+09:22:13.455 FAILED: extra-mixup-lines - AssertionError: after recall 1: drawn vertices not in the line colour (1.00, 0.50, 0.92) Expected: "0" - Received: "36"
+09:25:30.850 FAILED: extra-mixup-lines - AssertionError: after Again: mixUpLabelCount Expected: "0" - Received: "6"
+09:26:38.647 FAILED: extra-mixup-lines - AssertionError: after recall 1: MixUpLabel_0_dropped stays inside the opening of cell 75 up and down (label pitch 0.56..3.61, opening -9.76..1.81) Expected: "true" - Received: "false"
+09:27:36.549 FAILED: extra-layout-fit-and-reach - AssertionError: score card backing inside the display with at least 0.5 deg to spare (-1.61 deg; yaw -13.41..-3.37, pitch 5.79..9.43 deg) Expected: "true" - Received: "false"
+09:30:14.064 FAILED: extra-layout-fit-and-reach - AssertionError: score card backing does not overlap Again button (yaw -10.33..-0.26, pitch 5.76..9.39 deg vs yaw -5.47..-1.21, pitch 5.90..9.04 deg) Expected: "false" - Received: "true"
+09:32:09.402 FAILED: extra-one-pinch-one-press - AssertionError: Start press right after Again ignored (count +1) Expected: "1" - Received: "0"
+09:33:16.956 FAILED: extra-one-pinch-one-press - AssertionError: stray release ignored (ignoredStrayReleaseCount +1) Expected: "1" - Received: "0"

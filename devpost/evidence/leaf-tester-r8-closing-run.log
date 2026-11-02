@@ -1,0 +1,42 @@
+I 09:34:18.272 RUNS: c1-pickup-and-snap
+I 09:34:21.091 PASSED: c1-pickup-and-snap
+I 09:34:38.922 RUNS: c2-practice-glow-and-arrow
+I 09:34:42.879 PASSED: c2-practice-glow-and-arrow
+I 09:35:09.665 RUNS: c3-recall-miss-lights-answer
+I 09:35:21.775 PASSED: c3-recall-miss-lights-answer
+I 09:35:41.988 RUNS: c4-hold-note-and-hold-block
+I 09:35:50.251 PASSED: c4-hold-note-and-hold-block
+I 09:36:14.139 RUNS: c5-recall-unaided-score
+I 09:36:29.611 PASSED: c5-recall-unaided-score
+I 09:36:49.787 RUNS: extra-result-hides-and-session-total
+I 09:37:08.538 PASSED: extra-result-hides-and-session-total
+I 09:37:28.004 RUNS: extra-sound-cues
+I 09:37:37.568 PASSED: extra-sound-cues
+I 09:37:59.161 RUNS: extra-drill-pace
+I 09:38:49.626 PASSED: extra-drill-pace
+I 09:39:08.678 RUNS: extra-exit-again-done
+I 09:39:24.146 PASSED: extra-exit-again-done
+I 09:39:48.749 RUNS: extra-ladder-default-off
+I 09:40:08.277 PASSED: extra-ladder-default-off
+I 09:40:30.128 RUNS: extra-ladder-on
+I 09:41:16.133 PASSED: extra-ladder-on
+I 09:42:10.435 RUNS: extra-mixup-lines
+I 09:42:22.206 FAILED: extra-mixup-lines - Error: trigger("StartPracticeButton") did not complete
+I 09:43:14.020 RUNS: extra-mixup-lines
+I 09:44:04.818 PASSED: extra-mixup-lines
+I 09:44:25.031 RUNS: extra-hold-cells
+I 09:45:03.074 PASSED: extra-hold-cells
+I 09:45:29.727 RUNS: extra-print-fit
+I 09:45:35.952 PASSED: extra-print-fit
+I 09:46:00.627 RUNS: extra-layout-fit-and-reach
+I 09:46:06.940 PASSED: extra-layout-fit-and-reach
+I 09:46:29.173 RUNS: extra-leaf-overlay-hidden
+I 09:46:29.555 PASSED: extra-leaf-overlay-hidden
+I 09:46:47.480 RUNS: extra-one-pinch-one-press
+I 09:46:54.578 LEAFT ONE-PRESS Start practice pressed 0.42 s after Again (guard 0.60 s): mode recall, ignored 1
+I 09:46:55.060 LEAFT ONE-PRESS Start practice pressed 0.929 s after Again: mode practice
+I 09:47:01.756 LEAFT ONE-PRESS Start recall pressed 0.36 s after Done (guard 0.60 s): mode idle, ignored 1
+I 09:47:02.234 LEAFT ONE-PRESS stray release on Start practice: TriggerStart false, TriggerEnd true; stray count +1, mode idle
+I 09:47:02.609 LEAFT ONE-PRESS done
+I 09:47:02.635 PASSED: extra-one-pinch-one-press
+NOTE: extra-mixup-lines FAILED at 09:42:22 (trigger("StartPracticeButton") did not complete; RUNS came 50 s after the Lens reset and free memory read 21% right after); product scripts unchanged (SHA 18/18); it was re-run alone and PASSED at 09:44:04 before the next scenario started.

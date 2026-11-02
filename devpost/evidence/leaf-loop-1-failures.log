@@ -1,0 +1,12 @@
+03:57:11.798 [  0.000s]RUNS: c1-pickup-and-snap
+03:57:14.311 [  2.515s]PASSED: c1-pickup-and-snap
+03:57:18.385 [  0.000s]RUNS: c2-practice-glow-and-arrow
+03:57:19.024 [  0.640s]FAILED: c2-practice-glow-and-arrow - AssertionError: piece 0 in hand: arrow sits on the display edge (edge ratio 0.803) Expected: "true" - Received: "false"
+03:57:20.861 [  0.000s]RUNS: c3-recall-miss-lights-answer
+03:57:23.071 [  2.210s]FAILED: c3-recall-miss-lights-answer - AssertionError: C3 piece #1: after the miss: arrow sits on the display edge (edge ratio 0.803) Expected: "true" - Received: "false"
+03:57:25.301 [  0.000s]RUNS: c4-hold-note-and-hold-block
+03:57:34.145 [  8.844s]PASSED: c4-hold-note-and-hold-block
+03:57:36.914 [  0.000s]RUNS: c5-recall-unaided-score
+03:57:45.678 [  8.764s]FAILED: c5-recall-unaided-score - Error: Result text has the wrong form: "From memory: 7 of 8 this session"
+03:57:48.753 [  0.000s]RUNS: extra-result-hides-and-session-total
+03:57:55.267 [  6.513s]FAILED: extra-result-hides-and-session-total - AssertionError: pass 1 result Expected: "Unaided: 8/8 this session" - Received: "From memory: 8 of 8 this session"

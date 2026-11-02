@@ -1,0 +1,38 @@
+# CaseLight LEAF full suite (v0.4), coordinator run round 8, 2026-11-02, Lens Studio 5.23.2 Preview, one scenario at a time after recompile + settling refresh
+# Source: Lens Studio log from byte 13934180.
+# extra-drill-pace started at 09:52:43 and was cut off at 09:53:33 with no verdict: Lens Studio refreshed its sign-in token, the preview reset and the LEAF panel reported 'Widget is not initialized'. Panel reopened, scenario rerun once.
+09:48:54.005 RUNS: c1-pickup-and-snap
+09:48:58.720 PASSED: c1-pickup-and-snap
+09:49:12.472 RUNS: c2-practice-glow-and-arrow
+09:49:16.447 PASSED: c2-practice-glow-and-arrow
+09:49:30.050 RUNS: c3-recall-miss-lights-answer
+09:49:40.424 PASSED: c3-recall-miss-lights-answer
+09:49:58.287 RUNS: c4-hold-note-and-hold-block
+09:50:07.505 PASSED: c4-hold-note-and-hold-block
+09:50:25.186 RUNS: c5-recall-unaided-score
+09:50:44.070 PASSED: c5-recall-unaided-score
+09:51:08.028 RUNS: extra-result-hides-and-session-total
+09:51:27.250 PASSED: extra-result-hides-and-session-total
+09:51:54.873 RUNS: extra-sound-cues
+09:52:04.995 PASSED: extra-sound-cues
+09:52:43.430 RUNS: extra-drill-pace
+09:57:58.064 RUNS: extra-drill-pace
+09:58:48.700 PASSED: extra-drill-pace
+09:59:19.278 RUNS: extra-exit-again-done
+09:59:35.319 PASSED: extra-exit-again-done
+09:59:55.184 RUNS: extra-ladder-default-off
+10:00:15.347 PASSED: extra-ladder-default-off
+10:03:07.670 RUNS: extra-ladder-on
+10:03:47.303 PASSED: extra-ladder-on
+10:04:19.102 RUNS: extra-mixup-lines
+10:05:21.140 PASSED: extra-mixup-lines
+10:05:46.749 RUNS: extra-hold-cells
+10:06:28.213 PASSED: extra-hold-cells
+10:06:59.846 RUNS: extra-print-fit
+10:07:06.098 PASSED: extra-print-fit
+10:07:20.079 RUNS: extra-layout-fit-and-reach
+10:07:26.528 PASSED: extra-layout-fit-and-reach
+10:07:44.686 RUNS: extra-leaf-overlay-hidden
+10:07:45.082 PASSED: extra-leaf-overlay-hidden
+10:07:57.212 RUNS: extra-one-pinch-one-press
+10:08:15.109 PASSED: extra-one-pinch-one-press
