@@ -39,6 +39,16 @@ import {CaseLightDemoOffScenario} from "./CaseLightDemoOffScenario"
 import {CaseLightDemoReplayScenario} from "./CaseLightDemoReplayScenario"
 import {CaseLightCaseCheckScenario} from "./CaseLightCaseCheckScenario"
 import {CaseLightRealScaleScenario} from "./CaseLightRealScaleScenario"
+import {CaseLightMasteryMapScenario} from "./CaseLightMasteryMapScenario"
+import {CaseLightProgressSaveScenario} from "./CaseLightProgressSaveScenario"
+import {CaseLightProgressWelcomeScenario} from "./CaseLightProgressWelcomeScenario"
+import {CaseLightProgressResetScenario} from "./CaseLightProgressResetScenario"
+import {CaseLightPinchHintScenario} from "./CaseLightPinchHintScenario"
+import {CaseLightStandInScenario} from "./CaseLightStandInScenario"
+import {CaseLightButtonSpacingScenario} from "./CaseLightButtonSpacingScenario"
+import {CaseLightButtonSpacingExitScenario} from "./CaseLightButtonSpacingExitScenario"
+import {CaseLightButtonSpacingVeteranScenario} from "./CaseLightButtonSpacingVeteranScenario"
+import {CaseLightIkLoopScenario} from "./CaseLightIkLoopScenario"
 
 /**
  * LEAF's diagnostic report panel hides at once after each run (0 ms), so a film captured after a
@@ -86,5 +96,23 @@ export class CaseLightLeafIndex extends BaseScriptComponent {
     {id: "extra-demo-replay", typename: CaseLightDemoReplayScenario.getTypeName()},
     {id: "extra-case-check", typename: CaseLightCaseCheckScenario.getTypeName()},
     {id: "extra-case-real-scale", typename: CaseLightRealScaleScenario.getTypeName()},
+    {id: "extra-mastery-map", typename: CaseLightMasteryMapScenario.getTypeName()},
+    // A chain, in this order: save leaves progress in the store; welcome reads it at the next Lens start
+    // (route redraw, Start hides it) and leaves the keys; reset removes them at the start after that.
+    {id: "extra-progress-save", typename: CaseLightProgressSaveScenario.getTypeName()},
+    {id: "extra-progress-welcome", typename: CaseLightProgressWelcomeScenario.getTypeName()},
+    {id: "extra-progress-reset", typename: CaseLightProgressResetScenario.getTypeName()},
+    // Needs the empty store extra-progress-reset leaves: the opening pinch hint shows only with no saved progress.
+    // Its recall pass (to reach Again) saves progress; extra-stand-in-hidden presses Reset progress to empty the store.
+    {id: "extra-pinch-hint", typename: CaseLightPinchHintScenario.getTypeName()},
+    {id: "extra-stand-in-hidden", typename: CaseLightStandInScenario.getTypeName()},
+    // Needs nothing saved at Lens start: extra-stand-in-hidden presses Reset progress, leaving the store empty.
+    {id: "extra-button-spacing", typename: CaseLightButtonSpacingScenario.getTypeName()},
+    // Its recall pass saves progress (run it after extra-button-spacing, which needs the empty store).
+    {id: "extra-button-spacing-exit", typename: CaseLightButtonSpacingExitScenario.getTypeName()},
+    {id: "extra-button-spacing-veteran", typename: CaseLightButtonSpacingVeteranScenario.getTypeName()},
+    // Needs nothing saved at Lens start (the opening pinch hint is up), like extra-button-spacing; extra-button-spacing-exit
+    // leaves saved progress, so run it after a Reset progress. It ends no recall pass, so it saves nothing.
+    {id: "extra-ik-loop", typename: CaseLightIkLoopScenario.getTypeName()},
   ].map((m) => ({...m, parameters: NO_REPORT_PANEL}))
 }

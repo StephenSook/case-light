@@ -43,10 +43,16 @@ function applyTextRole(t: Text, role: TextRole, distanceCm: number = 110): void 
 const CONTENT_Z = 0.6
 const BUTTON_LABEL_Z = 0.08
 const PAD_CM = 0.35
-/** Case check button (cm): small enough to fit between the panel and the Start row above it. */
+/** Between Again and Done (cm): about 1.15 deg at the start position (Snap: targets at least 1 deg apart). */
+const BUTTON_GAP_CM = 1.1
+/**
+ * Case check button (cm): 2.0 cm tall (about 2.2 deg, Snap's 2 deg minimum), placed so it is about
+ * 1.1 deg above Again and Done (the plate's padding plus CASE_CHECK_GAP_CM) and about 1.1 deg below
+ * the Start row (with the panel where the scene puts it).
+ */
 const CASE_CHECK_W_CM = 5.6
-const CASE_CHECK_H_CM = 1.6
-const CASE_CHECK_GAP_CM = 0.6
+const CASE_CHECK_H_CM = 2.0
+const CASE_CHECK_GAP_CM = 0.8
 
 @component
 export class CaseLightExitUI extends BaseScriptComponent {
@@ -73,8 +79,8 @@ export class CaseLightExitUI extends BaseScriptComponent {
 
   @input
   @widget(new SliderWidget(2.4, 6, 0.1))
-  @hint("Height of each button, in cm")
-  buttonHeightCm: number = 3.0
+  @hint("Height of each button, in cm (2.5 keeps Again, Done and Case check above it at least 1 deg apart and 1 deg under the Start row)")
+  buttonHeightCm: number = 2.5
 
   @input
   @widget(new SliderWidget(30, 110, 1))
@@ -158,7 +164,7 @@ export class CaseLightExitUI extends BaseScriptComponent {
     flex.direction = FlexDirection.Row
     flex.justifyContent = FlexJustify.Center
     flex.alignItems = FlexAlign.Center
-    flex.columnGap = 0.5
+    flex.columnGap = BUTTON_GAP_CM
     flex.paddingTop = PAD_CM
     flex.paddingBottom = PAD_CM
     flex.paddingLeft = PAD_CM

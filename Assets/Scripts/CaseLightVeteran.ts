@@ -21,6 +21,12 @@ const NOTE_Z_CM = 3.4
 /** The chooser floats in front of the case, beside the slot (cm). */
 const CHOOSER_Z_CM = 8
 const CHOOSER_SIDE_OFFSET_CM = 8
+/**
+ * The chooser is drawn at its size in cm when it is this far from the eye, and scaled with its
+ * distance elsewhere, so it looks the same size at every slot (its buttons about 2.75 deg tall and
+ * 1.26 deg apart). Its side offset scales with it, so its near edge keeps clear of the slot.
+ */
+const CHOOSER_DESIGN_DISTANCE_CM = 50
 
 export interface VeteranViewState {
   mode: NoteViewMode
@@ -190,8 +196,10 @@ export class CaseLightVeteran extends BaseScriptComponent {
     const c = this.geo.slotCenterLocal(slot)
     // Beside the slot (toward the case's middle), in front of the case, turned to the eye.
     const side = c.x < 0 ? 1 : -1
-    const local = new vec3(c.x + side * (CHOOSER_SIDE_OFFSET_CM + SEP_PITCH_CM / 2), c.y, CHOOSER_Z_CM)
-    this.ui.showChooser(chooserOptions(this.store, slot), local, this.faceEyeLocal(local))
+    const at = (scale: number) => new vec3(c.x + side * (CHOOSER_SIDE_OFFSET_CM * scale + SEP_PITCH_CM / 2), c.y, CHOOSER_Z_CM)
+    const scale = this.chooserScale(at(this.chooserScale(at(1))))
+    const local = at(scale)
+    this.ui.showChooser(chooserOptions(this.store, slot), local, this.faceEyeLocal(local), scale)
   }
 
   private closeChooser(): void {
@@ -214,6 +222,12 @@ export class CaseLightVeteran extends BaseScriptComponent {
     const half = this.ui ? this.ui.noteWidthCm / 2 : 4.8
     const x = Math.max(geo.leftX + half, Math.min(-geo.leftX - half, c.x))
     return new vec3(x, geo.openingCenterY(geo.shelfOfSlot(slot)), NOTE_Z_CM)
+  }
+
+  /** The chooser's scale at a CaseRoot-local point: its eye distance over the design distance. */
+  private chooserScale(local: vec3): number {
+    const world = this.caseRoot.getTransform().getWorldTransform().multiplyPoint(local)
+    return world.distance(cameraWorldPosition()) / CHOOSER_DESIGN_DISTANCE_CM
   }
 
   /** A CaseRoot-local rotation that turns a panel at `local` to the eye (yaw and pitch, no roll). */

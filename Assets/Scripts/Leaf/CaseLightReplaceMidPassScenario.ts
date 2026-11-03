@@ -1,5 +1,5 @@
 // Owns: the LEAF check of rule CF1: re-placing the case mid-pass (on a wall, then with Place in front of me) keeps everything: the pass, the score counts, the next letter, the remaining bundle, a letter in hand, and the letters already placed (they move with the case).
-// Talks to: CaseLightLeafSupport (real SIK grab/drop and UIKit presses, two LEAF interactors), CaseLightWallSupport (our own HitTestSession, test ray), CaseLightMain read-only getters (mode, counts, bundleOrder, placedThisPass, topPieceIndex, heldPieceIndex, litSlotIndex, isPiecePlaced, placement read-outs), the Piece_n and CaseRoot scene objects.
+// Talks to: CaseLightLeafSupport (real SIK grab/drop and UIKit presses, two LEAF interactors), CaseLightWallSupport (our own HitTestSession, test ray), CaseLightMain read-only getters (mode, counts, bundleOrder, placedThisPass, topPieceIndex, heldPieceIndex, litSlotIndex, isPiecePlaced, placement read-outs), the Piece_n and CaseRoot scene objects; the CaseControls group's scale (predicted from the test's own distances, CaseLightWallSupport).
 // Must not: call CaseLightMain's or CaseLightPlacement's commands or test hooks, or change product state except through real input.
 
 /**
@@ -26,7 +26,7 @@ import WorldCameraFinderProvider from "SpectaclesInteractionKit.lspkg/Providers/
 import {CaseLightMain} from "../CaseLightMain"
 import {CaseLightLeafInteractor, dropSlotFor, expectedResult, fmt, hideLeafOverlay, log, mustFind, neighbourSlot, targetOf, waitForReady, waitForTopGrabbable, waitUntil} from "./CaseLightLeafSupport"
 import {modelComeBack} from "./CaseLightRecallSupport"
-import {AIM_PITCH_DEG, AIM_YAW_DEG, BAND_MAX_CM, BAND_MIN_CM, NEEDED_ROOM, WALL_WAIT_MS, ownHit, ownSession, quatAngleDeg, testRay} from "./CaseLightWallSupport"
+import {AIM_PITCH_DEG, AIM_YAW_DEG, BAND_MAX_CM, BAND_MIN_CM, NEEDED_ROOM, WALL_WAIT_MS, controlsDesignDistance, expectControlsScale, ownHit, ownSession, quatAngleDeg, testRay} from "./CaseLightWallSupport"
 
 const WALK_WAIT_MS = 150000
 
@@ -104,6 +104,10 @@ export class CaseLightReplaceMidPassScenario extends Scenario {
     const eye0 = cam.getWorldPosition()
     const openRoot = main.caseRoot.getTransform().getWorldPosition()
     const openRot = main.caseRoot.getTransform().getWorldRotation()
+    // The controls' group scales with its eye distance over its design distance (from the design eye,
+    // the world origin, to the group at the case's authored place); predicted at every step below.
+    const designDist = controlsDesignDistance()
+    let held = expectControlsScale(designDist, "at Lens start", 1).applied
     const n = main.pieceCount
     const session = ownSession()
     try {
@@ -152,6 +156,9 @@ export class CaseLightReplaceMidPassScenario extends Scenario {
       await waitUntil(() => cam.getWorldPosition().distance(eye0) > 100, WALK_WAIT_MS, "the camera moved toward the wall (MovePreviewCamera setPosition 0, 0, -350)")
       for (let i = 0; i < 10; i++) await nextFrame()
       const eye1 = cam.getWorldPosition()
+      // The camera walked past the case (still at its authored place): the group is behind the eye now,
+      // so its scale is held (the walk in the preview is one jump, so it is held at its Lens-start value).
+      held = expectControlsScale(designDist, "after the walk toward the wall", held).applied
       const ray = testRay(AIM_YAW_DEG, AIM_PITCH_DEG)
       const near = await ownHit(session, ray.start, ray.end, WALL_WAIT_MS)
       const nearDist = near.hit ? near.hit.pos.distance(eye1) : NaN
@@ -175,6 +182,7 @@ export class CaseLightReplaceMidPassScenario extends Scenario {
       const root1 = main.caseRoot.getTransform().getWorldPosition()
       expect(main.lastPlacementKind, "re-place 1 kind").toBe("wall")
       expect(root1.distance(openRoot) > 100, `control: re-place 1 really moved the case (${root1.distance(openRoot).toFixed(1)} cm)`).toBe(true)
+      held = expectControlsScale(designDist, "re-place 1, on the wall", held).applied
       const s1 = readState(main)
       log(`CF1 after the wall re-place: CaseRoot ${fmt(root1)}; ${fmtState(s1)}`)
       expectSameState(s0, s1, "after re-placing on the wall")
@@ -189,10 +197,14 @@ export class CaseLightReplaceMidPassScenario extends Scenario {
       await waitUntil(() => main.placementCount === 2, 1000, "Place in front of me placed the case")
       for (let i = 0; i < 5; i++) await nextFrame()
       const root2 = main.caseRoot.getTransform().getWorldPosition()
-      const expectedRoot2 = eye1.add(openRoot.sub(eye0))
+      // The opening pose is the authored place relative to the design eye (the world origin); this
+      // scenario starts with the camera there, so it is also the offset from eye0.
+      const expectedRoot2 = eye1.add(openRoot)
       const s2 = readState(main)
       log(`CF1 after Place in front of me (letter ${heldLetter} in hand): CaseRoot ${fmt(root2)}, expected ${fmt(expectedRoot2)} (opening offset from the moved head); drag ended ${hold.dragEnded()}; ${fmtState(s2)}`)
       expect(main.lastPlacementKind, "re-place 2 kind").toBe("front")
+      const scale2 = expectControlsScale(designDist, "re-place 2, in front of the eye", held)
+      expect(Math.abs(scale2.applied - 1) <= 0.006, `re-place 2: the controls are back at scale 1 (${scale2.applied.toFixed(4)})`).toBe(true)
       expect(root2.distance(expectedRoot2) <= 0.05, `Place in front of me uses the moved head (${root2.distance(expectedRoot2).toFixed(3)} cm from the opening offset)`).toBe(true)
       expect(quatAngleDeg(main.caseRoot.getTransform().getWorldRotation(), openRot) <= 0.05, "Place in front of me: same heading as at open (head yaw unchanged)").toBe(true)
       expect(hold.dragEnded(), "the letter was not dropped by the re-place").toBe(false)

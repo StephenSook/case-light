@@ -548,6 +548,23 @@ export function displaySpare(b: AngleBox): number {
   return Math.min(DISPLAY_HALF_W_DEG - Math.max(Math.abs(b.minYaw), Math.abs(b.maxYaw)), DISPLAY_HALF_H_DEG - Math.max(Math.abs(b.minPitch), Math.abs(b.maxPitch)))
 }
 
+/**
+ * Half-angles (deg) a preview still shows, from the main camera ("Camera Object"): its vertical
+ * field of view and aspect. In the 5.23.2 Spectacles preview (1400 x 1590 stills) this is about
+ * 16.1 deg each side and 18.3 deg up and down, so the still cuts a little off the display's top.
+ */
+export function previewStillHalfAngles(): {yaw: number; pitch: number} {
+  const cam = mustFind("Camera Object").getComponent("Component.Camera") as Camera
+  const halfV = cam.fov / 2
+  return {yaw: (Math.atan(Math.tan(halfV) * cam.aspect) * 180) / Math.PI, pitch: (halfV * 180) / Math.PI}
+}
+
+/** Every corner of the angle box is inside what a preview still shows. */
+export function insidePreviewStill(b: AngleBox): boolean {
+  const h = previewStillHalfAngles()
+  return Math.max(Math.abs(b.minYaw), Math.abs(b.maxYaw)) <= h.yaw && Math.max(Math.abs(b.minPitch), Math.abs(b.maxPitch)) <= h.pitch
+}
+
 /** The two angle boxes overlap (as seen from the eye). */
 export function anglesOverlap(a: AngleBox, b: AngleBox): boolean {
   return a.minYaw < b.maxYaw && b.minYaw < a.maxYaw && a.minPitch < b.maxPitch && b.minPitch < a.maxPitch
@@ -570,9 +587,14 @@ export function textWorldCorners(name: string): vec3[] {
  * mesh vertices do not show the drawn size; the pass's size does.
  */
 export function roundedRectWorldCorners(name: string): vec3[] {
-  const so = mustFind(name)
+  return roundedRectCornersOf(mustFind(name))
+}
+
+/** roundedRectWorldCorners for a SceneObject already in hand (names need not be unique). */
+export function roundedRectCornersOf(so: SceneObject): vec3[] {
+  const name = so.name
   const rmv = so.getComponent("Component.RenderMeshVisual") as RenderMeshVisual
-  const size = (rmv.mainPass as any).size as vec2
+  const size = rmv ? ((rmv.mainPass as any).size as vec2) : null
   if (!size || !(size.x > 0) || !(size.y > 0)) throw new Error(`${name}: no drawn size on its pass`)
   const m = so.getTransform().getWorldTransform()
   const hx = size.x / 2

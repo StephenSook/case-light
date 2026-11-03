@@ -1,0 +1,14 @@
+# extra-ik-loop (session 45, LEAF IKBodyInteractor, no fallback) and the tightened extra-wall-placement controls (coordinator, on the orchestrating session's review). LEAF 2.0.2 fail-fast. Lens Studio log LensStudioLog-2026-11-03-12-11-21-188-2a8aa.txt.
+15:23:17.598 PASSED: extra-ik-loop
+15:24:16.174 FAILED: extra-ik-loop - AssertionError: recall miss: after the miss: litSlotIndex Expected: "17" - Received: "-1"
+15:24:57.546 FAILED: extra-wall-placement - AssertionError: aiming 40 deg off axis: no hit Expected: "none" - Received: "wall"
+15:26:04.875 FAILED: extra-wall-placement - Error: Precondition failed: no wall hit along the test ray within 3000 ms (1 hit-test results, all empty). This scenario needs Sunlit Room (Lens Studio InteractiveResources.bundle/Scenes/Sunlit Room) with the preview camera within 3 m of its wall (MovePrev
+15:28:31.772 PASSED: extra-wall-placement
+#   15:23:17 IK loop in Plane, nothing saved: Start practice (left hand), Piece_0 into cell 9, Start recall (right hand), Piece_4 into cell 76 from memory, Piece_3 into cell 18 (miss, answer 17 lit); no LEAF diagnostic.
+#   15:24:16 planted break: recall miss with setLit(NO_SLOT); restored byte-identical.
+#   15:24:57 a real red, intermittent: the product still reported a wall 20 frames after the test swung its ray 40 deg off axis (the product hit-tests with WorldQuery's smoothing filter on). Same code passed at 14:45:14 and 15:28:31. Reported, not changed.
+#   15:26:04 infrastructure: 1 hit-test result in 3 s (Lens Studio at 180 to 200 percent CPU with the preview running in Sunlit Room near the wall; about 0 percent paused); preview paused and resumed.
+#   15:28:31 pass with the tightened controls: away from the in-front pose 97.64 cm vs 97.64 predicted from our own hit (within 10 percent); pinch hint playing with nothing saved, 46 of 58 hand joints moving.
+15:36:10.533 PASSED: extra-wall-placement  [the off-axis guard: "none" after 103 ms and 3 new product hit tests, held 524 ms over 16 frames; LEAF began the run 2 min 40 s after the request]
+15:40:46.783 FAILED: extra-wall-placement - at Lens start: controls scale applied 6.0000, predicted 1.0000 (held)  [infrastructure caused by the coordinator: a preview pause and resume landed as LEAF started the Lens, so a transient camera pose was latched while the controls were behind the eye; not the planted condition]
+15:45:01.046 FAILED: extra-wall-placement - aiming 40 deg off axis: no hit within 3000 ms (count did not advance: 0 new hit tests in 3000 ms (frozen))  [planted break: this._hitTests++ removed; restored byte-identical; LEAF began the run 3.5 min after the request]

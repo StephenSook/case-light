@@ -1,5 +1,5 @@
-// Owns: all text printed on the case: cell label strips, street names (block start + repeats), HOLD label, caption, end result, mix-up end labels, and the lit label highlight.
-// Talks to: CaseLightMain (build(geometry), setRoute, showResult, showAllRetired, showResultLine2, hideResult, showMixUpLabels, clearMixUpLabels), CaseLightGeometry and CaseLightRoute (positions, data), CaseLightMixUp (label spots), CaseLightPassLogic (card wording).
+// Owns: all text printed on the case: cell label strips, street names (block start + repeats), HOLD label, caption, end result, mix-up end labels, the mastery map's row words, and the lit label highlight.
+// Talks to: CaseLightMain (build(geometry), setRoute, showResult, showAllRetired, showResultLine2, hideResult, showMixUpLabels, clearMixUpLabels, showMasteryLabels, clearMasteryLabels, setPrintedLabelsShown), CaseLightGeometry and CaseLightRoute (positions, data), CaseLightMixUp and CaseLightMasteryView (label spots), CaseLightPassLogic (card wording).
 // Must not: count anything or decide when the result shows (CaseLightMain owns that).
 
 /**
@@ -24,6 +24,7 @@ import { addBacking, DEFAULT_BACKING_COLOR, setBackingSize } from "./CaseLightBa
 import { CaseGeometry, HOLD_BLOCK_SLOT, HOLD_CELLS, LABEL_STRIP_CM, NO_SLOT, SEP_PITCH_CM, SEPS_PER_SHELF } from "./CaseLightGeometry"
 import { cellLabels, DEFAULT_ROUTE, RouteId, routeStreets, streetRuns } from "./CaseLightRoute"
 import { MIXUP_LABEL_CAP_CM, MixUpLabelSpot } from "./CaseLightMixUp"
+import { MASTERY_AMBER, MASTERY_GREEN, MASTERY_LABEL_CAP_CM, MASTERY_WHITE, MasteryLabelSpot } from "./CaseLightMasteryView"
 import { CASELIGHT_VERSION } from "./CaseLightVersion"
 import { formatCameBack, formatScore } from "./CaseLightPassLogic"
 
@@ -171,6 +172,8 @@ export class CaseLightCaseLabelsUI extends BaseScriptComponent {
   private streetNameTexts: Text[] = []
   private mixUpRoot: SceneObject | null = null
   private mixUpLabels: Array<{ spot: MixUpLabelSpot; text: Text }> = []
+  /** Pooled row words of the mastery map (one per playable row), made on the opening show. */
+  private masteryLabels: Array<{ text: Text; backing: RoundedRectangle }> = []
 
   get isResultVisible(): boolean {
     return !!this.resultText && this.resultText.getSceneObject().enabled
@@ -223,6 +226,49 @@ export class CaseLightCaseLabelsUI extends BaseScriptComponent {
     for (let i = this.mixUpRoot.getChildrenCount() - 1; i >= 0; i--) this.mixUpRoot.getChild(i).destroy()
   }
 
+  /** Print the mastery map's row words at their spots (pooled: one text per row, reused). */
+  showMasteryLabels(spots: MasteryLabelSpot[]): void {
+    this.clearMasteryLabels()
+    for (const spot of spots) {
+      let entry = this.masteryLabels[spot.row]
+      if (!entry) {
+        const name = `MasteryRowLabel_${spot.row}`
+        // Tint before the text so it draws behind it.
+        const backing = addBacking(this.sceneObject, `${name}_Backing`, spot.width, spot.height, this.backingColor, vec3.zero(), 0.35)
+        backing.renderMeshVisual.setRenderOrder(MIXUP_RENDER_ORDER)
+        const text = this.makeText(name, "", sizeForCap(MASTERY_LABEL_CAP_CM), vec3.zero(), spot.width - 0.2, spot.height, HorizontalAlignment.Center, MASTERY_WHITE, 700)
+        text.setRenderOrder(MIXUP_RENDER_ORDER + 1)
+        entry = { text, backing }
+        this.masteryLabels[spot.row] = entry
+      }
+      entry.text.text = spot.text
+      entry.text.textFill.color = spot.state === "learned" ? MASTERY_GREEN : spot.state === "weak" ? MASTERY_AMBER : MASTERY_WHITE
+      entry.text.layoutRect = Rect.create(-(spot.width - 0.2) / 2, (spot.width - 0.2) / 2, -spot.height / 2, spot.height / 2)
+      entry.text.getSceneObject().getTransform().setLocalPosition(new vec3(spot.x, spot.y, spot.z))
+      setBackingSize(entry.backing, spot.width, spot.height)
+      entry.backing.getSceneObject().getTransform().setLocalPosition(new vec3(spot.x, spot.y, spot.z - 0.05))
+      entry.text.getSceneObject().enabled = true
+      entry.backing.getSceneObject().enabled = true
+    }
+  }
+
+  /** Hide every mastery map row word. */
+  clearMasteryLabels(): void {
+    for (const e of this.masteryLabels) {
+      if (!e) continue
+      e.text.getSceneObject().enabled = false
+      e.backing.getSceneObject().enabled = false
+    }
+  }
+
+  /** The mastery map's row words on screen right now, by row ("" for a row not shown). */
+  get masteryLabelTexts(): string[] {
+    return [0, 1].map((r) => {
+      const e = this.masteryLabels[r]
+      return e && e.text.getSceneObject().enabled ? e.text.text : ""
+    })
+  }
+
   /** True while the score card's backing is drawn (it follows the card). */
   get isResultBackingVisible(): boolean {
     return !!this.resultBacking && this.resultBacking.getSceneObject().enabled
@@ -245,6 +291,22 @@ export class CaseLightCaseLabelsUI extends BaseScriptComponent {
   /** The small version label's text, e.g. "v0.3". */
   get versionString(): string {
     return this.versionTextComp ? this.versionTextComp.text : ""
+  }
+
+  /** True while the labels a real case already has printed are drawn (cell numbers, street names, HOLD). */
+  get printedLabelsShown(): boolean {
+    return !!this.routeRoot && this.routeRoot.enabled && !!this.holdLabel && this.holdLabel.getSceneObject().enabled
+  }
+
+  /**
+   * Hide stand-in case: draw or hide what a real case already has printed: every cell's numbers and
+   * the street names (all under RouteLabels, so a route switch while hidden stays hidden) and the
+   * HOLD label. The caption, version tag, score card, mix-up and mastery words and the lit-label
+   * tint stay: the glasses draw those over a real case too.
+   */
+  setPrintedLabelsShown(shown: boolean): void {
+    if (this.routeRoot) this.routeRoot.enabled = shown
+    if (this.holdLabel) this.holdLabel.getSceneObject().enabled = shown
   }
 
   get labelledCellCount(): number {

@@ -1,0 +1,46 @@
+# Button-spacing pass (sessions 41 and 42), LEAF 2.0.2 fail-fast, Sunlit Room, Lens Studio log LensStudioLog-2026-11-03-12-11-21-188-2a8aa.txt.
+# Every LEAF verdict from 13:27 to 13:57, in order. FAILED lines are planted breaks (also in break-proofs.log), except 13:49:43, a real red in the new exit scenario's control (see the note below it).
+13:28:04.695 PASSED: extra-button-spacing
+13:28:26.416 PASSED: extra-layout-fit-and-reach
+13:29:23.352 PASSED: extra-drill-pace
+13:29:49.067 PASSED: extra-exit-again-done
+13:29:56.281 PASSED: extra-route-picker-in-view
+13:30:13.281 PASSED: extra-mastery-map
+13:30:34.101 PASSED: extra-progress-save
+13:30:41.514 PASSED: extra-progress-welcome
+13:30:48.435 PASSED: extra-progress-reset
+13:31:05.806 PASSED: extra-pinch-hint
+13:31:16.720 PASSED: extra-stand-in-hidden
+13:31:44.328 FAILED: extra-button-spacing - AssertionError: opening view: OptionsButton and StartPracticeButton at least 1 deg apart (0.08 deg) Expected: "true" - Received: "false"
+#   break: CaseLightControlsUI ROW_GAP_CM 1.1 -> 0.15; restored
+13:49:21.563 PASSED: extra-button-spacing
+13:49:43.990 FAILED: extra-button-spacing-exit - AssertionError: after Done: Options opens the panel (control) Expected: "true" - Received: "false"
+#   real red, not a break: after a Case check ends with Done its card stays up for resultSeconds (documented in CaseLightMain), so the product rightly ignored the press (options-ignored reason=score-card). The coordinating agent fixed the test's order and added an assertion: the press while that card is up is ignored, then the control runs once the card times out. Nothing was removed. Store cleared with welcome and reset, then rerun green at 13:52:27.
+#   13:51:02 to 13:51:41: one run lost to Lens Studio, not the product (LEAF began 37 s late, the Lens reset 1 s in, "Widget is not initialized"); LEAF panel reopened and the run repeated.
+13:50:41.153 PASSED: extra-progress-welcome
+13:50:50.473 PASSED: extra-progress-reset
+13:52:27.114 PASSED: extra-button-spacing-exit
+13:52:45.077 PASSED: extra-button-spacing-veteran
+13:52:54.509 PASSED: extra-progress-welcome
+13:53:04.990 PASSED: extra-progress-reset
+13:53:22.399 PASSED: extra-layout-fit-and-reach
+13:54:05.047 FAILED: extra-button-spacing-exit - AssertionError: exit view, score card up: AgainButton and DoneButton at least 1 deg apart (0.16 deg) Expected: "true" - Received: "false"
+#   break: CaseLightExitUI BUTTON_GAP_CM 1.1 -> 0.15; restored
+13:54:32.743 FAILED: extra-button-spacing-veteran - AssertionError: chooser at slot 2: NoteOption_1 and NoteOption_2 at least 1 deg apart (0.46 deg) Expected: "true" - Received: "false"
+#   break: CaseLightVeteranUI CHOOSER_GAP_CM 1.1 -> 0.4; restored
+13:54:57.412 FAILED: extra-progress-welcome - AssertionError: Reset progress at least 2 deg each way (5.60 x 1.55 deg) Expected: "true" - Received: "false"
+#   break: CaseLightControlsUI RESET_H_CM 2.05 -> 1.5; restored, store cleared with welcome and reset (green)
+13:55:12.424 PASSED: extra-progress-welcome
+13:55:30.203 PASSED: extra-progress-reset
+13:55:59.653 FAILED: extra-layout-fit-and-reach - AssertionError: exit view: an Options press opens nothing Expected: "false" - Received: "true"
+13:56:26.865 FAILED: extra-button-spacing-exit - AssertionError: exit view, score card up: the Options press opens nothing Expected: "false" - Received: "true"
+#   break (13:55:59 and 13:56:26): CaseLightMain.toggleOptions with no score-card or exit reason; restored. 90/90 fingerprints OK (mutation-backup-a4b).
+# Wall controls scale with eye distance (sessions 43 and 44): Sunlit Room, camera at (0, 0, -350) at Lens start for extra-wall-placement; origin then walked to (0, 0, -350) for extra-replace-mid-pass; origin for extra-wall-refusals.
+14:11:50.545 FAILED: extra-wall-placement - Error: Precondition failed: the wall is 508.0 cm from the eye, outside 60..290 cm. This scenario needs Sunlit Room (Lens Studio InteractiveResources.bundle/Scenes/Sunlit Room) with the preview camera within 3 m of it
+14:12:32.565 FAILED: extra-wall-placement - AssertionError: wall placement, aiming: OptionsButton and StartRecallButton at least 1 deg apart (-0.46 deg, overlapping) Expected: "true" - Received: "false"
+14:43:58.909 FAILED: extra-wall-placement - AssertionError: at open, with no input: objects that drift on their own Expected: "0" - Received: "40"
+14:45:14.454 PASSED: extra-wall-placement
+14:46:20.740 FAILED: extra-wall-placement - AssertionError: case on the wall (154.2 cm, scale 1.000): StartRecallButton and ShowMyCaseButton at least 1 deg apart (0.38 deg) Expected: "true" - Received: "false"
+14:48:04.360 PASSED: extra-replace-mid-pass
+14:48:37.607 PASSED: extra-wall-refusals
+#   14:11:50 precondition only (camera not yet moved); 14:12:32 the real red that session 44 fixed (case opened 293 cm behind the eye); 14:43:58 a real red in the test (pinch hint joints counted as drift), fixed in CaseLightWallSupport with an anchor control; 14:46:20 the planted break (scale forced to 1), restored byte-identical.

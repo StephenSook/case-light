@@ -1,0 +1,41 @@
+# CaseLight LEAF, max-ceiling item A2 (progress saved in the Lens's local storage, global.persistentStorageSystem.store), coordinator session, one scenario per run_leaf_scenario call.
+# Every run with the run parameter __leaf__diagnostic_policy = fail-fast. Lens Studio 5.23.2, log LensStudioLog-2026-11-02-17-16-46-871-5ad48.txt, demoReplay input false.
+# The pair runs in order: extra-progress-save, then extra-progress-welcome (LEAF restarts the Lens between them, so the welcome check reads what the save left across a restart).
+# Product SHA-256: 33 scripts fingerprinted in mutation-backup-a2 before any break. Each verdict appended as it landed.
+00:20:31.586 PASSED: extra-progress-save  [fail-fast]
+00:20:45.287 PASSED: extra-progress-welcome  [fail-fast, after save]
+# The coordinator found the save scenario's 'welcome hidden after Start' check vacuous (the welcome is never up there) and split the chain in three: welcome now checks the route-switch redraw and that the opening Start hides it, keeping the keys; the new extra-progress-reset presses Reset progress. Chain rerun:
+00:22:40.091 PASSED: extra-progress-save  [fail-fast, chain 1/3]
+00:22:49.544 PASSED: extra-progress-welcome  [fail-fast, chain 2/3]
+00:22:59.035 PASSED: extra-progress-reset  [fail-fast, chain 3/3]
+# break 1: CaseLightProgress.mergeRows saves a weak row as learned.
+00:23:49.694 FAILED: extra-progress-save - AssertionError: route 1: row 0 saved learned, row 1 not Expected: "[0]" - Received: "[0,1]"  [fail-fast, break 1]
+# break 2: CaseLightProgress.nextLast never replaces the saved last score.
+00:24:16.376 FAILED: extra-progress-save - AssertionError: caselight.v1.last saved and readable Expected: "true" - Received: "false"  [fail-fast, break 2]
+# break 3: CaseLightProgress.welcomeLines counts one row too many on line 2 (save ran before it and passed).
+00:24:39.996 PASSED: extra-progress-save  [fail-fast, break 3 setup (save half unaffected)]
+00:24:43.072 FAILED: extra-progress-welcome - AssertionError: welcome line 2 = route 1's saved rows Expected: "Route 1: 1 of 2 rows learned" - Received: "Route 1: 2 of 2 rows learned"  [fail-fast, break 3]
+# break 4: CaseLightControlsUI.hideHint no longer hides the welcome on the opening Start (save ran before it and passed).
+00:25:03.537 PASSED: extra-progress-save  [fail-fast, break 4 setup (save half unaffected)]
+00:25:12.130 FAILED: extra-progress-welcome - AssertionError: the opening Start hides the welcome and Reset progress Expected: "false" - Received: "true"  [fail-fast, break 4]
+# break 5: CaseLightMain's route switch no longer redraws the welcome's line 2 (save ran before it and passed).
+00:25:35.008 PASSED: extra-progress-save  [fail-fast, break 5 setup (save half unaffected)]
+00:25:41.354 FAILED: extra-progress-welcome - AssertionError: line 2 redrawn for route 2 Expected: "Route 2: 0 of 2 rows learned" - Received: "Route 1: 1 of 2 rows learned"  [fail-fast, break 5]
+# break 6: CaseLightMain.resetProgress removes the route keys but not caselight.v1.last (the welcome was up at open, so extra-progress-save pressed Reset progress itself).
+00:25:55.210 FAILED: extra-progress-save - AssertionError: control: no key of ours in the store before the pass Expected: "[]" - Received: "["caselight.v1.last"]"  [fail-fast, break 6]
+# all 6 restored byte-identical (cmp), 33/33 product SHA-256 fingerprints OK (mutation-backup-a2); chain green again:
+00:26:19.311 PASSED: extra-progress-save  [fail-fast, after restore, chain 1/3]
+00:26:30.880 PASSED: extra-progress-welcome  [fail-fast, after restore, chain 2/3]
+00:26:39.878 PASSED: extra-progress-reset  [fail-fast, after restore, chain 3/3]
+# Fix (builder session 40): the welcome and Reset progress step aside while Veteran mode is on (whole panel off, colliders included) and come back when it is off, before the opening Start. Chain rerun with the extended extra-progress-reset:
+NO VERDICT within 150 s for extra-progress-save  [fail-fast, after the Veteran fix, chain 1/3]
+02:41:08.891 FAILED: extra-progress-welcome - Error: run extra-progress-save immediately before this scenario  [fail-fast, after the Veteran fix, chain 2/3]
+# Both lines above are Lens Studio infrastructure, not product verdicts: extra-progress-save was requested at 02:34:12 but LEAF began it at 02:36:11 and the Lens reset three times at 02:36:17, 6 s into the run, so it never reached a verdict and saved nothing; extra-progress-welcome (requested 02:37:58, begun 02:41:08) then found no saved keys, as it is written to. The Mac was locked with its display asleep (the orchestrating session confirmed screen capture returned only the wallpaper at 02:12). LEAF paused until the Mac is awake; the chain will be rerun then.
+# 2026-11-03 after the 05:28 crash and a fresh Lens Studio session (log LensStudioLog-2026-11-03-12-11-21-188-2a8aa.txt). Chain rerun, fail-fast, Sunlit Room, with the Veteran fix in place.
+12:47:06.614 PASSED: extra-progress-save  [fail-fast, after the Veteran fix, chain 1/3; saved {"rows":[0]} and {"x":7,"y":8}]
+12:47:19.125 PASSED: extra-progress-welcome  [fail-fast, after the Veteran fix, chain 2/3; "Welcome back. Last time: 7 of 8 from memory" / "Route 1: 1 of 2 rows learned"]
+12:47:30.976 PASSED: extra-progress-reset  [fail-fast, after the Veteran fix, chain 3/3; live colliders under the welcome: 3 at open, 0 with Veteran on; slot 61 pinch opened the chooser; removed=2]
+# Veteran break run (save 12:48:29 PASSED, welcome 12:48:34 PASSED, reset 12:48:38 FAILED at "Veteran mode on hides the welcome and Reset progress", see break-proofs.log); restored byte-identical, then:
+12:49:04.517 PASSED: extra-veteran-notes  [fail-fast, after restore, with saved progress at open (progress-loaded found=1, welcome up): the run that went red at 02:2x in the baseline]
+12:49:15.367 PASSED: extra-progress-welcome  [fail-fast, after restore, cleanup chain 1/2]
+12:49:18.447 PASSED: extra-progress-reset  [fail-fast, after restore, cleanup chain 2/2; Veteran on: 0 live colliders; store empty after]

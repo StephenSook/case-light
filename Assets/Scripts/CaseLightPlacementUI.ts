@@ -36,7 +36,8 @@ function applyTextRole(t: Text, role: TextRole, distanceCm: number = 110): void 
 
 const CONTENT_Z = 0.6
 const BUTTON_LABEL_Z = 0.08
-const GAP_CM = 0.5
+/** Between Place on wall and Place in front of me: their angle boxes (seen obliquely, off to the right) at least 1 deg apart. */
+const GAP_CM = 2.0
 const PAD_CM = 0.35
 const CUE_WIDTH_CM = 12
 const CUE_HALF_H_CM = 1
@@ -62,8 +63,8 @@ export class CaseLightPlacementUI extends BaseScriptComponent {
 
   @input
   @widget(new SliderWidget(2, 5, 0.1))
-  @hint("Height of each button, in cm")
-  buttonHeightCm: number = 2.5
+  @hint("Height of each button, in cm (2.3 keeps the pair 1 deg apart and 1 deg above Veteran mode)")
+  buttonHeightCm: number = 2.3
 
   @input
   @widget(new SliderWidget(30, 110, 1))

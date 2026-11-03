@@ -187,3 +187,60 @@ Restored build:
 # Measured from the drawn CaseLines vertices in the case frame (case root position and rotation, world cm, no scale), run with __leaf__diagnostic_policy fail-fast. All 11 hard checks are evaluated, logged, then asserted together.
 # break: CaseLightMain.onStart scales the case root to 0.9 right after the case mesh is built. Restored byte-identical (cmp), 29/29 product SHA-256 fingerprints OK (mutation-backup-f13b). Pitch, every separation, both 40-cell spans, the 6 in spacing and the depth go red; the divider count and the 1974 field range stay ok (13.50 cm is inside 11.91..19.69).
 21:41:53.969 FAILED: extra-case-real-scale - AssertionError: real-scale hard checks out of tolerance (7 of 11) Expected: "none" - Received: "slot pitch 2.29 cm within 2.54 +/- 0.05 (one inch, M-41 221.2, VERIFIED); every separation width (2.29..2.29) within 2.54 +/- 0.05; row 0: 40-cell span 91.44 cm within 101.6 +/- 0.5 (40 one-inch separations); row 1: 40-cell span 91.44 cm within 101.6 +/- 0.5 (40 one-inch separations); shelf spacing (bottoms) 13.50 cm within 15.24 +/- 0.5 (6 in); shelf spacing (tops) 13.50 cm within 15.24 +/- 0.5 (6 in); shelf depth 27.00 cm within 30.48 +/- 1 (12 in, ve
+
+## max-ceiling item A1 (coordinator, 5): mastery map, Show my case
+# Every run with __leaf__diagnostic_policy fail-fast (run parameter). The scenario presses ShowMyCaseButton and StartRecallButton through UIKit and drops letters through SIK (RecallSupport.playRecallPass); expected rows come from the printed labels, never from the product's map.
+# breaks: (1) CaseLightMastery.recordPlacement counts a helped placement as learned; (2) rowStateOf drops the weak rule; (3) rowOfTarget puts the hold letter in row 1; (4) CaseLightMain.toggleMasteryMap lets the map show during a pass; (5) a Start press no longer hides it. Each restored byte-identical (cmp), 31/31 product SHA-256 fingerprints OK (mutation-backup-a1).
+23:59:28.084 FAILED: extra-mastery-map - AssertionError: c. after the pass: row 1 state Expected: "weak" - Received: "learned"
+23:59:56.048 FAILED: extra-mastery-map - AssertionError: c. after the pass: row 1 state Expected: "weak" - Received: "learned"
+00:00:12.226 FAILED: extra-mastery-map - AssertionError: a. before any recall: row 0 counts Expected: "learned 0, weak 0, unseen 5" - Received: "learned 0, weak 0, unseen 4"
+00:00:27.788 FAILED: extra-mastery-map - AssertionError: b. press during a recall pass: the map is hidden Expected: "false" - Received: "true"
+00:00:42.309 FAILED: extra-mastery-map - AssertionError: d. Start recall pressed with the map shown: the map is hidden Expected: "false" - Received: "true"
+
+## max-ceiling item A2 (coordinator, 6): progress saved in the Lens's local storage
+# Every run with __leaf__diagnostic_policy fail-fast (run parameter). The chain extra-progress-save, extra-progress-welcome, extra-progress-reset runs in order with a Lens restart between each; the tests read the store with their own JSON parse, never the product's module. Presses through UIKit, drops through SIK.
+# breaks: (1) CaseLightProgress.mergeRows saves a weak row as learned; (2) nextLast never replaces the saved last score; (3) welcomeLines counts one row too many; (4) CaseLightControlsUI.hideHint no longer hides the welcome on the opening Start; (5) CaseLightMain's route switch no longer redraws the welcome's line 2; (6) CaseLightMain.resetProgress leaves caselight.v1.last behind. Each restored byte-identical (cmp), 33/33 product SHA-256 fingerprints OK (mutation-backup-a2).
+00:23:49.694 FAILED: extra-progress-save - AssertionError: route 1: row 0 saved learned, row 1 not Expected: "[0]" - Received: "[0,1]"
+00:24:16.376 FAILED: extra-progress-save - AssertionError: caselight.v1.last saved and readable Expected: "true" - Received: "false"
+00:24:43.072 FAILED: extra-progress-welcome - AssertionError: welcome line 2 = route 1's saved rows Expected: "Route 1: 1 of 2 rows learned" - Received: "Route 1: 2 of 2 rows learned"
+00:25:12.130 FAILED: extra-progress-welcome - AssertionError: the opening Start hides the welcome and Reset progress Expected: "false" - Received: "true"
+00:25:41.354 FAILED: extra-progress-welcome - AssertionError: line 2 redrawn for route 2 Expected: "Route 2: 0 of 2 rows learned" - Received: "Route 1: 1 of 2 rows learned"
+00:25:55.210 FAILED: extra-progress-save - AssertionError: control: no key of ours in the store before the pass Expected: "[]" - Received: "["caselight.v1.last"]"
+
+## max-ceiling item A3 (coordinator, 6): opening pinch hint, Hide stand-in case, view toggles at 2 deg
+# Every run with __leaf__diagnostic_policy fail-fast (run parameter). Real input: UIKit presses, SIK grabs and drops. The hint's clearance is measured from the skinned hand mesh's own vertices over at least 5 frames of its loop.
+# breaks: (1) CaseLightPinchHintRule.nextPinchHint ends the hint on the opening Start press; (2) openingPinchHint never shows it; (3) CaseLightPinchHintUI.play draws the hand 1.6 times larger; (4) CaseLightCaseMesh.setShown never hides the case lines; (5) CaseLightCaseLabelsUI.setPrintedLabelsShown leaves the HOLD label drawn; (6) the view toggles 1.7 cm tall, under 2 deg. Each restored byte-identical (cmp), 35/35 product SHA-256 fingerprints OK (mutation-backup-a3).
+01:58:30.305 FAILED: extra-pinch-hint - AssertionError: still playing after the opening Start press Expected: "true" - Received: "false"
+01:59:38.521 FAILED: extra-pinch-hint - AssertionError: control: the hint plays at open (no saved progress) Expected: "true" - Received: "false"
+02:01:42.818 FAILED: extra-pinch-hint - AssertionError: the hand stays 0.3 deg clear of the caption at every sampled frame (-0.70 deg) Expected: "true" - Received: "false"
+02:03:03.296 FAILED: extra-stand-in-hidden - AssertionError: CaseLines hidden Expected: "false" - Received: "true"
+02:04:26.417 FAILED: extra-stand-in-hidden - AssertionError: HoldLabel hidden Expected: "false" - Received: "true"
+02:05:55.267 FAILED: extra-layout-fit-and-reach - AssertionError: Show my case toggle at least 2 deg each way (2.44 x 1.76 deg) Expected: "true" - Received: "false"
+# A2 Veteran break (2026-11-03): CaseLightProgress.welcomeVisible without "&& !c.veteranOn" (Veteran mode on no longer hides the welcome). Chain save 12:48:29 PASSED, welcome 12:48:34 PASSED, then:
+12:48:38.399 FAILED: extra-progress-reset - AssertionError: Veteran mode on hides the welcome and Reset progress Expected: "false" - Received: "true"
+# restored byte-identical (cmp + SHA-256 against mutation-backup-a3b), 35/35 fingerprints OK
+# Button-spacing break (2026-11-03, session 41 layout): CaseLightControlsUI ROW_GAP_CM 1.1 -> 0.15 (row pairs pulled to 0.08 / 0.12 / 0.14 deg):
+13:31:44.328 FAILED: extra-button-spacing - AssertionError: opening view: OptionsButton and StartPracticeButton at least 1 deg apart (0.08 deg) Expected: "true" - Received: "false"
+# logged pairs under 1 deg: OptionsButton ~ StartPracticeButton 0.08; StartRecallButton ~ ShowMyCaseButton 0.12; StartPracticeButton ~ StartRecallButton 0.14. Restored byte-identical (cmp + SHA-256 against mutation-backup-a4), 87/87 fingerprints OK
+# Exit-view spacing break (session 42 layout): CaseLightExitUI BUTTON_GAP_CM 1.1 -> 0.15:
+13:54:05.047 FAILED: extra-button-spacing-exit - AssertionError: exit view, score card up: AgainButton and DoneButton at least 1 deg apart (0.16 deg) Expected: "true" - Received: "false"
+# restored byte-identical (cmp + SHA-256 against mutation-backup-a4b)
+# Veteran chooser spacing break (session 42): CaseLightVeteranUI CHOOSER_GAP_CM 1.1 -> 0.4:
+13:54:32.743 FAILED: extra-button-spacing-veteran - AssertionError: chooser at slot 2: NoteOption_1 and NoteOption_2 at least 1 deg apart (0.46 deg) Expected: "true" - Received: "false"
+# restored byte-identical (cmp + SHA-256 against mutation-backup-a4b)
+# Reset progress size break (session 42): CaseLightControlsUI RESET_H_CM 2.05 -> 1.5 (saved progress present at open):
+13:54:57.412 FAILED: extra-progress-welcome - AssertionError: Reset progress at least 2 deg each way (5.60 x 1.55 deg) Expected: "true" - Received: "false"
+# restored byte-identical (cmp + SHA-256 against mutation-backup-a4b)
+# Options gate break (session 42): CaseLightMain.toggleOptions with no score-card / exit reason (Options opens anywhere):
+13:55:59.653 FAILED: extra-layout-fit-and-reach - AssertionError: exit view: an Options press opens nothing Expected: "false" - Received: "true"
+13:56:26.865 FAILED: extra-button-spacing-exit - AssertionError: exit view, score card up: the Options press opens nothing Expected: "false" - Received: "true"
+# restored byte-identical (cmp + SHA-256 against mutation-backup-a4b)
+# Control-scale break (session 44): CaseLightMain.updateControlsScale with the scale forced to 1 (controls fixed in cm, as before session 43), wall setup (Sunlit Room, camera at 0, 0, -350):
+14:46:20.740 FAILED: extra-wall-placement - AssertionError: case on the wall (154.2 cm, scale 1.000): StartRecallButton and ShowMyCaseButton at least 1 deg apart (0.38 deg) Expected: "true" - Received: "false"
+# restored byte-identical (cmp + SHA-256 against mutation-backup-a4d)
+# IK loop break (session 45): CaseLightMain recall miss with this.setLit(NO_SLOT) instead of this.setLit(target) (the answer cell no longer lights), driven by LEAF's IK body (no fallback):
+15:24:16.174 FAILED: extra-ik-loop - AssertionError: recall miss: after the miss: litSlotIndex Expected: "17" - Received: "-1"
+# restored byte-identical (cmp + SHA-256 against mutation-backup-a4e)
+# Wall off-axis guard break (coordinator, approved by the orchestrating session): CaseLightPlacement without this._hitTests++ (the product's hit-test count frozen), wall setup:
+15:45:01.046 FAILED: extra-wall-placement - AssertionError: aiming 40 deg off axis: no hit within 3000 ms (count did not advance: 0 new hit tests in 3000 ms (frozen)) Expected: "true" - Received: "false"
+# restored byte-identical (cmp + SHA-256 against mutation-backup-a4g)

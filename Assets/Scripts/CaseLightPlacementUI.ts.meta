@@ -58,6 +58,6 @@
     - '// @input string placeOnWallLabel = "Place on wall" {"hint":"Label on the toggle that turns wall aiming on (aim at a wall, then pinch)"}'
     - '// @input string placeInFrontLabel = "Place in front of me" {"hint":"Label on the button that puts the case back in front of you"}'
     - '// @input float buttonWidthCm = 9.5 {"hint":"Width of each button, in cm", "widget":"slider", "min":6, "max":14, "step":0.1}'
-    - '// @input float buttonHeightCm = 2.5 {"hint":"Height of each button, in cm", "widget":"slider", "min":2, "max":5, "step":0.1}'
+    - '// @input float buttonHeightCm = 2.3 {"hint":"Height of each button, in cm (2.3 keeps the pair 1 deg apart and 1 deg above Veteran mode)", "widget":"slider", "min":2, "max":5, "step":0.1}'
     - '// @input float viewDistanceCm = 60 {"hint":"Typical distance from the eye to these buttons, in cm (scales the label size)", "widget":"slider", "min":30, "max":110, "step":1}'
     - '// @ui {"widget":"group_end"}'

@@ -1,5 +1,5 @@
 // Owns: the bundle tray and the sample letters (Piece_<i>): SIK grab/move, stacking, snap-in, return to hand.
-// Talks to: CaseLightMain (build, relabel, layout, requeue, setActivePiece, placeIn, snapThenReturn; onGrab/onDragMove/onRelease), CaseLightPieceCardUI.
+// Talks to: CaseLightMain (build, relabel, layout, requeue, setActivePiece, placeIn, snapThenReturn, pieceObject; onGrab/onDragMove/onRelease), CaseLightPieceCardUI.
 // Must not: decide right or wrong, count anything, or light slots (CaseLightMain owns that).
 
 /**

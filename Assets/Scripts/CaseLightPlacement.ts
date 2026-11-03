@@ -1,5 +1,5 @@
 // Owns: putting the whole case group (CaseRoot) on a real wall when the user asks: the wall hit test, the aim preview (case outline on the wall, a warning ring elsewhere), the refuse rule, the placement pose, and "place in front of me".
-// Talks to: CaseLightMain (build, onPlaced, read-outs), CaseLightPlacementUI (toggle state, button, refuse cue), WorldQueryModule (HitTestSession), the SIK targeting interactor (ray and pinch), CaseLightGeometry (outline and shelf height), CaseLightMeshUtil (aim meshes).
+// Talks to: CaseLightMain (build, onPlaced, read-outs), CaseLightPlacementUI (toggle state, button, refuse cue), WorldQueryModule (HitTestSession), the SIK targeting interactor (ray and pinch), CaseLightGeometry (outline and shelf height), CaseLightMeshUtil (aim meshes), CaseLightControlScale (the design eye the opening pose is relative to).
 // Must not: create text, change any drill state, or move the case unless the user asked (Place on wall + a pinch on a wall, or Place in front of me).
 // Size: about 500 lines because the test read-outs, the pinch arming, the refuse rule and the pose math stay with their one owner; the aim meshes are two short builders.
 
@@ -24,7 +24,10 @@
  * A pinch counts only if it started while aiming was on and not on a button or a letter, so the
  * pinch that presses Place on wall can never also place the case. A placement turns aiming off.
  * Place in front of me puts CaseRoot back at its opening pose relative to the current head
- * (yaw only, so it stays upright).
+ * (yaw only, so it stays upright). The opening pose is the case's authored place relative to the
+ * design eye (the world origin, looking down -Z, where Spectacles puts the head when a Lens
+ * starts), so it does not depend on where the head happens to be at Lens start (in a preview
+ * whose camera starts elsewhere, the case still opens at its authored place).
  */
 
 import { SIK } from "SpectaclesInteractionKit.lspkg/SIK"
@@ -34,6 +37,7 @@ import Event, { PublicApi } from "SpectaclesInteractionKit.lspkg/Utils/Event"
 import { CaseGeometry, CASE_WIDTH_CM, SEP_PITCH_CM, SEPS_PER_SHELF } from "./CaseLightGeometry"
 import { addMeshObject, MeshAccumulator, RGBA } from "./CaseLightMeshUtil"
 import { CaseLightPlacementUI } from "./CaseLightPlacementUI"
+import { DESIGN_EYE_CM } from "./CaseLightControlScale"
 
 export type PlacementKind = "none" | "wall" | "front"
 /** Why the latest pinch did not place the case ("none" after a placement or before any refusal). */
@@ -207,7 +211,7 @@ export class CaseLightPlacement extends BaseScriptComponent {
     return shelf.y - this.eyePosition().y
   }
 
-  /** The same height measured at the opening pose (build time), in cm. */
+  /** The same height at the opening pose, relative to the design eye (cm). */
   get openLowerShelfAboveEyeCm(): number {
     return this.openShelfAboveEyeCm
   }
@@ -279,15 +283,14 @@ export class CaseLightPlacement extends BaseScriptComponent {
     if (this.geo || !this.caseRoot) return
     this.geo = geo
 
-    // Opening pose, measured, in the head's yaw frame.
-    const eye = this.eyePosition()
-    const yaw0 = this.headYaw()
-    const inv = quat.angleAxis(-yaw0, vec3.up())
+    // Opening pose: the case's authored place relative to the design eye (yaw 0), never to wherever
+    // the head is at Lens start.
+    const eye = new vec3(DESIGN_EYE_CM[0], DESIGN_EYE_CM[1], DESIGN_EYE_CM[2])
     const t = this.caseRoot.getTransform()
-    this.openOffset = inv.multiplyVec3(t.getWorldPosition().sub(eye))
-    this.openRot = inv.multiply(t.getWorldRotation())
+    this.openOffset = t.getWorldPosition().sub(eye)
+    this.openRot = t.getWorldRotation()
     this.openRootAboveEyeCm = t.getWorldPosition().y - eye.y
-    this.openShelfAboveEyeCm = this.lowerShelfAboveEyeCm
+    this.openShelfAboveEyeCm = t.getWorldTransform().multiplyPoint(new vec3(0, geo.boardTopY(geo.lowerPlayableShelf), 0)).y - eye.y
 
     const mat = material.clone()
     mat.mainPass.blendMode = BlendMode.Add

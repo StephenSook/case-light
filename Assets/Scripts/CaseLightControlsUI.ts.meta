@@ -30,11 +30,15 @@
   ScriptInputsHidden:
     buttonHeightCm: false
     buttonWidthCm: false
+    hideStandInLabel: false
     hintLine2Text: false
     hintText: false
+    optionsLabel: false
     paceButtonLabel: false
     practiceLabel: false
     recallLabel: false
+    resetProgressLabel: false
+    showMyCaseLabel: false
     viewDistanceCm: false
   ScriptTypesHidden:
     {}
@@ -52,7 +56,11 @@
       viewDistanceCm: !<float> 75.000000
       hintText: Pinch Start practice
       hintLine2Text: "Practice, then the case goes dark."
+      optionsLabel: Options
       paceButtonLabel: Drill pace
+      showMyCaseLabel: Show my case
+      hideStandInLabel: Hide stand-in case
+      resetProgressLabel: Reset progress
   ScriptTypes:
     -
       {}
@@ -63,10 +71,14 @@
     - '// @ui {"widget":"group_start", "label":"Settings"}'
     - '// @input string practiceLabel = "Start practice" {"hint":"Label on the button that starts a practice pass (slots lit)"}'
     - '// @input string recallLabel = "Start recall" {"hint":"Label on the button that starts a recall pass (case dark)"}'
-    - '// @input float buttonWidthCm = 6 {"hint":"Width of each Start button, in cm (the row of three must stay inside the view)", "widget":"slider", "min":4, "max":16, "step":0.5}'
+    - '// @input float buttonWidthCm = 5 {"hint":"Width of each Start button, in cm (the row of four, 1 deg apart, must stay inside the view and clear of the route buttons)", "widget":"slider", "min":4, "max":16, "step":0.5}'
     - '// @input float buttonHeightCm = 2.5 {"hint":"Height of the button row, in cm (the row, the hint and the bundle share the view above the case)", "widget":"slider", "min":3, "max":8, "step":0.1}'
     - '// @input float viewDistanceCm = 55 {"hint":"Typical distance from the eye to these buttons, in cm (scales the label size)", "widget":"slider", "min":30, "max":110, "step":1}'
     - '// @input string hintText = "Pinch Start practice" {"hint":"One-time hint shown just above the buttons until a Start button is pressed (the Lens starts idle)"}'
     - '// @input string hintLine2Text = "Practice, then the case goes dark." {"hint":"Second line under the hint (what practice and recall are), shown and hidden with it"}'
+    - '// @input string optionsLabel = "Options" {"hint":"Label on the toggle at the left of the row that opens the Options panel (Drill pace, Hide stand-in case)"}'
     - '// @input string paceButtonLabel = "Drill pace" {"hint":"Label on the small toggle that turns the optional drill pace light on and off"}'
+    - '// @input string showMyCaseLabel = "Show my case" {"hint":"Label on the toggle that shows the mastery map on the case (what you remember, from your recall passes)"}'
+    - '// @input string hideStandInLabel = "Hide stand-in case" {"hint":"Label on the toggle that hides the stand-in case (its lines and the printed numbers, street names and HOLD), leaving only what the glasses would draw over a real case"}'
+    - '// @input string resetProgressLabel = "Reset progress" {"hint":"Label on the button that removes the saved progress (shown with the welcome lines)"}'
     - '// @ui {"widget":"group_end"}'

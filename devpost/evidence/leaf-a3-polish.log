@@ -1,0 +1,22 @@
+# CaseLight LEAF, max-ceiling item A3 (F9 polish: opening pinch hint from Specs3DHandHints v2.0.0, Hide stand-in case, both view toggles at 2 deg or more), coordinator session, one scenario per run_leaf_scenario call.
+# Every run with the run parameter __leaf__diagnostic_policy = fail-fast. Lens Studio 5.23.2 (relaunched after the 00:40 GUI crash), log LensStudioLog-2026-11-03-00-54-45-828-b0d88.txt, demoReplay input false, scene SHA-256 501733e3...
+# extra-pinch-hint needs no saved progress at Lens start (it runs right after extra-progress-reset in the suite).
+# Product SHA-256: scripts fingerprinted in mutation-backup-a3 before any break. Each verdict appended as it landed.
+01:57:43.433 PASSED: extra-pinch-hint  [fail-fast]
+01:57:56.074 PASSED: extra-stand-in-hidden  [fail-fast]
+# break 1: CaseLightPinchHintRule.nextPinchHint ends the hint on the opening Start press too.
+01:58:30.305 FAILED: extra-pinch-hint - AssertionError: still playing after the opening Start press Expected: "true" - Received: "false"  [fail-fast, break 1]
+# break 2: CaseLightPinchHintRule.openingPinchHint never shows the hint.
+01:59:38.521 FAILED: extra-pinch-hint - AssertionError: control: the hint plays at open (no saved progress) Expected: "true" - Received: "false"  [fail-fast, break 2]
+# break 3: CaseLightPinchHintUI.play draws the hand 1.6 times larger (same pinch spot).
+02:01:42.818 FAILED: extra-pinch-hint - AssertionError: the hand stays 0.3 deg clear of the caption at every sampled frame (-0.70 deg) Expected: "true" - Received: "false"  [fail-fast, break 3]
+# break 4: CaseLightCaseMesh.setShown never hides the stand-in case lines.
+02:03:03.296 FAILED: extra-stand-in-hidden - AssertionError: CaseLines hidden Expected: "false" - Received: "true"  [fail-fast, break 4]
+# break 5: CaseLightCaseLabelsUI.setPrintedLabelsShown leaves the HOLD label drawn.
+02:04:26.417 FAILED: extra-stand-in-hidden - AssertionError: HoldLabel hidden Expected: "false" - Received: "true"  [fail-fast, break 5]
+# break 6: CaseLightControlsUI's view toggles 1.7 cm tall (under Snap's 2 deg target size).
+02:05:55.267 FAILED: extra-layout-fit-and-reach - AssertionError: Show my case toggle at least 2 deg each way (2.44 x 1.76 deg) Expected: "true" - Received: "false"  [fail-fast, break 6]
+# all 6 restored byte-identical (cmp), 35/35 product SHA-256 fingerprints OK (mutation-backup-a3); green again:
+02:07:53.610 PASSED: extra-pinch-hint  [fail-fast, after restore]
+02:08:01.595 PASSED: extra-stand-in-hidden  [fail-fast, after restore]
+02:08:20.554 PASSED: extra-layout-fit-and-reach  [fail-fast, after restore]

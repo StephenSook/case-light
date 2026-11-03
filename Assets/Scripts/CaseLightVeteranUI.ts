@@ -6,7 +6,9 @@
  * The toggle panel sits under Place on wall / Place in front of me, past the right edge of the
  * start view, so at open it is outside the display. The chooser offers exactly the labels it is
  * given (three fixed reminders, plus Remove note when the slot has one), stacked in one column
- * beside the slot so the slot stays visible. Cards are printed inside the slot's opening, above
+ * beside the slot so the slot stays visible, CHOOSER_GAP_CM apart. CaseLightVeteran scales the
+ * chooser with its distance from the eye, so its buttons look the same size at every slot: at
+ * least 2 deg tall and at least 1 deg apart (Snap's guidance) at the far corners of the case too. Cards are printed inside the slot's opening, above
  * its label strip, in front of any letter standing in it.
  * One pinch, one button: a button acts on a release only if the pinch started on it.
  * SceneObject names (stable, for tests): VeteranControls (this object), VeteranModeButton,
@@ -39,6 +41,8 @@ function applyTextRole(t: Text, role: TextRole, distanceCm: number = 110): void 
 const CONTENT_Z = 0.6
 const BUTTON_LABEL_Z = 0.08
 const GAP_CM = 0.4
+/** Between chooser buttons (cm at scale 1): about 1.26 deg at CaseLightVeteran's chooser design distance (50 cm). */
+const CHOOSER_GAP_CM = 1.1
 const PAD_CM = 0.35
 /** Most chooser rows: three reminders and Remove note. */
 const MAX_OPTIONS = 4
@@ -178,10 +182,10 @@ export class CaseLightVeteranUI extends BaseScriptComponent {
   }
 
   /**
-   * Show the chooser with these labels (at most four), centred at a CaseRoot-local point and
-   * turned by a CaseRoot-local rotation.
+   * Show the chooser with these labels (at most four), centred at a CaseRoot-local point, turned
+   * by a CaseRoot-local rotation and scaled by `scale` (1 = its size in cm).
    */
-  showChooser(labels: string[], local: vec3, rotation: quat): void {
+  showChooser(labels: string[], local: vec3, rotation: quat, scale: number = 1): void {
     if (!this.chooser || !this.chooserFlex) return
     const n = Math.min(MAX_OPTIONS, labels.length)
     this.optionLabels = labels.slice(0, n)
@@ -196,6 +200,7 @@ export class CaseLightVeteranUI extends BaseScriptComponent {
     const t = this.chooser.getTransform()
     t.setLocalPosition(local)
     t.setLocalRotation(rotation)
+    t.setLocalScale(vec3.one().uniformScale(scale))
     this.wantChooser = true
     if (this.settled) this.chooser.enabled = true
   }
@@ -248,7 +253,7 @@ export class CaseLightVeteranUI extends BaseScriptComponent {
     })
   }
 
-  private column(content: SceneObject): FlexLayout {
+  private column(content: SceneObject, rowGap: number = GAP_CM): FlexLayout {
     const flex = content.createComponent(FlexLayout.getTypeName()) as FlexLayout
     flex.autoDiscoverItemsOnStart = false
     flex.width = -1
@@ -256,7 +261,7 @@ export class CaseLightVeteranUI extends BaseScriptComponent {
     flex.direction = FlexDirection.Column
     flex.justifyContent = FlexJustify.Center
     flex.alignItems = FlexAlign.Center
-    flex.rowGap = GAP_CM
+    flex.rowGap = rowGap
     flex.paddingTop = PAD_CM
     flex.paddingBottom = PAD_CM
     flex.paddingLeft = PAD_CM
@@ -312,7 +317,7 @@ export class CaseLightVeteranUI extends BaseScriptComponent {
     const content = global.scene.createSceneObject("Content")
     content.setParent(root)
     content.getTransform().setLocalPosition(new vec3(0, 0, CONTENT_Z))
-    const flex = this.column(content)
+    const flex = this.column(content, CHOOSER_GAP_CM)
     for (let i = 0; i < MAX_OPTIONS; i++) {
       const name = `NoteOption_${i}`
       const so = global.scene.createSceneObject(name)

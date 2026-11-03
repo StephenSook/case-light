@@ -1,0 +1,59 @@
+# Full LEAF run, v0.7 candidate: 45 scenarios, one at a time, LEAF 2.0.2 fail-fast (__leaf__diagnostic_policy fail-fast on every run), started 2026-11-03 16:07 ET.
+# Lens Studio 5.23.2 freshly restarted at 16:05 (the previous session degraded: 170 to 280 percent CPU with the preview paused; one c1 pass at 15:49 there is not counted). Log LensStudioLog-2026-11-03-16-04-56-671-bc4d6.txt.
+# Scene SHA-256 6fc32e6f59b74c7015e23ec8f750c2c516e53c48092323e6cb26510fdaa27cdd, not saved during the run.
+# Rooms: Plane with the camera at the origin, except the three wall scenarios, run last in Sunlit Room after a preview pause and resume. Order: registration order, with extra-ik-loop run right after extra-stand-in-hidden (it needs nothing saved) and the walls moved to the end.
+# Demo replay switched on in memory for extra-demo-replay only (scene tool, never saved) and back off after. Each line: time, LEAF duration, verdict, room, fail-fast runner lines since the last mark.
+16:07:08.021 [3.059s] PASSED: c1-pickup-and-snap  [Plane; fail-fast runner lines 1]
+16:08:17.082 [4.856s] PASSED: c2-practice-glow-and-arrow  [Plane; fail-fast runner lines 4]
+16:08:33.102 [10.762s] PASSED: c3-recall-miss-lights-answer  [Plane; fail-fast runner lines 4]
+16:08:53.896 [9.998s] PASSED: c4-hold-note-and-hold-block  [Plane; fail-fast runner lines 4]
+16:09:13.488 [17.718s] PASSED: c5-recall-unaided-score  [Plane; fail-fast runner lines 4]
+16:09:53.643 [24.223s] PASSED: extra-result-hides-and-session-total  [Plane; fail-fast runner lines 6]
+16:10:12.902 [13.445s] PASSED: extra-sound-cues  [Plane; fail-fast runner lines 6]
+16:11:09.412 [50.547s] PASSED: extra-drill-pace  [Plane; fail-fast runner lines 6]
+16:11:39.800 [23.234s] PASSED: extra-exit-again-done  [Plane; fail-fast runner lines 6]
+16:12:13.000 [28.099s] PASSED: extra-ladder-default-off  [Plane; fail-fast runner lines 6]
+16:13:26.245 [68.498s] PASSED: extra-ladder-on  [Plane; fail-fast runner lines 6]
+NO VERDICT within 300 s for extra-mixup-lines  [Plane; fail-fast runner lines 3]
+#   not a product verdict: the coordinator sent three run requests at once; this run's tool call timed out at about 60 s and LEAF then started extra-hold-cells, which reset the Lens at 16:14:33 mid-run (after its second recall pass). Rerun alone below.
+16:15:23.109 [45.980s] PASSED: extra-hold-cells  [Plane; fail-fast runner lines 3]
+16:15:35.471 [9.171s] PASSED: extra-print-fit  [Plane; fail-fast runner lines 3]
+NO VERDICT within 300 s for extra-mixup-lines  [Plane; fail-fast runner lines 1]
+#   not a product verdict: Lens Studio requested an account token refresh at 16:22:03.851 and the Lens reset at 16:22:05 mid-run (after its third recall pass, all checks so far passing). Rerun alone below.
+16:28:39.904 [53.803s] PASSED: extra-mixup-lines  [Plane; fail-fast runner lines 1]
+16:29:00.363 [10.257s] PASSED: extra-layout-fit-and-reach  [Plane; fail-fast runner lines 4]
+16:29:12.503 [0.147s] PASSED: extra-leaf-overlay-hidden  [Plane; fail-fast runner lines 4]
+16:29:39.449 [21.691s] PASSED: extra-one-pinch-one-press  [Plane; fail-fast runner lines 4]
+16:30:20.316 [31.702s] PASSED: extra-come-back-and-retire  [Plane; fail-fast runner lines 4]
+16:30:52.285 [13.369s] PASSED: extra-veteran-notes  [Plane; fail-fast runner lines 1]
+16:32:25.076 [23.032s] PASSED: extra-veteran-notes-in-pass  [Plane; fail-fast runner lines 2]
+16:32:37.875 [5.672s] PASSED: extra-veteran-stray-after-abort  [Plane; fail-fast runner lines 2]
+16:33:25.758 [10.217s] PASSED: extra-route-labels  [Plane; fail-fast runner lines 2]
+16:35:01.022 [24.289s] PASSED: extra-route-letters  [Plane; fail-fast runner lines 3]
+16:35:31.606 [18.769s] PASSED: extra-route-switch-resets  [Plane; fail-fast runner lines 6]
+16:35:48.443 [10.095s] PASSED: extra-last-letter-dark  [Plane; fail-fast runner lines 6]
+16:35:55.969 [0.108s] PASSED: extra-route-picker-in-view  [Plane; fail-fast runner lines 6]
+16:36:31.759 [30.865s] PASSED: extra-placement-log  [Plane; fail-fast runner lines 6]
+16:36:55.310 [17.285s] PASSED: extra-recall-no-glow-per-frame  [Plane; fail-fast runner lines 6]
+16:37:13.649 [10.436s] PASSED: extra-demo-replay-off-by-default  [Plane; fail-fast runner lines 6]
+16:38:44.264 [68.001s] PASSED: extra-demo-replay  [Plane, demoReplay on in memory only; fail-fast runner lines 1]
+#   demoReplay switched on in memory at 16:37:27 (scene tool), back off after the run; the scene file on disk unchanged (6fc32e6f).
+16:39:21.603 [24.805s] PASSED: extra-case-check  [Plane; fail-fast runner lines 3]
+16:39:28.356 [0.130s] PASSED: extra-case-real-scale  [Plane; fail-fast runner lines 3]
+16:39:44.909 [11.641s] PASSED: extra-mastery-map  [Plane; fail-fast runner lines 3]
+16:40:08.646 [11.293s] PASSED: extra-progress-save  [Plane; fail-fast runner lines 6]
+16:40:18.201 [1.570s] PASSED: extra-progress-welcome  [Plane; fail-fast runner lines 6]
+16:40:28.353 [1.948s] PASSED: extra-progress-reset  [Plane; fail-fast runner lines 6]
+16:40:49.982 [12.092s] PASSED: extra-pinch-hint  [Plane; fail-fast runner lines 6]
+16:41:01.081 [3.760s] PASSED: extra-stand-in-hidden  [Plane; fail-fast runner lines 6]
+16:41:21.069 [14.305s] PASSED: extra-ik-loop  [Plane; fail-fast runner lines 6]
+16:41:33.878 [1.043s] PASSED: extra-button-spacing  [Plane; fail-fast runner lines 3]
+16:42:02.009 [22.916s] PASSED: extra-button-spacing-exit  [Plane; fail-fast runner lines 3]
+16:42:15.639 [6.941s] PASSED: extra-button-spacing-veteran  [Plane; fail-fast runner lines 3]
+#   walls: preview switched to Sunlit Room, camera reset to the origin, preview paused and resumed at 16:42:31
+16:43:56.133 [12.619s] PASSED: extra-wall-refusals  [Sunlit Room, camera at the origin; fail-fast runner lines 1]
+16:45:31.398 [10.120s] PASSED: extra-wall-placement  [Sunlit Room, camera at (0, 0, -350) at Lens start; fail-fast runner lines 1]
+16:47:16.973 [20.846s] PASSED: extra-replace-mid-pass  [Sunlit Room, camera at the origin, walked to (0, 0, -350) while it waited; fail-fast runner lines 1]
+#   end of run, refreshed then paused: threads 74, AQClient queues 0, AQServer queues 0, CPU 7.4
+# Result: 45 of 45 scenarios passed under fail-fast, 16:07 to 16:47 ET; 0 failed. Two NO VERDICT lines above are the annotated infrastructure aborts of extra-mixup-lines (the coordinator's own batched request; a Lens Studio token refresh), both rerun alone and passed at 16:28:39.
+# Scene SHA-256 after the run: 6fc32e6f59b74c7015e23ec8f750c2c516e53c48092323e6cb26510fdaa27cdd (unchanged, never saved).

@@ -41,6 +41,7 @@
     mixUpLines: false
     mixUps: false
     pace: false
+    pinchHint: false
     placement: false
     practiceLadder: false
     resultSeconds: false
@@ -75,6 +76,7 @@
       placement: !<MappingBased.AssignableType_12> 00000000-0000-0000-0000-000000000000
       veteran: !<MappingBased.AssignableType_13> 00000000-0000-0000-0000-000000000000
       routePicker: !<MappingBased.AssignableType_14> 00000000-0000-0000-0000-000000000000
+      pinchHint: !<MappingBased.AssignableType_15> 00000000-0000-0000-0000-000000000000
       lineMaterial: !<reference.Material> 00000000-0000-0000-0000-000000000000
       shelfCount: !<float> 6.000000
       bundleCount: !<float> 8.000000
@@ -106,6 +108,7 @@
     - '// @input AssignableType_12 placement {"hint":"Optional: put the case on a real wall (Place on wall / Place in front of me). Nothing moves unless the user asks"}'
     - '// @input AssignableType_13 veteran {"hint":"Optional: Veteran mode, where a veteran pins sorting reminders on slots (letters pause while it is on)"}'
     - "// @input AssignableType_14 routePicker {\"hint\":\"Optional: today's route choice (Route 1 | Route 2), usable only between passes\"}"
+    - '// @input AssignableType_15 pinchHint {"hint":"Optional: the opening pinch hint at the top letter (PinchHintAnchor under the bundle tray), shown only with no saved progress"}'
     - '// @input Asset.Material lineMaterial {"hint":"Unlit vertex-colour material used for all line art (SimpleVertexBaseColor)"}'
     - '// @ui {"widget":"group_end"}'
     - '// @ui {"widget":"separator"}'

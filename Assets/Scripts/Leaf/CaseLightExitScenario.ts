@@ -1,12 +1,13 @@
 // Owns: the LEAF check for the exit shown after each recall pass: "Again" starts a clean new recall pass; "Done" returns to idle with glow, label highlight, edge arrow, pace light and ripples off, counts kept and the hint still hidden.
-// Talks to: CaseLightLeafSupport (real SIK/UIKit input and assertions), CaseLightMain read-only getters, AgainButton / DoneButton / DrillPaceButton / ExitControls / Ripple_n / Piece_n / BundleTray by name.
+// Talks to: CaseLightLeafSupport (real SIK/UIKit input and assertions), CaseLightMain read-only getters, AgainButton / DoneButton / OptionsButton / DrillPaceButton / ExitControls / Ripple_n / Piece_n / BundleTray by name.
 // Must not: call CaseLightMain's test hooks or commands (exitAgain / exitDone included), or change product state except through real input.
 
 /**
  * Input: REAL (LEAF SIK interactor). Two recall passes. Pass 1 ends; Again is pressed. Pass 2:
- * the Drill pace toggle is pressed early, and the last letter goes to a wrong cell before its own, so
- * the glow, its label and (if the answer is out of view) the edge arrow are on just before the end;
- * then it is placed (its ripple is seen on), the exit shows, and Done is pressed.
+ * the Drill pace toggle is pressed early (Options, Drill pace, Options again: the toggle is in the
+ * Options panel), and the last letter goes to a wrong cell before its own, so the glow, its label
+ * and (if the answer is out of view) the edge arrow are on just before the end; then it is placed
+ * (its ripple is seen on), the exit shows, and Done is pressed.
  * Positive controls: the exit is seen shown before it is asserted hidden; the hint is seen shown
  * while idle; glow, label, arrow, pace light and a ripple are each seen ON before Done is asserted
  * to leave them off. The glow, label and arrow are already turned off by the pass ending itself;
@@ -91,9 +92,14 @@ export class CaseLightExitScenario extends Scenario {
     expect(top, "Again: top of the bundle is the new order's top piece").toBe(order2[0])
 
     // ---------------- Pass 2: pace on early; last letter missed once. ----------------
+    // Drill pace is in the Options panel: open it, press Drill pace, close it again (real presses).
+    await ix.pressButton("OptionsButton")
+    expect(main.optionsOpen, "Options open during pass 2").toBe(true)
     await ix.pressButton("DrillPaceButton")
     await nextFrame()
     expect(main.isPaceOn, "pace on during pass 2").toBe(true)
+    await ix.pressButton("OptionsButton")
+    expect(main.optionsOpen, "Options closed again during pass 2").toBe(false)
     const lastPiece = order2[order2.length - 1]
     let rippleSeen = 0
     let rippleObjsSeen = 0

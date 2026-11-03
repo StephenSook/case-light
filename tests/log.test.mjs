@@ -1,4 +1,4 @@
-// Owns: unit tests for Assets/Scripts/CaseLightLog.ts: the CASELIGHT_LOG v1 line format, quoting, the cell tokens, the session id and the capped buffer.
+// Owns: unit tests for Assets/Scripts/CaseLightLog.ts: the CASELIGHT_LOG v1 line format, quoting, the cell tokens, the saved-progress, pinch hint, stand-in and options-ignored event lines, the session id and the capped buffer.
 // Talks to: Assets/Scripts/CaseLightLog.ts (pure, no imports), node:test, node:assert.
 // Must not: load any scene code; it parses the lines with its own small parser, not the module's.
 
@@ -14,6 +14,16 @@ import {
   formatPassStart,
   formatPassEnd,
   formatRouteSwitch,
+  formatProgressLoaded,
+  formatProgressSaved,
+  formatProgressReset,
+  formatProgressFull,
+  formatProgressBadData,
+  formatPinchHintStart,
+  formatPinchHintEnd,
+  formatStandIn,
+  formatOptionsIgnored,
+  rowsToken,
   randomToken,
   sessionId,
   LogBuffer,
@@ -77,6 +87,36 @@ test("pass start, pass end and route switch lines", () => {
   assert.equal(practiceEnd.score, "")
   assert.equal(practiceEnd.cameback, "")
   assert.equal(formatRouteSwitch({ ...HEAD, mode: "idle" }, 1), "CASELIGHT_LOG v1 seq=7 session=s1-k3x9q2 route=2 pass=3 mode=idle event=route-switch from=1")
+})
+
+test("saved progress lines: loaded, saved, reset, full and bad data", () => {
+  const idle = { ...HEAD, mode: "idle" }
+  const p = "CASELIGHT_LOG v1 seq=7 session=s1-k3x9q2 route=2 pass=3 mode=idle"
+  assert.equal(rowsToken(null), "-")
+  assert.equal(rowsToken([]), "none")
+  assert.equal(rowsToken([0, 1]), "0,1")
+  assert.equal(formatProgressLoaded(idle, [{ route: 1, rows: null }, { route: 2, rows: null }], null), `${p} event=progress-loaded found=0 route1=- route2=- x=- y=-`)
+  assert.equal(formatProgressLoaded(idle, [{ route: 1, rows: [0] }, { route: 2, rows: null }], { x: 7, y: 8 }), `${p} event=progress-loaded found=1 route1=0 route2=- x=7 y=8`)
+  assert.equal(formatProgressSaved(idle, [0], 7, 8), `${p} event=progress-saved rows=0 x=7 y=8`)
+  assert.equal(formatProgressSaved(idle, [], null, null), `${p} event=progress-saved rows=none x=- y=-`)
+  assert.equal(formatProgressReset(idle, 2), `${p} event=progress-reset removed=2`)
+  assert.equal(formatProgressFull(idle), `${p} event=progress-full`)
+  assert.equal(formatProgressBadData(idle, "caselight.v1.last"), `${p} event=progress-bad-data key=caselight.v1.last`)
+})
+
+test("pinch hint and stand-in lines", () => {
+  const idle = { ...HEAD, mode: "idle" }
+  assert.equal(formatPinchHintStart(idle, 0), "CASELIGHT_LOG v1 seq=7 session=s1-k3x9q2 route=2 pass=3 mode=idle event=pinch-hint-start piece=0")
+  assert.deepEqual(parse(formatPinchHintEnd(idle, "start")), { seq: "7", session: "s1-k3x9q2", route: "2", pass: "3", mode: "idle", event: "pinch-hint-end", reason: "start" })
+  assert.equal(parse(formatPinchHintEnd(idle, "grab")).reason, "grab")
+  assert.equal(formatStandIn(HEAD, true), "CASELIGHT_LOG v1 seq=7 session=s1-k3x9q2 route=2 pass=3 mode=recall event=stand-in hidden=1")
+  assert.equal(parse(formatStandIn(HEAD, false)).hidden, "0")
+})
+
+test("an ignored Options press names why", () => {
+  const idle = { ...HEAD, mode: "idle" }
+  assert.equal(formatOptionsIgnored(idle, "score-card"), "CASELIGHT_LOG v1 seq=7 session=s1-k3x9q2 route=2 pass=3 mode=idle event=options-ignored reason=score-card")
+  assert.deepEqual(parse(formatOptionsIgnored(idle, "exit")), { seq: "7", session: "s1-k3x9q2", route: "2", pass: "3", mode: "idle", event: "options-ignored", reason: "exit" })
 })
 
 test("an escaped address survives the round trip", () => {

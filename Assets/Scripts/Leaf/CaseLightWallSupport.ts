@@ -1,5 +1,5 @@
 // Owns: the shared ground truth and measurements of the wall-placement scenarios: our own hit tests (independent of the product's), the test ray, the drawn case face and axes, and the "nothing else moved / rigid" snapshots.
-// Talks to: WorldQueryModule (its own HitTestSession, passed in by each scenario), the SIK camera provider, CaseLightMain read-only getters, drawn scene objects (CaseLines, Label_n).
+// Talks to: WorldQueryModule (its own HitTestSession, passed in by each scenario), the SIK camera provider, CaseLightMain read-only getters, drawn scene objects (CaseLines, Label_n); the CaseControls group (its scale, predicted from the test's own distances).
 // Must not: call any product command or test hook, or change product state.
 
 /**
@@ -152,15 +152,38 @@ export function outsideCaseRoot(caseRoot: SceneObject): Map<string, Pose> {
   return out
 }
 
-/** Local (or world) poses of every SceneObject inside CaseRoot (CaseRoot itself excluded). */
+/** True for the opening pinch hint's animated hand: the object named PinchHint and everything under it. */
+export function isPinchHintAnimation(key: string): boolean {
+  return /:PinchHint(\/|$)/.test(key)
+}
+
+/**
+ * Local (or world) poses of every SceneObject inside CaseRoot (CaseRoot itself excluded), except the
+ * opening pinch hint's animated hand (PinchHint and below), which moves by design while nothing is
+ * saved. Its anchor (PinchHintAnchor) stays in the snapshot, so the hint still has to move with the case.
+ */
 export function insideCaseRoot(caseRoot: SceneObject, world: boolean): Map<string, Pose> {
   const all = new Map<string, SceneObject>()
   collect(caseRoot, "CaseRoot", all)
   all.delete("CaseRoot")
   const out = new Map<string, Pose>()
   all.forEach((so, k) => {
+    if (isPinchHintAnimation(k)) return
     const t = so.getTransform()
     out.set(k, world ? {p: t.getWorldPosition(), r: t.getWorldRotation(), s: t.getWorldScale()} : {p: t.getLocalPosition(), r: t.getLocalRotation(), s: t.getLocalScale()})
+  })
+  return out
+}
+
+/** Local poses of the pinch hint's animated hand only (the part insideCaseRoot leaves out), for its own control. */
+export function hintJointPoses(caseRoot: SceneObject): Map<string, Pose> {
+  const all = new Map<string, SceneObject>()
+  collect(caseRoot, "CaseRoot", all)
+  const out = new Map<string, Pose>()
+  all.forEach((so, k) => {
+    if (!isPinchHintAnimation(k)) return
+    const t = so.getTransform()
+    out.set(k, {p: t.getLocalPosition(), r: t.getLocalRotation(), s: t.getLocalScale()})
   })
   return out
 }
@@ -350,4 +373,42 @@ export async function ownWallDistance(session: HitTestSession, timeoutMs: number
   const h = await ownHit(session, ray.start, ray.end, timeoutMs)
   const eye = WorldCameraFinderProvider.getInstance().getWorldPosition()
   return {hit: h.hit, distCm: h.hit ? h.hit.pos.distance(eye) : NaN, results: h.results}
+}
+
+
+/**
+ * The controls' group (CaseControls) scales with its eye distance over its design distance. The
+ * design distance is a property of the layout: from the design eye (the world origin, looking down
+ * -Z, where Spectacles puts the head when a Lens starts) to the group at the case's authored place,
+ * about 57.13 cm. Measure it before anything moves the case. The test's own clamp (0.5 to 6) and its
+ * in-front condition are written here, not read from the product.
+ */
+export const CONTROLS_DESIGN_DISTANCE_CM = 57.13
+export function controlsDesignDistance(): number {
+  return mustFind("CaseControls").getTransform().getWorldPosition().distance(vec3.zero())
+}
+
+/**
+ * The group's eye distance and depth along the view now, the scale this test predicts, and the
+ * scale the product applied. The scale follows the distance only while the group is in front of
+ * the eye (positive depth); behind the eye the last scale is held, so the prediction there is
+ * `heldScale` (the scale the test last saw applied).
+ */
+export function controlsScaleNow(designDist: number, heldScale: number): {dist: number; depth: number; inFront: boolean; predicted: number; applied: number} {
+  const cam = WorldCameraFinderProvider.getInstance()
+  const g = mustFind("CaseControls").getTransform()
+  const toGroup = g.getWorldPosition().sub(cam.getWorldPosition())
+  const view = cam.getTransform().getWorldTransform().multiplyDirection(new vec3(0, 0, -1)).normalize()
+  const depth = toGroup.dot(view)
+  const inFront = depth > 0
+  const predicted = inFront ? Math.min(6, Math.max(0.5, toGroup.length / designDist)) : heldScale
+  return {dist: toGroup.length, depth, inFront, predicted, applied: g.getLocalScale().x}
+}
+
+/** The applied scale matches the prediction within 0.6 percent (just above the product's 0.5 percent update step). */
+export function expectControlsScale(designDist: number, ctx: string, heldScale: number): {dist: number; depth: number; inFront: boolean; predicted: number; applied: number} {
+  const c = controlsScaleNow(designDist, heldScale)
+  log(`WALL controls ${ctx}: group ${c.dist.toFixed(2)} cm from the eye, ${c.inFront ? "in front of" : "behind"} it (depth ${c.depth.toFixed(2)} cm), design ${designDist.toFixed(2)} cm, predicted scale ${c.predicted.toFixed(4)}${c.inFront ? "" : " (held)"}, applied ${c.applied.toFixed(4)}`)
+  expect(Math.abs(c.applied - c.predicted) / c.predicted <= 0.006, `${ctx}: the controls' scale follows their eye distance while in front of the eye and is held behind it (applied ${c.applied.toFixed(4)}, predicted ${c.predicted.toFixed(4)}${c.inFront ? "" : ", held"})`).toBe(true)
+  return c
 }

@@ -27,7 +27,8 @@ const LABEL_WEIGHT = 700
 
 const CONTENT_Z = 0.6
 const BUTTON_LABEL_Z = 0.08
-const GAP_CM = 0.25
+/** Between the two route buttons: about 1.06 deg at the start position (Snap: targets at least 1 deg apart). */
+const GAP_CM = 1.05
 const PAD_CM = 0.15
 
 @component
@@ -43,8 +44,8 @@ export class CaseLightRouteUI extends BaseScriptComponent {
 
   @input
   @widget(new SliderWidget(1.2, 5, 0.05))
-  @hint("Height of each route button, in cm (the two are stacked)")
-  buttonHeightCm: number = 2.45
+  @hint("Height of each route button, in cm (the two are stacked, 1 deg apart; 2.0 keeps each over 2 deg tall)")
+  buttonHeightCm: number = 2.0
 
   @input
   @widget(new SliderWidget(0.4, 0.9, 0.01))

@@ -1,5 +1,5 @@
 // Owns: all session state (mode, pass order, top/held piece, lit slot, helped/unaided/total) and every right/wrong decision.
-// Talks to: CaseLightBundle, CaseLightHighlight, CaseLightViewCue, CaseLightCaseLabelsUI, CaseLightControlsUI, CaseLightCaseMesh, CaseLightRipple, CaseLightAudio, CaseLightPace, CaseLightExitUI, CaseLightMixUp, CaseLightPlacement, CaseLightVeteran, CaseLightRouteUI (all wired as @inputs); CaseLightRoute (route data and the route choice rule); CaseLightLog (placement log lines, printed here); CaseLightDemo (the demo replay's recorded steps and checks); CaseLightCaseCheck (the Case check rules); CaseLightSlotPinch (the shared slot-pinch target, made here).
+// Talks to: CaseLightBundle, CaseLightHighlight, CaseLightViewCue, CaseLightCaseLabelsUI, CaseLightControlsUI, CaseLightCaseMesh, CaseLightRipple, CaseLightAudio, CaseLightPace, CaseLightExitUI, CaseLightMixUp, CaseLightPlacement, CaseLightVeteran, CaseLightRouteUI (all wired as @inputs); CaseLightRoute (route data and the route choice rule); CaseLightLog (placement log lines, printed here); CaseLightDemo (the demo replay's recorded steps and checks); CaseLightCaseCheck (the Case check rules); CaseLightSlotPinch (the shared slot-pinch target, made here); CaseLightMastery (the mastery map rules) and CaseLightMasteryView (its drawing, made here); CaseLightProgress (saved progress rules) through CaseLightProgressStore (the persistent store, made here); CaseLightPinchHintRule (when the opening pinch hint shows and ends) and CaseLightPinchHintUI (its drawing, an @input); CaseLightControlScale (the scale of the CaseControls group, the controls that ride with the case, by eye distance).
 // Must not: draw anything itself or create text.
 // Size: long because it is the one owner of session state and the whole LEAF read-out surface; drawing, layout and audio live in the focused modules.
 
@@ -41,6 +41,40 @@
  *     Again, Done or a Start press: the card's second line then reads "Case check: N of 2 found"
  *     (after Done it stays up for resultSeconds). It never changes the score, come-backs,
  *     retirement or notes; letters still in wrong cells go back to their own cells on Done.
+ *   Mastery map ("Show my case", a toggle at the right end of the opening row): every recall miss and recall placement
+ *     updates that letter's state on the current route (CaseLightMastery: weak after a miss or a
+ *     helped placement, learned after a placement from memory; practice changes nothing; Done and
+ *     route switches keep it, only a fresh Lens start clears it). Pressed while idle, the case
+ *     shows each playable row's state and word and a mark at each letter's cell (one log line);
+ *     pressed again it hides. Pressed during a practice or recall pass or a Case check it does
+ *     nothing (the marks would give the answers away) and the ignored press is logged. Any Start
+ *     press, Again and the Case check starting hide it; a route switch while it is shown redraws
+ *     it for the new route. Showing it clears the mix-up marks of the pass just ended, and the
+ *     one-time welcome panel.
+ *   Saved progress (CaseLightProgress, in the Lens's persistent store under caselight.v1.*):
+ *     loaded once at Lens start; saved at the end of every completed recall pass (today's route's
+ *     rows learned, merged with what was saved, and the session score "From memory: X of Y").
+ *     When something was saved, the case shows a welcome panel (last score; today's route's rows
+ *     learned) with "Reset progress" until the opening Start press, Reset progress, the mastery
+ *     map or a placement of the case (CaseLightProgress.welcomeVisible); a route switch redraws its second line. Veteran mode
+ *     hides it while on (its panel stands in front of the cells a veteran pinches) and brings it
+ *     back when off. Hidden means its SceneObject is off, colliders and interaction plane included. Reset progress removes only our keys (never the whole store). The mastery map
+ *     stays this session only: it is NOT seeded from saved progress. A full store is logged and
+ *     a one-line notice shows; bad saved data is logged and read as no progress.
+ *   Opening pinch hint (CaseLightPinchHintRule): on a run with no saved progress at Lens start
+ *     (no welcome) and no demo replay, the 3D Hints right hand plays PinchNear at the top letter.
+ *     It shows the grab, and no letter can be grabbed before a Start press (the bundle is inactive
+ *     while idle), so it stays up through the opening Start press until the grab of any letter
+ *     ends it (one log line at its start, one at its end); nothing brings it back.
+ *   Options (a toggle at the left of the opening row) opens a small panel with Drill pace and Hide
+ *     stand-in case, in a column left of the bundle; a Start press and the end of a pass (the score
+ *     card stands there) close it, and while the score card or Again and Done are up a press does
+ *     nothing (logged, options-ignored).
+ *   Hide stand-in case (a toggle in the Options panel, any mode except the exit view, mid-pass too): hides the case lines
+ *     and everything a real case already has printed (cell numbers, street names, HOLD), leaving
+ *     what the glasses would draw over a real case: letters, glow, edge arrow, mix-up lines, the
+ *     mastery map and its row words, the welcome, the controls, the caption and the version tag.
+ *     Drops count exactly the same (they use the geometry, never what is drawn). One log line.
  * A drop counts as "over a separation" from where the user is looking: the eye-to-piece ray is
  * intersected with the case face (see CaseGeometry.projectToFace). Released anywhere else, the
  * piece just goes back to the hand with no count.
@@ -67,11 +101,18 @@ import { missLitAfterGrab, PassQueue, Retirement, SessionScore, withoutRetired }
 import { CaseLightVeteran } from "./CaseLightVeteran"
 import { CASE_CHECK_COUNT, CaseCheckRound, caseCheckCardText as caseCheckLine, chooseMisplaced, Misplaced } from "./CaseLightCaseCheck"
 import { SlotPinchTarget } from "./CaseLightSlotPinch"
+import { MasteryMap, MasteryState, RowCounts, rowLabel, rowStateOf } from "./CaseLightMastery"
+import { CaseLightMasteryView } from "./CaseLightMasteryView"
+import { emptyProgress, encodeLast, encodeRoute, hasProgress, loadProgress, mergeRows, nextLast, ourKeys, Progress, routeKey, LAST_KEY, welcomeLines, welcomeVisible } from "./CaseLightProgress"
+import { ProgressStore } from "./CaseLightProgressStore"
+import { nextPinchHint, openingPinchHint, PinchHintEnd, PinchHintEvent, PinchHintState } from "./CaseLightPinchHintRule"
+import { CaseLightPinchHintUI } from "./CaseLightPinchHintUI"
 import { CaseGeometry, HOLD_BLOCK_SLOT, HOLD_CELLS, NO_SLOT, SEP_PITCH_CM } from "./CaseLightGeometry"
 import { CaseLightHighlight } from "./CaseLightHighlight"
-import { buildBundle, cellLabels, chooseRoute, DEFAULT_ROUTE, holdAddressOf, practiceOrder, recallOrder, RouteId, routeStreets, SamplePiece } from "./CaseLightRoute"
+import { buildBundle, cellLabels, chooseRoute, DEFAULT_ROUTE, holdAddressOf, practiceOrder, recallOrder, ROUTE_IDS, RouteId, routeStreets, SamplePiece } from "./CaseLightRoute"
 import { CaseLightRouteUI } from "./CaseLightRouteUI"
-import { CaseCheckEnd, formatCaseCheckEnd, formatCaseCheckPinch, formatCaseCheckStart, formatPassEnd, formatPassStart, formatPlacement, formatRouteSwitch, LogBuffer, LogHead, LogResult, placedToken, randomToken, rightToken, sessionId } from "./CaseLightLog"
+import { designDistanceCm, nextControlScale } from "./CaseLightControlScale"
+import { CaseCheckEnd, formatCaseCheckEnd, formatCaseCheckPinch, formatCaseCheckStart, formatMasteryIgnored, formatMasteryMap, formatOptionsIgnored, formatPassEnd, formatProgressBadData, formatProgressFull, formatProgressLoaded, formatProgressReset, formatProgressSaved, formatPassStart, formatPinchHintEnd, formatPinchHintStart, formatStandIn, formatPlacement, formatRouteSwitch, LogBuffer, LogHead, LogResult, placedToken, randomToken, rightToken, sessionId } from "./CaseLightLog"
 import { attemptMismatch, DEMO_LABEL_TEXT, DemoScene, dropCellOf, formatDemoLine, passEndMismatch, recordedReplay, replaySessionId, ReplayStep, sceneOf } from "./CaseLightDemo"
 import { CaseLightAudio } from "./CaseLightAudio"
 import { CaseLightPace } from "./CaseLightPace"
@@ -89,6 +130,19 @@ const LADDER_TOP_RUNG = 2
 /** Demo replay: a letter is shown in hand this long before it moves, then carried this long to its release (s). */
 const DEMO_HOLD_S = 0.5
 const DEMO_CARRY_S = 0.6
+
+/**
+ * The controls that ride with the case, by their stable SceneObject names (children of CaseRoot):
+ * they are moved into one group (CaseControls) that scales with its eye distance
+ * (CaseLightControlScale). The welcome panel, the caption strip, the tray and the cells stay out.
+ */
+const SCALED_CONTROL_NAMES = ["LedgeControls", "RoutePicker", "PlacementControls", "VeteranControls", "ExitControls", "ResultAnchor"]
+/**
+ * The group's anchor in CaseRoot's frame (cm): on the case face, centred across, at the top of the
+ * caption strip (its backings reach 3.80). Every control is above it and every cell and row label
+ * below it, so scaling about it never brings a control down over the case.
+ */
+const CONTROLS_ANCHOR_LOCAL = new vec3(0, 3.8, 0)
 
 /** How far a placed letter sticks out of its separation toward the user (cm). */
 const PLACED_STICK_OUT_CM = 3
@@ -168,6 +222,11 @@ export class CaseLightMain extends BaseScriptComponent {
   @allowUndefined
   @hint("Optional: today's route choice (Route 1 | Route 2), usable only between passes")
   routePicker: CaseLightRouteUI
+
+  @input
+  @allowUndefined
+  @hint("Optional: the opening pinch hint at the top letter (PinchHintAnchor under the bundle tray), shown only with no saved progress")
+  pinchHint: CaseLightPinchHintUI
 
   @input
   @hint("Unlit vertex-colour material used for all line art (SimpleVertexBaseColor)")
@@ -273,6 +332,32 @@ export class CaseLightMain extends BaseScriptComponent {
   private caseCheckFlash: DelayedCallbackEvent | null = null
   private caseCheckFlashSlot = NO_SLOT
   private _ignoredStartPresses = 0
+  /** The mastery map: each letter's state per route from recall this session, and its drawing (both made in onStart). */
+  private mastery = new MasteryMap(0)
+  private masteryView: CaseLightMasteryView | null = null
+  private _masteryShown = false
+  private _masteryIgnored = 0
+  private _optionsIgnored = 0
+  /** Saved progress: the store adapter (made in onStart) and what it holds now. */
+  private progressStore: ProgressStore | null = null
+  private progress: Progress = emptyProgress()
+  private _progressSaves = 0
+  /** What the welcome panel's rule needs (CaseLightProgress.welcomeVisible); Veteran mode is read live. */
+  private _welcomeSavedAtStart = false
+  private _openingStartPressed = false
+  private _progressResetPressed = false
+  private _welcomeMapShown = false
+  /** The case has been placed (on a wall or in front) since Lens start: the welcome goes for good. */
+  private _casePlaced = false
+  /** The scaled controls' group, its design distance (from the design eye at its authored place) and its current scale. */
+  private controlsGroup: SceneObject | null = null
+  private _controlsDesignDistance = 0
+  private _controlsScale = 1
+  /** The opening pinch hint (CaseLightPinchHintRule) and whether it was shown at Lens start. */
+  private hintState: PinchHintState = { playing: false, ended: "none" }
+  private _hintShown = false
+  /** Hide stand-in case: true while the case lines and printed labels are hidden. */
+  private _standInHidden = false
 
   // ── Read-only state (for tests and other scripts) ───────────────────────────────────────
 
@@ -638,6 +723,16 @@ export class CaseLightMain extends BaseScriptComponent {
   }
 
   /** Placements made since the Lens opened (on a wall or in front of the user). */
+  /** The CaseControls group's scale now (eye distance over the design distance; 1 at the opening pose in front of the eye). */
+  get controlsScale(): number {
+    return this._controlsScale
+  }
+
+  /** The CaseControls group's design distance (cm): from the design eye to its anchor at the authored place. */
+  get controlsDesignDistanceCm(): number {
+    return this._controlsDesignDistance
+  }
+
   get placementCount(): number {
     return this.placement ? this.placement.placementCount : 0
   }
@@ -839,6 +934,118 @@ export class CaseLightMain extends BaseScriptComponent {
     return !!this.slotPinch && this.slotPinch.isLive
   }
 
+  // ── Mastery map read-outs (CaseLightMastery) ─────────────────────────────────────────────
+
+  /** A letter's mastery state on today's route: "unseen", "weak" or "learned". */
+  masteryLetterState(piece: number): MasteryState {
+    return this.mastery.letterState(this._route, piece)
+  }
+
+  /** A playable row's mastery state on today's route (row 0 holds the hold letter). */
+  masteryRowState(row: number): MasteryState {
+    return rowStateOf(this.masteryRowCounts(row))
+  }
+
+  /** A playable row's letter counts on today's route. */
+  masteryRowCounts(row: number): RowCounts {
+    return this.mastery.rowCounts(this._route, this.letterTargets(), row)
+  }
+
+  /** True while the mastery map is drawn on the case. */
+  get masteryMapShown(): boolean {
+    return this._masteryShown && !!this.masteryView && this.masteryView.isShown
+  }
+
+  /** Per-cell marks visible right now (0 while the map is hidden). */
+  get masteryMarkCount(): number {
+    return this.masteryView ? this.masteryView.visibleMarkCount : 0
+  }
+
+  /** The row words on screen right now, row 0 then row 1 ("" while hidden). */
+  get masteryRowLabels(): string[] {
+    return this.caseLabels ? this.caseLabels.masteryLabelTexts : ["", ""]
+  }
+
+  /** Show my case presses ignored (during a pass or a Case check). */
+  /** Options presses that did nothing because the score card or Again and Done were up. */
+  get optionsIgnoredPressCount(): number {
+    return this._optionsIgnored
+  }
+
+  get masteryIgnoredPressCount(): number {
+    return this._masteryIgnored
+  }
+
+  /** True while the Show my case toggle shows its on state. */
+  get isShowMyCaseOn(): boolean {
+    return this.controls ? this.controls.isShowMyCaseOn : false
+  }
+
+  // ── Saved progress read-outs (CaseLightProgress) ─────────────────────────────────────────
+
+  /** True while the welcome lines (and Reset progress) are on screen. */
+  get progressWelcomeShown(): boolean {
+    return this.controls ? this.controls.isWelcomeVisible : false
+  }
+
+  /** The welcome lines on screen ("" when hidden). */
+  get progressWelcomeLines(): string[] {
+    return this.controls ? this.controls.welcomeLineTexts : ["", ""]
+  }
+
+  /** Rows learned as saved for a route (null when nothing is saved for it). */
+  progressSavedRows(route: number): number[] | null {
+    const r = this.progress.routes.get(route)
+    return r ? r.slice() : null
+  }
+
+  /** The last score as saved ({x, y}), or null. */
+  get progressLastSaved(): { x: number; y: number } | null {
+    return this.progress.last ? { x: this.progress.last.x, y: this.progress.last.y } : null
+  }
+
+  /** Saves made this session (one per completed recall pass). */
+  get progressSaveCount(): number {
+    return this._progressSaves
+  }
+
+  // ── Opening pinch hint and Hide stand-in case read-outs ───────────────────────────────────
+
+  /** True while the opening pinch hint plays. */
+  get pinchHintPlaying(): boolean {
+    return this.hintState.playing
+  }
+
+  /** How the hint ended: "grab", or "none" (still playing, or never shown). */
+  get pinchHintEnd(): PinchHintEnd {
+    return this.hintState.ended
+  }
+
+  /** True when the hint was shown at Lens start. */
+  get pinchHintShown(): boolean {
+    return this._hintShown
+  }
+
+  /** True while the hint's hand is drawn. */
+  get pinchHintDrawn(): boolean {
+    return this.pinchHint ? this.pinchHint.isDrawn : false
+  }
+
+  /** True while Hide stand-in case is on (case lines and printed labels hidden). */
+  get standInHidden(): boolean {
+    return this._standInHidden
+  }
+
+  /** True while the Hide stand-in case toggle shows its on state. */
+  get isHideStandInOn(): boolean {
+    return this.controls ? this.controls.isHideStandInOn : false
+  }
+
+  /** True while the Options panel (Drill pace, Hide stand-in case) is open. */
+  get optionsOpen(): boolean {
+    return this.controls ? this.controls.isOptionsOpen : false
+  }
+
   // ── Demo replay read-outs (CaseLightDemo) ────────────────────────────────────────────────
 
   /** True while a demo replay is playing (false before it starts, after it ends or stops). */
@@ -986,6 +1193,62 @@ export class CaseLightMain extends BaseScriptComponent {
   }
 
   /**
+   * Show my case (the toggle's path): show the mastery map when idle, hide it when shown. During a
+   * practice or recall pass or a Case check the press does nothing (logged) and the toggle stays off.
+   */
+  toggleMasteryMap(): void {
+    if (!this.ready) return
+    if (this._masteryShown) {
+      this.hideMasteryMap()
+      return
+    }
+    const reason = this._mode !== "idle" ? "pass" : this._caseCheckActive ? "case-check" : ""
+    if (reason) {
+      this._masteryIgnored++
+      this.writeLog(formatMasteryIgnored(this.logHead(), reason))
+      this.controls.setShowMyCaseState(false)
+      return
+    }
+    this.showMasteryMap()
+  }
+
+  /**
+   * Options (the toggle's path): open or close the panel with Drill pace and Hide stand-in case.
+   * While the score card or Again and Done are up the press does nothing (logged) and the panel
+   * stays closed, because it opens where the score card stands.
+   */
+  toggleOptions(): void {
+    if (!this.ready) {
+      if (this.controls) this.controls.setOptionsOpen(false)
+      return
+    }
+    const reason = this.isResultVisible ? "score-card" : this.isExitVisible ? "exit" : ""
+    if (reason) {
+      this._optionsIgnored++
+      this.writeLog(formatOptionsIgnored(this.logHead(), reason))
+      this.controls.setOptionsOpen(false)
+      return
+    }
+    this.controls.setOptionsOpen(!this.controls.isOptionsOpen)
+  }
+
+  /**
+   * Hide stand-in case (the toggle's path), in any mode: hide or show the case lines and the labels
+   * a real case already has printed. Nothing else changes; drops use the geometry, not the drawing.
+   */
+  toggleStandIn(): void {
+    if (!this.ready) {
+      if (this.controls) this.controls.setStandInState(false)
+      return
+    }
+    this._standInHidden = !this._standInHidden
+    this.caseMesh.setShown(!this._standInHidden)
+    this.caseLabels.setPrintedLabelsShown(!this._standInHidden)
+    this.controls.setStandInState(this._standInHidden)
+    this.writeLog(formatStandIn(this.logHead(), this._standInHidden))
+  }
+
+  /**
    * Today's route (the picker's path). Taken only between passes (chooseRoute): during a pass the
    * picker is greyed out and this refuses. A switch relabels the case and the bundle (same slots)
    * and starts the route fresh: score, come-backs, retirement and mix-ups reset; notes are per route.
@@ -1038,6 +1301,8 @@ export class CaseLightMain extends BaseScriptComponent {
     this.setSnapPreview(NO_SLOT)
     for (const m of plan) this.bundle.placeIn(m.piece, this.placedWorldPosition(m.wrongSlot, this.pieces[m.piece].side), this.placedWorldRotation())
     this.slotPinch.acquire("case-check")
+    // The map's cell marks would show where the misplaced letters belong.
+    this.hideMasteryMap()
     this.writeLog(formatCaseCheckStart(this.logHead(), plan.map((m) => m.wrongSlot)))
     return true
   }
@@ -1146,8 +1411,16 @@ export class CaseLightMain extends BaseScriptComponent {
     // Measured at the opening pose, before anything can move the case.
     if (this.placement) {
       this.placement.build(this.geo, this.lineMaterial)
-      this.placement.onPlaced.add(() => this.configureStepPads())
+      this.placement.onPlaced.add(() => {
+        this.configureStepPads()
+        // The welcome stands on the case face over the upper row's cells: a placement ends it.
+        this._casePlaced = true
+        this.applyWelcome()
+        this.updateControlsScale()
+      })
     }
+    // Measured at the opening pose too: the controls' group and its eye distance there.
+    this.buildControlsGroup()
     // One slot-pinch target for the case face, shared by Veteran mode and Case check.
     this.slotPinch = new SlotPinchTarget(this.caseRoot, this.geo, this.veteran ? this.veteran.debugCollider : false)
     this.slotPinch.onSlotPinched.add((slot) => this.onCaseCheckPinch(slot))
@@ -1161,14 +1434,29 @@ export class CaseLightMain extends BaseScriptComponent {
     }
     this.rungs = this.pieces.map(() => 0)
     this.retirement = new Retirement(this.pieces.length)
+    this.mastery = new MasteryMap(this.pieces.length)
+    this.masteryView = new CaseLightMasteryView(this.caseRoot, this.geo, this.lineMaterial)
     this.configureStepPads()
 
-    this.bundle.onGrab.add((i) => this.onGrabbed(i))
+    // The pinch hint hears every grab and release ahead of the pass logic (it ends on the grab of any letter).
+    this.bundle.onGrab.add((i) => {
+      this.onHintEvent("grab")
+      this.onGrabbed(i)
+    })
     this.bundle.onDragMove.add((a) => this.onDragMoved(a))
-    this.bundle.onRelease.add((a) => this.onReleased(a))
+    this.bundle.onRelease.add((a) => {
+      this.onHintEvent("release")
+      this.onReleased(a)
+    })
     this.controls.onStartPractice.add(() => this.onStartButton("practice"))
     this.controls.onStartRecall.add(() => this.onStartButton("recall"))
+    this.controls.onToggleOptions.add(() => this.toggleOptions())
     this.controls.onTogglePace.add(() => this.togglePace())
+    this.controls.onToggleShowMyCase.add(() => this.toggleMasteryMap())
+    this.controls.setShowMyCaseState(false)
+    this.controls.onToggleStandIn.add(() => this.toggleStandIn())
+    this.controls.setStandInState(false)
+    this.controls.onResetProgress.add(() => this.resetProgress())
     this.controls.setBackingColor(this.caseLabels.backingColor)
     if (this.exitControls) {
       this.exitControls.onAgain.add(() => this.exitAgain())
@@ -1189,6 +1477,8 @@ export class CaseLightMain extends BaseScriptComponent {
     this.bundle.layout(this.order)
     this.ready = true
     print(`CaseLightMain: ready. ${this.pieces.length} pieces, ${this.geo.shelfCount} shelves, case mesh ${this.caseMesh.builtVertexCount} vertices, ${this.caseLabels.labelledCellCount} labelled cells.`)
+    this.loadSavedProgress()
+    this.startPinchHint()
     if (this.demoReplay) this.startDemoReplay()
   }
 
@@ -1206,11 +1496,19 @@ export class CaseLightMain extends BaseScriptComponent {
   // ── Pass flow ──────────────────────────────────────────────────────────────────────────
 
   private beginPass(mode: CaseLightMode, order: number[]): void {
+    // Set ahead of turning Veteran mode off below, so that change cannot bring the welcome back.
+    this._openingStartPressed = true
+    // A Start press closes the Options panel (it is reopened from the row at any time).
+    this.controls.setOptionsOpen(false)
+    // A Start press (or Again) reaches the pinch hint's rule too; it does not end the hint.
+    this.onHintEvent("start")
     // A pass needs its letters: starting one turns Veteran mode off (notes are kept).
     if (this.veteran && this.veteran.isOn) this.veteran.setMode(false)
     // A Start press ends a running Case check (its line is logged; the new pass hides the card).
     this.endCaseCheck("start")
     this.resetCaseCheck()
+    // The map never shows during a pass: its cell marks would give the answers away.
+    this.hideMasteryMap()
     this.caseLabels.hideResult()
     if (this.exitControls) this.exitControls.hide()
     this.controls.hideHint()
@@ -1283,6 +1581,8 @@ export class CaseLightMain extends BaseScriptComponent {
       this.playCue("chime", isHold ? HOLD_BLOCK_SLOT : slot)
       const placed = this.pass!.placeTop()
       if (this._mode === "recall") this.score.add(placed.helped)
+      // Mastery: learned from memory, weak when helped in this pass (practice changes nothing).
+      this.mastery.recordPlacement(this._route, piece, !placed.helped, this._mode)
       this.logPlacement(piece, slot, "correct", this._mode === "recall" && !placed.helped)
       this.missLitPiece = -1
       if (this._mode === "practice" && this.practiceLadder) this.rungs[piece] = Math.min(LADDER_TOP_RUNG, this.rungs[piece] + 1)
@@ -1294,6 +1594,7 @@ export class CaseLightMain extends BaseScriptComponent {
     // Wrong separation: snap into it (so the drop is visible), then back to the hand.
     this._lastDropResult = isHold ? "refused-hold" : "miss"
     this.logPlacement(piece, slot, isHold ? "refused-hold" : "miss", false)
+    this.mastery.recordMiss(this._route, piece, this._mode)
     if (this._mode === "practice" && this.practiceLadder) this.rungs[piece] = Math.max(0, this.rungs[piece] - 1)
     // Recall: keep the address's opening wrong drop for the mix-up lines on the score view.
     if (this._mode === "recall" && !this.passMixUps.has(piece)) this.passMixUps.set(piece, { dropped: slot, right: target, address: this.addressOf(piece) })
@@ -1362,6 +1663,8 @@ export class CaseLightMain extends BaseScriptComponent {
       this.caseCheckPlan = this.planCaseCheck(pass)
       this._caseCheckOffered = this.caseCheckPlan.length === CASE_CHECK_COUNT
       if (this.exitControls) this.exitControls.setCaseCheckOffered(this._caseCheckOffered)
+      // The score card covers the Options panel's place: the end of a pass closes it.
+      this.controls.setOptionsOpen(false)
       if (this.exitControls) this.exitControls.show()
       if (this.mixUps && this.mixUpLines) {
         const eyeLocal = this.caseRoot.getTransform().getInvertedWorldTransform().multiplyPoint(WorldCameraFinderProvider.getInstance().getWorldPosition())
@@ -1375,6 +1678,7 @@ export class CaseLightMain extends BaseScriptComponent {
     end.mode = finished
     const recall = finished === "recall"
     this.writeLog(formatPassEnd(end, this.pass ? this.pass.placedCount : 0, recall ? this.caseLabels.resultString : "", recall ? this.caseLabels.cameBackString : ""))
+    if (recall) this.saveProgress()
   }
 
   /** The fields every log line starts with (takes the next seq). */
@@ -1407,6 +1711,9 @@ export class CaseLightMain extends BaseScriptComponent {
 
   /** Every letter is retired: no recall pass; the card says so and the exit (Again / Done) stays up. */
   private showAllRetired(): void {
+    this._openingStartPressed = true
+    this.onHintEvent("start")
+    this.hideMasteryMap()
     this.clearCaseCheckMarks(true)
     this._caseCheckOffered = false
     if (this.exitControls) this.exitControls.setCaseCheckOffered(false)
@@ -1424,6 +1731,8 @@ export class CaseLightMain extends BaseScriptComponent {
       this.resultHide.enabled = true
       this.resultHide.reset(this.resultSeconds)
     }
+    // The card covers the Options panel's place: close it.
+    this.controls.setOptionsOpen(false)
     if (this.exitControls) this.exitControls.show()
     print("CaseLightMain: every letter is retired; recall has nothing left until Done.")
   }
@@ -1588,6 +1897,177 @@ export class CaseLightMain extends BaseScriptComponent {
     // The on-screen score starts again on the new route: a log reader resets its count here.
     this.writeLog(formatRouteSwitch(this.logHead(), fromRoute))
     print(`CaseLightMain: route ${route} (${this.routeStreetNames.join(", ")}); score, come-backs and retirement reset.`)
+    // Shown: redraw for the new route's own letters (each route keeps its own map).
+    if (this._masteryShown) this.showMasteryMap()
+    // Welcome up: its second line is about today's route.
+    this.applyWelcome()
+  }
+
+  // ── Saved progress ─────────────────────────────────────────────────────────────────────
+
+  /** Read what was saved (once, at Lens start), log it, and show the welcome when there is any. */
+  /** The opening pinch hint: shown at the top letter only with no saved progress (CaseLightPinchHintRule). */
+  private startPinchHint(): void {
+    this.hintState = openingPinchHint(hasProgress(this.progress), this.demoReplay)
+    const top = this.order.length > 0 ? this.order[0] : -1
+    const letter = top >= 0 ? this.bundle.pieceObject(top) : null
+    if (!this.hintState.playing || !this.pinchHint || !letter || !this.pinchHint.play(letter)) {
+      this.hintState = { playing: false, ended: "none" }
+      if (this.pinchHint) this.pinchHint.hide()
+      return
+    }
+    this._hintShown = true
+    this.writeLog(formatPinchHintStart(this.logHead(), top))
+  }
+
+  /** A grab, release or Start press: the rule decides whether the hint ends; it is logged once. */
+  private onHintEvent(event: PinchHintEvent): void {
+    const next = nextPinchHint(this.hintState, event)
+    if (this.hintState.playing && !next.playing) {
+      if (this.pinchHint) this.pinchHint.hide()
+      this.hintState = next
+      this.writeLog(formatPinchHintEnd(this.logHead(), next.ended))
+      return
+    }
+    this.hintState = next
+  }
+
+  private loadSavedProgress(): void {
+    this.progressStore = new ProgressStore(() => this.onProgressFull())
+    const store = this.progressStore
+    const loaded = loadProgress((key) => store.read(key), ROUTE_IDS)
+    this.progress = loaded.progress
+    for (const key of loaded.badKeys) this.writeLog(formatProgressBadData(this.logHead(), key))
+    const routes = ROUTE_IDS.map((r) => ({ route: r as number, rows: this.progress.routes.get(r) || null }))
+    this.writeLog(formatProgressLoaded(this.logHead(), routes, this.progress.last))
+    this._welcomeSavedAtStart = hasProgress(this.progress)
+    this.applyWelcome()
+  }
+
+  /**
+   * Move the controls that ride with the case into one group, CaseControls, whose origin is the
+   * anchor (CONTROLS_ANCHOR_LOCAL); their world poses are kept, so at the opening pose nothing moves.
+   * The group is then scaled every frame by its eye distance over its design distance (from the
+   * design eye to the anchor at the case's authored place, CaseLightControlScale), so on a wall or
+   * anywhere else the controls look as big, and as far apart, as they do at the opening pose.
+   */
+  private buildControlsGroup(): void {
+    if (this.controlsGroup || !this.caseRoot) return
+    const group = global.scene.createSceneObject("CaseControls")
+    group.setParent(this.caseRoot)
+    group.getTransform().setLocalPosition(CONTROLS_ANCHOR_LOCAL)
+    group.getTransform().setLocalRotation(quat.quatIdentity())
+    group.getTransform().setLocalScale(vec3.one())
+    const missing: string[] = []
+    for (const name of SCALED_CONTROL_NAMES) {
+      let found: SceneObject | null = null
+      for (let i = 0; i < this.caseRoot.getChildrenCount(); i++) {
+        const c = this.caseRoot.getChild(i)
+        if (c.name === name) found = c
+      }
+      if (found) found.setParentPreserveWorldTransform(group)
+      else missing.push(name)
+    }
+    if (missing.length > 0) print(`CaseLightMain: controls not found under CaseRoot, left unscaled: ${missing.join(", ")}`)
+    this.controlsGroup = group
+    // The case is still at its authored place here (nothing has moved it yet).
+    const a = group.getTransform().getWorldPosition()
+    this._controlsDesignDistance = designDistanceCm([a.x, a.y, a.z])
+    this._controlsScale = 1
+    this.createEvent("UpdateEvent").bind(() => this.updateControlsScale())
+  }
+
+  /**
+   * Apply the controls' scale for the eye distance now, when the group is in front of the eye and
+   * the scale has changed enough (CaseLightControlScale.nextControlScale).
+   */
+  private updateControlsScale(): void {
+    if (!this.controlsGroup) return
+    const cam = WorldCameraFinderProvider.getInstance()
+    const eye = cam.getWorldPosition()
+    const toGroup = this.controlsGroup.getTransform().getWorldPosition().sub(eye)
+    const view = cam.getTransform().getWorldTransform().multiplyDirection(new vec3(0, 0, -1)).normalize()
+    const s = nextControlScale(this._controlsScale, toGroup.length, toGroup.dot(view), this._controlsDesignDistance)
+    if (s === this._controlsScale) return
+    this._controlsScale = s
+    this.controlsGroup.getTransform().setLocalScale(vec3.one().uniformScale(s))
+  }
+
+  /**
+   * Show or hide the welcome panel by its rule (CaseLightProgress.welcomeVisible), with today's
+   * route's lines. Hiding switches its SceneObject off (CaseLightControlsUI), so its backplate's
+   * collider and interaction plane and the Reset progress button stop taking any ray.
+   */
+  private applyWelcome(): void {
+    const show = welcomeVisible({ savedAtStart: this._welcomeSavedAtStart, startPressed: this._openingStartPressed, resetPressed: this._progressResetPressed, mapShown: this._welcomeMapShown, veteranOn: this.veteranMode, casePlaced: this._casePlaced })
+    const lines = show ? welcomeLines(this.progress, this._route) : []
+    if (lines.length === 2) this.controls.showWelcome(lines[0], lines[1])
+    else this.controls.hideWelcome()
+  }
+
+  /** A completed recall pass: today's route's rows (merged with what was saved) and the session score. */
+  private saveProgress(): void {
+    if (!this.progressStore) return
+    const saved = this.progress.routes.get(this._route) || null
+    const rows = mergeRows(saved, [this.masteryRowState(0), this.masteryRowState(1)])
+    const last = nextLast(this.progress.last, this.score.unaided, this.score.total)
+    this.progressStore.write(routeKey(this._route), encodeRoute(rows))
+    if (last) this.progressStore.write(LAST_KEY, encodeLast(last))
+    this.progress.routes.set(this._route, rows)
+    this.progress.last = last
+    this._progressSaves++
+    this.writeLog(formatProgressSaved(this.logHead(), rows, last ? last.x : null, last ? last.y : null))
+  }
+
+  /** Reset progress: remove only our keys; this session's map and score are untouched. */
+  private resetProgress(): void {
+    let removed = 0
+    if (this.progressStore) for (const key of ourKeys(ROUTE_IDS)) if (this.progressStore.remove(key)) removed++
+    this.progress = emptyProgress()
+    this._progressResetPressed = true
+    this.applyWelcome()
+    this.writeLog(formatProgressReset(this.logHead(), removed))
+  }
+
+  /** The Lens reported the store full: log it and say so in one line (nothing is cleared). */
+  private onProgressFull(): void {
+    this.writeLog(formatProgressFull(this.logHead()))
+    this.controls.showNotice("Progress not saved: storage full", 4)
+  }
+
+  // ── Mastery map ────────────────────────────────────────────────────────────────────────
+
+  /** Each letter's target on today's route (a separation, or -2 for the hold letter). */
+  private letterTargets(): number[] {
+    return this.pieces.map((_, i) => this.targetSlotOf(i))
+  }
+
+  /** Draw the map for today's route and log it (replacing any shown). */
+  private showMasteryMap(): void {
+    if (!this.masteryView) return
+    const targets = this.letterTargets()
+    const rows = [0, 1].map((row) => {
+      const counts = this.mastery.rowCounts(this._route, targets, row)
+      const state = rowStateOf(counts)
+      return { row, state, text: rowLabel(state, counts), counts }
+    })
+    const cells = targets.map((target, i) => ({ target, state: this.mastery.letterState(this._route, i) }))
+    // The map takes the case face: the mix-up marks of the pass just ended, and the welcome, go.
+    this.clearMixUps()
+    this._welcomeMapShown = true
+    this.applyWelcome()
+    const spots = this.masteryView.show(rows, cells)
+    this.caseLabels.showMasteryLabels(spots)
+    this._masteryShown = true
+    this.controls.setShowMyCaseState(true)
+    this.writeLog(formatMasteryMap(this.logHead(), rows.map((r) => ({ state: r.state, learned: r.counts.learned, weak: r.counts.weak, unseen: r.counts.unseen }))))
+  }
+
+  private hideMasteryMap(): void {
+    if (this.masteryView) this.masteryView.hide()
+    if (this.caseLabels) this.caseLabels.clearMasteryLabels()
+    this._masteryShown = false
+    if (this.controls) this.controls.setShowMyCaseState(false)
   }
 
   // ── Demo replay player ─────────────────────────────────────────────────────────────────
@@ -1712,6 +2192,8 @@ export class CaseLightMain extends BaseScriptComponent {
     }
     if (!on) this.setSnapPreview(NO_SLOT)
     this.activateTop()
+    // The welcome stands on the case face in front of the cells: hidden while Veteran mode is on.
+    this.applyWelcome()
   }
 
   private setSnapPreview(slot: number): void {

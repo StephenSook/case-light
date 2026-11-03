@@ -1,11 +1,13 @@
 // Owns: the case line art as one MeshBuilder mesh (shelves, dividers, heavy street/HOLD lines, ledge, frame).
-// Talks to: CaseLightMain (build(geometry, material), setRoute(route)), CaseLightGeometry and CaseLightRoute (sizes, street breaks).
+// Talks to: CaseLightMain (build(geometry, material), setRoute(route), setShown(shown) for Hide stand-in case), CaseLightGeometry and CaseLightRoute (sizes, street breaks).
 // Must not: hold session state or create text (labels live in CaseLightCaseLabelsUI).
 
 /**
  * Thin light bars in one draw call, so the case stays visible on the additive display while
  * "dark" (no slot lit). Playable shelves get all 41 dividers; the other shelves are faint
- * unlabelled outlines.
+ * unlabelled outlines. This whole drawing is the stand-in for a real case: Hide stand-in case
+ * switches it off (setShown(false)) and nothing else depends on it being drawn (drops use the
+ * geometry, never the mesh).
  */
 
 import { CaseGeometry, CASE_WIDTH_CM, HOLD_CELLS, LEDGE_DEPTH_CM, LEDGE_THICKNESS_CM, SEPS_PER_SHELF, SHELF_DEPTH_CM, SIDE_WALL_CM } from "./CaseLightGeometry"
@@ -60,6 +62,16 @@ export class CaseLightCaseMesh extends BaseScriptComponent {
     this.built = true
     this.geo = geo
     this.visual = addMeshObject(this.sceneObject, "CaseLines", this.makeMesh(geo), material)
+  }
+
+  /** True while the case lines are drawn (Hide stand-in case off). */
+  get isShown(): boolean {
+    return !!this.visual && this.visual.getSceneObject().enabled
+  }
+
+  /** Draw or hide the case lines (the CaseLines object). The geometry and the slots do not change. */
+  setShown(shown: boolean): void {
+    if (this.visual) this.visual.getSceneObject().enabled = shown
   }
 
   /** Redraw for another route: only the heavy lines between streets move (same geometry, same slots). */

@@ -1,0 +1,18 @@
+# CaseLight LEAF, max-ceiling item A1 (mastery map, "Show my case"), coordinator session, one scenario per run_leaf_scenario call.
+# Every run with the run parameter __leaf__diagnostic_policy = fail-fast. Lens Studio 5.23.2, log LensStudioLog-2026-11-02-17-16-46-871-5ad48.txt, demoReplay input false.
+# Product SHA-256: 31 scripts fingerprinted in mutation-backup-a1 before any break. Each verdict appended as it landed.
+23:57:51.223 PASSED: extra-mastery-map  [fail-fast, green before breaks]
+# break 1: CaseLightMastery.recordPlacement counts every recall placement as learned (a helped placement too).
+23:59:28.084 FAILED: extra-mastery-map - AssertionError: c. after the pass: row 1 state Expected: "weak" - Received: "learned"  [fail-fast, break 1]
+# break 2: CaseLightMastery.rowStateOf drops the weak rule (a row with a weak letter can read learned).
+23:59:56.048 FAILED: extra-mastery-map - AssertionError: c. after the pass: row 1 state Expected: "weak" - Received: "learned"  [fail-fast, break 2]
+# break 3: CaseLightMastery.rowOfTarget puts the hold letter (HOLD block) in row 1.
+00:00:12.226 FAILED: extra-mastery-map - AssertionError: a. before any recall: row 0 counts Expected: "learned 0, weak 0, unseen 5" - Received: "learned 0, weak 0, unseen 4"  [fail-fast, break 3]
+# break 4: CaseLightMain.toggleMasteryMap lets the map show during a practice or recall pass.
+00:00:27.788 FAILED: extra-mastery-map - AssertionError: b. press during a recall pass: the map is hidden Expected: "false" - Received: "true"  [fail-fast, break 4]
+# break 5: CaseLightMain's Start press no longer hides the map (the start-of-pass hide call commented out).
+00:00:42.309 FAILED: extra-mastery-map - AssertionError: d. Start recall pressed with the map shown: the map is hidden Expected: "false" - Received: "true"  [fail-fast, break 5]
+# all 5 restored byte-identical (cmp), 31/31 product SHA-256 fingerprints OK (mutation-backup-a1); green again:
+00:01:07.353 PASSED: extra-mastery-map  [fail-fast, after restore]
+# rerun after A2's builder changed this scenario's pace-caption neighbour to the caption backing (the switched-off Text gave a nonsense box):
+00:20:03.725 PASSED: extra-mastery-map  [fail-fast, after A2 scenario edit]

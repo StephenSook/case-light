@@ -1,6 +1,6 @@
-// Owns: the LEAF check of the layout: at open, the top letter is within a stated reach envelope with a short throw to the case, and all four of its corners, the start hint, both Start buttons, the case caption and its small print (wording checked, OpenStreetMap credit included) are inside the display rectangle without overlapping the letter or the version label; after a recall pass, the score card backing, Again and Done are inside it with 0.5 deg to spare and overlap neither each other, the Start row, nor the tray.
-// Talks to: CaseLightLeafSupport (display rectangle from the brief, angle boxes, drawn vertex boxes, Text boxes), CaseLightMain read-only getters (slot positions, cell corners), WorldCameraFinderProvider, scene objects by name.
-// Must not: call CaseLightMain's test hooks or commands, or change product state except through real input (one recall pass, for the exit view).
+// Owns: the LEAF check of the layout: at open, the top letter is within a stated reach envelope with a short throw to the case, and all four of its corners, the start hint, both Start buttons, the case caption and its small print (wording checked, OpenStreetMap credit included) are inside the display rectangle without overlapping the letter or the version label, and the row's two toggles (Options, Show my case) and, with Options opened by a real press, the panel's two (Drill pace, Hide stand-in case) are inside it and wholly inside a preview still, at least 2 deg each way, without overlapping the letter; after a recall pass the Options panel is closed and an Options press there opens nothing (no pinchable object, counted or exempt, stands over the score card), and the score card backing, Again and Done are inside the display with 0.5 deg to spare and overlap neither each other, the Start row (Options, Start practice, Start recall, Show my case), nor the tray.
+// Talks to: CaseLightLeafSupport (display rectangle from the brief, angle boxes, drawn vertex boxes, Text boxes), CaseLightSpacingSupport (the census of pinchable objects), CaseLightMain read-only getters (slot positions, cell corners), WorldCameraFinderProvider, scene objects by name.
+// Must not: call CaseLightMain's test hooks or commands, or change product state except through real input (Options pressed twice at open and once at the exit view, one recall pass for the exit view).
 
 /**
  * Display fit uses the design brief's rectangle (23.6 deg wide; 38 cm tall at 55 cm, about 38.1
@@ -49,6 +49,7 @@ import {
   fmtBox,
   hideLeafOverlay,
   insideDisplay,
+  insidePreviewStill,
   log,
   mustFind,
   roundedRectWorldCorners,
@@ -57,6 +58,7 @@ import {
   waitForReady,
   waitForTopGrabbable,
 } from "./CaseLightLeafSupport"
+import {census} from "./CaseLightSpacingSupport"
 
 const REACH_MIN_CM = 30
 const REACH_MAX_CM = 55
@@ -117,6 +119,31 @@ export class CaseLightLayoutReachScenario extends Scenario {
       expect(anglesOverlap(it.box, top), `${it.name} does not overlap the top letter (${fmtBox(it.box)} vs ${fmtBox(top)})`).toBe(false)
     }
 
+    // The toggles: the row's two at open, then the Options panel's two once a real press opens it.
+    // Each inside the display AND wholly inside a preview still (whose top edge is lower than the
+    // display's), and clear of the top letter.
+    const placeOnWall = angleBox(roundedRectWorldCorners("PlaceOnWallButton"))
+    expect(insidePreviewStill(placeOnWall), `still test rejects the Place on wall button, outside the opening view by design (${fmtBox(placeOnWall)}) (positive control)`).toBe(false)
+    const ix = new CaseLightLeafInteractor()
+    const checkToggle = (label: string, name: string) => {
+      expect(mustFind(name).isEnabledInHierarchy, `${label} drawn`).toBe(true)
+      const b = angleBox(roundedRectWorldCorners(name))
+      log(`LAYOUT ${label}: ${fmtBox(b)}, spare ${displaySpare(b).toFixed(2)} deg`)
+      expect(insideDisplay(b) && insidePreviewStill(b), `${label} inside the display and a preview still (${fmtBox(b)})`).toBe(true)
+      // Snap's guideline: targets at least 2 degrees in angular size, each way.
+      const wDeg = b.maxYaw - b.minYaw
+      const hDeg = b.maxPitch - b.minPitch
+      expect(wDeg >= 2 && hDeg >= 2, `${label} at least 2 deg each way (${wDeg.toFixed(2)} x ${hDeg.toFixed(2)} deg)`).toBe(true)
+      expect(anglesOverlap(b, top), `${label} does not overlap the top letter (${fmtBox(b)} vs ${fmtBox(top)})`).toBe(false)
+    }
+    for (const [label, name] of [["Options toggle", "OptionsButton"], ["Show my case toggle", "ShowMyCaseButton"]]) checkToggle(label, name)
+    expect(main.optionsOpen, "Options closed at open").toBe(false)
+    await ix.pressButton("OptionsButton")
+    expect(main.optionsOpen, "Options opened by a real press").toBe(true)
+    for (const [label, name] of [["Drill pace toggle", "DrillPaceButton"], ["Hide stand-in case toggle", "HideStandInButton"]]) checkToggle(label, name)
+    await ix.pressButton("OptionsButton")
+    expect(main.optionsOpen, "Options closed again by a second press").toBe(false)
+
     // v0.5 disclosure and data credit, readable at open. The test holds the wording itself.
     const captionText = mustFind("Caption").getComponent("Component.Text") as Text
     const creditText = mustFind("CreditText").getComponent("Component.Text") as Text
@@ -134,10 +161,12 @@ export class CaseLightLayoutReachScenario extends Scenario {
       expect(b.minYaw >= captionBacking.minYaw && b.maxYaw <= captionBacking.maxYaw && b.minPitch >= captionBacking.minPitch && b.maxPitch <= captionBacking.maxPitch, `${name} ink inside the caption backing (${fmtBox(b)} vs ${fmtBox(captionBacking)})`).toBe(true)
     }
     // --- Exit view after a recall pass (score card, Again, Done). ---
-    const ix = new CaseLightLeafInteractor()
+    // The Start row as drawn at the exit view. Drill pace is in the Options panel, which the end of
+    // a pass closes (asserted below), so it is not drawn there; the panel's place is logged.
     const trayBox = angleBox(drawnWorldBox("TrayLines").pts)
     const stackAtOpen = top
-    const startRow = ["StartPracticeButton", "StartRecallButton", "DrillPaceButton"].map((n) => ({name: n, box: angleBox(roundedRectWorldCorners(n))}))
+    const startRow = ["OptionsButton", "StartPracticeButton", "StartRecallButton", "ShowMyCaseButton"].map((n) => ({name: n, box: angleBox(roundedRectWorldCorners(n))}))
+    const panelPlace = ["DrillPaceButton", "HideStandInButton"].map((n) => ({name: n, box: angleBox(roundedRectWorldCorners(n))}))
     await ix.pressButton("StartRecallButton")
     expect(main.mode, "recall started for the exit view").toBe("recall")
     while (main.mode === "recall") {
@@ -147,6 +176,18 @@ export class CaseLightLayoutReachScenario extends Scenario {
     }
     expectResult(main, true, "exit view: score card shown")
     expect(main.isExitVisible, "exit view: Again / Done shown").toBe(true)
+    expect(main.optionsOpen, "exit view: the Options panel is closed").toBe(false)
+    for (const p of panelPlace) expect(mustFind(p.name).isEnabledInHierarchy, `exit view: ${p.name} (Options panel) not drawn`).toBe(false)
+    // The Options panel opens where the score card stands, so a press here does nothing: nothing
+    // pinchable may stand over the score card (every pinchable object, counted or exempt).
+    await ix.pressButton("OptionsButton")
+    expect(main.optionsOpen, "exit view: an Options press opens nothing").toBe(false)
+    for (const p of panelPlace) expect(mustFind(p.name).isEnabledInHierarchy, `exit view after an Options press: ${p.name} not drawn`).toBe(false)
+    const cardBox = angleBox(roundedRectWorldCorners("ResultBacking"))
+    const pinchable = census()
+    const overCard = pinchable.targets.concat(pinchable.exemptBoxes).filter((t) => anglesOverlap(t.box, cardBox)).map((t) => t.name)
+    log(`LAYOUT exit after an Options press: ${pinchable.targets.length} buttons and ${pinchable.exemptBoxes.length} exempt objects measured; over the score card: ${overCard.join(", ") || "none"}`)
+    expect(overCard.length, `exit view: nothing pinchable over the score card (${overCard.join(", ") || "none"})`).toBe(0)
     let inTray = 0
     for (let i = 0; i < main.pieceCount; i++) if (!main.isPiecePlaced(i)) inTray++
     expect(inTray, "exit view: every letter is in a cell (the tray is empty)").toBe(0)
@@ -162,6 +203,7 @@ export class CaseLightLayoutReachScenario extends Scenario {
       log(`LAYOUT exit ${it.name}: ${fmtBox(it.box)}, ${spare.toFixed(2)} deg to spare`)
       expect(spare >= 0.5, `${it.name} inside the display with at least 0.5 deg to spare (${spare.toFixed(2)} deg; ${fmtBox(it.box)})`).toBe(true)
       for (const s of startRow) expect(anglesOverlap(it.box, s.box), `${it.name} does not overlap ${s.name} (${fmtBox(it.box)} vs ${fmtBox(s.box)})`).toBe(false)
+      for (const p of panelPlace) log(`LAYOUT exit ${it.name} over the closed Options panel's ${p.name} place: ${anglesOverlap(it.box, p.box)}`)
       expect(anglesOverlap(it.box, trayBox), `${it.name} does not overlap the tray (${fmtBox(it.box)} vs ${fmtBox(trayBox)})`).toBe(false)
       log(`LAYOUT exit ${it.name} over the (now empty) stack place at open: ${anglesOverlap(it.box, stackAtOpen)}`)
     }

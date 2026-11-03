@@ -19,8 +19,11 @@ Where a license name is not stated by the source itself, this file says so inste
 | LEAF (test framework) | 2.0.2 | `Packages/Leaf.lspkg` | Snap Inc. |
 | AiPreviewAgent Inspect and Interact (preview test tooling) | 2.0.1 each | `Packages/AiPreviewAgentInspect.lspkg`, `Packages/AiPreviewAgentInteract.lspkg` | Snap Inc. |
 | Bitmoji 3D (a declared dependency of LEAF 2.0.2, listed in LEAF's `package_dependencies.json`, used by LEAF's hand-and-body visualizer; the Lens itself does not use it) | 10.0.1 | `Packages/Bitmoji 3D.lsc` | Snap Inc. |
+| Specs3DHandHints (the animated hand of the opening pinch hint; the Asset Library's newer "3D Hints" 4.0.0 was not used because it needs Interaction Kit and UI Kit 4.0.0) | 2.0.0 | `Packages/3D Hints.lspkg` | Snap Inc. |
+| Utilities (a declared dependency of Specs3DHandHints 2.0.0) | 2.0.0 | `Packages/Utilities.lspkg` | Snap Inc. |
+| SnapDecorators (a declared dependency of Specs3DHandHints 2.0.0) | 2.0.0 | `Packages/SnapDecorators.lspkg` | Snap Inc. |
 
-Versions are as Lens Studio 5.23.2 reports them for this project. No LICENSE file and no license field was found inside any of these packages (every file in each archive searched on 2 November 2026), so they are used under the terms that ship with Lens Studio and each package, and this file does not name a license for them. One file inside SIK carries its own notice, quoted as written: `Package/Assets/Utils/OneEuroFilter.ts` in `Packages/SpectaclesInteractionKit.lspkg`, "Copyright 2019 Inria" and "BSD License https://opensource.org/licenses/BSD-3-Clause".
+Versions are as Lens Studio 5.23.2 reports them for this project. No LICENSE file and no license field was found inside any of these packages (every file in each archive searched on 2 November 2026, and the three hint packages on 3 November 2026), so they are used under the terms that ship with Lens Studio and each package, and this file does not name a license for them. One file inside SIK carries its own notice, quoted as written: `Package/Assets/Utils/OneEuroFilter.ts` in `Packages/SpectaclesInteractionKit.lspkg`, "Copyright 2019 Inria" and "BSD License https://opensource.org/licenses/BSD-3-Clause".
 
 ## From the tools used to build it
 

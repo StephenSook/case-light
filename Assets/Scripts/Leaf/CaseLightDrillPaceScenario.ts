@@ -1,13 +1,14 @@
 // Owns: the LEAF check for the optional drill pace: off by default, the Drill pace toggle turns it on and off, the "drill pace 18/min" caption shows only while on, the light steps at 18 per minute (within 5%), and toggling it changes no other state.
-// Talks to: CaseLightLeafSupport (real SIK/UIKit input and assertions), CaseLightMain read-only getters (pace read-outs, counts, glow), DrillPaceButton / PaceLight / PaceLabelText by name.
+// Talks to: CaseLightLeafSupport (real SIK/UIKit input and assertions), CaseLightMain read-only getters (pace read-outs, counts, glow, optionsOpen), OptionsButton / DrillPaceButton / PaceLight / PaceLabelText by name.
 // Must not: call CaseLightMain's test hooks or commands (togglePace included), or change product state except through real input; the one exception is pace.lettersPerMinute, raised for the wrap check and put back to 18 in a finally.
 
 /**
  * Product behaviour (builder, verified in CaseLightPace.ts / CaseLightControlsUI.ts): the pace
  * step is computed from elapsed time (steps = seconds * rate / 60), not counted per frame.
  *
- * Input: REAL (LEAF SIK interactor): Start recall, one miss so a cell is lit, then the Drill pace
- * toggle is pressed with a real UIKit trigger, twice.
+ * Input: REAL (LEAF SIK interactor): Start recall, one miss so a cell is lit, then Options is pressed
+ * (the Drill pace toggle is in its panel) and the Drill pace toggle is pressed with a real UIKit
+ * trigger, twice. The panel stays open to the end (no drop follows).
  * Positive controls: the default-off state is recorded before the opening press and asserted only
  * after the light and caption have been seen ON; "caption hidden" after the second press comes
  * after it was seen shown.
@@ -91,6 +92,9 @@ export class CaseLightDrillPaceScenario extends Scenario {
     expect(main.lastDropResult, "deliberate miss").toBe("miss")
     await waitForTopGrabbable(main)
     expectGlowAt(main, target, "answer lit after the miss (before the toggle)")
+    // Drill pace is in the Options panel: open it with a real press (it changes no pass state).
+    await ix.pressButton("OptionsButton")
+    expect(main.optionsOpen, "Options open, Drill pace reachable").toBe(true)
     const before = snap(main)
 
     // Press Drill pace (real UIKit trigger): ON.

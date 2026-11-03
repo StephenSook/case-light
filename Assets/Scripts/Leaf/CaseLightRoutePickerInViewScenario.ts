@@ -1,4 +1,4 @@
-// Owns: the LEAF check that today's route picker can be found when the Lens opens: both Route buttons inside the brief's display rectangle with 0.5 deg to spare, at the Start row's reach, labelled "Route 1" / "Route 2", and clear of the hint, the Start row, the caption, the credit, the version tag, the top letter and the tray.
+// Owns: the LEAF check that today's route picker can be found when the Lens opens: both Route buttons inside the brief's display rectangle with 0.5 deg to spare, at the Start row's reach, labelled "Route 1" / "Route 2", and clear of the hint, the Start row (Options, Start practice, Start recall, Show my case), the caption, the credit, the version tag, the top letter, the tray and the Options panel's two toggles' places (Drill pace, Hide stand-in case).
 // Talks to: CaseLightLeafSupport (angle boxes from the eye, the brief's display rectangle, drawn boxes), CaseLightMain read-only getters (mode, routeId).
 // Must not: move, press or change anything; it only measures what is drawn at open.
 
@@ -66,12 +66,16 @@ export class CaseLightRoutePickerInViewScenario extends Scenario {
       {name: "start hint (both lines and backing)", box: angleBox([...textWorldCorners("StartHint"), ...textWorldCorners("StartHintLine2"), ...roundedRectWorldCorners("StartHintBacking")])},
       {name: "Start practice button", box: angleBox(roundedRectWorldCorners("StartPracticeButton"))},
       {name: "Start recall button", box: angleBox(startRecall)},
+      // Drill pace and Hide stand-in case: their places in the Options panel (drawn while it is open).
       {name: "Drill pace button", box: angleBox(roundedRectWorldCorners("DrillPaceButton"))},
       {name: "case caption (text and backing)", box: angleBox([...textWorldCorners("Caption"), ...roundedRectWorldCorners("CaptionBacking")])},
       {name: "small print under the caption", box: angleBox(textWorldCorners("CreditText"))},
       {name: "version tag", box: angleBox([...textWorldCorners("VersionLabel"), ...roundedRectWorldCorners("VersionBacking")])},
       {name: "top letter", box: angleBox(drawnWorldBox("Piece_0").pts)},
       {name: "tray", box: angleBox(drawnWorldBox("TrayLines").pts)},
+      {name: "Show my case toggle", box: angleBox(roundedRectWorldCorners("ShowMyCaseButton"))},
+      {name: "Hide stand-in case toggle", box: angleBox(roundedRectWorldCorners("HideStandInButton"))},
+      {name: "Options toggle", box: angleBox(roundedRectWorldCorners("OptionsButton"))},
     ]
     expect(anglesOverlap(neighbours[2].box, neighbours[2].box), "control: a box overlaps itself").toBe(true)
 

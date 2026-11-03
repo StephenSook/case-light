@@ -1,0 +1,28 @@
+# CaseLight LEAF full suite after max-ceiling items A1 to A3, before Sync Kit (A4 baseline). All 41 registered scenarios, one per run_leaf_scenario call, coordinator session.
+# Policy: every run with the run parameter __leaf__diagnostic_policy = fail-fast; each line carries the count of fail-fast runner config lines LEAF printed during that run.
+# Lens Studio 5.23.2, relaunched after the 00:40 GUI crash and CaseLight reopened from disk; log LensStudioLog-2026-11-03-00-54-45-828-b0d88.txt, Preview 1.
+# Assets/Scene.scene SHA-256 at start: 501733e30b5841b06c48687fb5bb9a9ee6aa9296582823fde6a06d695d502601. Product scripts: 35, matching mutation-backup-a3 fingerprints.
+# Rooms: Plane, except the three wall scenarios in Sunlit Room. extra-demo-replay: demoReplay set on in memory (scene-graphql, never saved) for that run only.
+# Order: registration order, with extra-demo-replay and the three wall scenarios moved to the end (fewer room switches). The A2 chain (save, welcome, reset) and extra-pinch-hint run back to back as registered.
+# Each line: verdict time, LEAF duration, verdict, id, then room and fail-fast count. Appended as each verdict landed.
+02:14:41.029 [4.050s] PASSED: c1-pickup-and-snap  [Plane; fail-fast runner lines 1]
+02:15:03.519 [3.765s] PASSED: c2-practice-glow-and-arrow  [Plane; fail-fast runner lines 1]
+02:15:58.904 [45.229s] PASSED: c3-recall-miss-lights-answer  [Plane; fail-fast runner lines 1]
+02:16:21.298 [7.994s] PASSED: c4-hold-note-and-hold-block  [Plane; fail-fast runner lines 1]
+02:17:17.231 [15.003s] PASSED: c5-recall-unaided-score  [Plane; fail-fast runner lines 1]
+02:17:50.337 [20.180s] PASSED: extra-result-hides-and-session-total  [Plane; fail-fast runner lines 1]
+02:18:14.778 [9.746s] PASSED: extra-sound-cues  [Plane; fail-fast runner lines 1]
+02:19:18.151 [49.754s] PASSED: extra-drill-pace  [Plane; fail-fast runner lines 1]
+02:19:51.164 [15.544s] PASSED: extra-exit-again-done  [Plane; fail-fast runner lines 1]
+02:20:25.421 [19.872s] PASSED: extra-ladder-default-off  [Plane; fail-fast runner lines 1]
+02:21:27.693 [47.220s] PASSED: extra-ladder-on  [Plane; fail-fast runner lines 1]
+02:22:28.657 [51.048s] PASSED: extra-mixup-lines  [Plane; fail-fast runner lines 1]
+02:23:25.653 [41.148s] PASSED: extra-hold-cells  [Plane; fail-fast runner lines 1]
+02:23:47.127 [7.182s] PASSED: extra-print-fit  [Plane; fail-fast runner lines 1]
+02:24:07.025 [6.497s] PASSED: extra-layout-fit-and-reach  [Plane; fail-fast runner lines 1]
+02:24:19.381 [0.086s] PASSED: extra-leaf-overlay-hidden  [Plane; fail-fast runner lines 1]
+02:26:14.924 [18.512s] PASSED: extra-one-pinch-one-press  [Plane; fail-fast runner lines 1]
+02:26:53.665 [23.893s] PASSED: extra-come-back-and-retire  [Plane; fail-fast runner lines 1]
+02:27:06.817 [3.675s] FAILED: extra-veteran-notes - AssertionError: c. pinch on slot 61 (upper row): the eye ray toward slot 61 meets the slot-pinch target (hit InteractionPlaneColliderRoot) Expected: "true" - Received: "false"  [Plane; fail-fast runner lines 1]
+# STOPPED at the red above (a real finding, not loosened): the A2 welcome panel (up at open because an earlier scenario saved progress) has an interaction plane over the middle of the upper row, so the Veteran slot pinch on cell 61 hits the panel instead. Fixed in the product, then this suite is rerun from the start.
+# Diagnosis, no code changed: Reset progress pressed (store emptied, so no welcome at the next Lens start), then extra-veteran-notes alone: 02:29:00.912 PASSED: extra-veteran-notes (progress-loaded found=0). The welcome panel is the cause; the A3 toggles are not.

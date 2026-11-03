@@ -27,7 +27,8 @@ export function parseLogLine(line: string): Map<string, string> {
     const eq = line.indexOf("=", i)
     if (eq < 0) throw new Error(`no "=" after position ${i} in: ${line}`)
     const key = line.substring(i, eq)
-    if (!/^[a-z]+$/.test(key)) throw new Error(`bad key "${key}" in: ${line}`)
+    // Lower-case letters, then letters or digits (the saved-progress line has route1= / route2=).
+    if (!/^[a-z][a-z0-9]*$/.test(key)) throw new Error(`bad key "${key}" in: ${line}`)
     let j = eq + 1
     let value = ""
     if (line[j] === '"') {
@@ -73,8 +74,11 @@ export class CaseLightPlacementLogScenario extends Scenario {
   async run(): Promise<void> {
     const main = await waitForReady()
     const ix = new CaseLightLeafInteractor()
-    const linesAtOpen = main.placementLogLines.length
-    expect(linesAtOpen, "no log line before any pass").toBe(0)
+    // Before any pass only the Lens-start lines: what saved progress was read, and the opening pinch
+    // hint when it shows. No placement or pass line.
+    const atOpen = main.placementLogLines.map((l) => parseLogLine(l))
+    log(`PLACELOG at open: ${JSON.stringify(atOpen.map((f) => f.get("event") || "(placement)"))}`)
+    expect(atOpen.length >= 1 && atOpen.every((f) => f.get("event") === "progress-loaded" || f.get("event") === "pinch-hint-start"), "before any pass only the Lens-start lines (progress-loaded, pinch-hint-start)").toBe(true)
     const attempts: Attempt[] = []
     let missedThisPass = new Set<number>()
     let passMode = "practice"
