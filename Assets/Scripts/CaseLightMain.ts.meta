@@ -34,18 +34,22 @@
     caseMesh: false
     caseRoot: false
     controls: false
+    demoReplay: false
     exitControls: false
     highlights: false
     lineMaterial: false
     mixUpLines: false
     mixUps: false
     pace: false
+    placement: false
     practiceLadder: false
     resultSeconds: false
     ripples: false
+    routePicker: false
     shelfCount: false
     sounds: false
     startGuardSeconds: false
+    veteran: false
     viewCue: false
   ScriptTypesHidden:
     {}
@@ -68,6 +72,9 @@
       pace: !<MappingBased.AssignableType_9> 00000000-0000-0000-0000-000000000000
       exitControls: !<MappingBased.AssignableType_10> 00000000-0000-0000-0000-000000000000
       mixUps: !<MappingBased.AssignableType_11> 00000000-0000-0000-0000-000000000000
+      placement: !<MappingBased.AssignableType_12> 00000000-0000-0000-0000-000000000000
+      veteran: !<MappingBased.AssignableType_13> 00000000-0000-0000-0000-000000000000
+      routePicker: !<MappingBased.AssignableType_14> 00000000-0000-0000-0000-000000000000
       lineMaterial: !<reference.Material> 00000000-0000-0000-0000-000000000000
       shelfCount: !<float> 6.000000
       bundleCount: !<float> 8.000000
@@ -75,6 +82,7 @@
       practiceLadder: false
       mixUpLines: true
       startGuardSeconds: 0.600000
+      demoReplay: false
   ScriptTypes:
     -
       {}
@@ -95,6 +103,9 @@
     - '// @input AssignableType_9 pace {"hint":"Optional drill pace light, switched by the Drill pace toggle (off by default)"}'
     - '// @input AssignableType_10 exitControls {"hint":"Again / Done buttons shown with the score card at the end of a recall pass"}'
     - '// @input AssignableType_11 mixUps {"hint":"Mix-up lines drawn on the score view after a recall pass (needs mixUpLines on)"}'
+    - '// @input AssignableType_12 placement {"hint":"Optional: put the case on a real wall (Place on wall / Place in front of me). Nothing moves unless the user asks"}'
+    - '// @input AssignableType_13 veteran {"hint":"Optional: Veteran mode, where a veteran pins sorting reminders on slots (letters pause while it is on)"}'
+    - "// @input AssignableType_14 routePicker {\"hint\":\"Optional: today's route choice (Route 1 | Route 2), usable only between passes\"}"
     - '// @input Asset.Material lineMaterial {"hint":"Unlit vertex-colour material used for all line art (SimpleVertexBaseColor)"}'
     - '// @ui {"widget":"group_end"}'
     - '// @ui {"widget":"separator"}'
@@ -106,4 +117,9 @@
     - "// @input bool practiceLadder {\"hint\":\"Practice cue ladder: each address's practice cue fades a rung after a right placement (slot, then row, then shelf band) and comes back a rung after a miss. Off = the exact separation glows on every practice pass\"}"
     - "// @input bool mixUpLines = true {\"hint\":\"After a recall pass, draw a thin line from each missed address's wrong cell to its right cell, outline both cells and label them (cleared by Again, Done or any Start)\"}"
     - '// @input float startGuardSeconds = 0.6 {"hint":"A Start button press this soon after Again or Done is ignored, so one pinch can never press an exit button and then a Start button (0 = off)", "widget":"slider", "min":0, "max":2, "step":0.05}'
+    - '// @ui {"widget":"group_end"}'
+    - '// @ui {"widget":"separator"}'
+    - '// @ui {"widget":"label", "label":"<span style=\"color: #60A5FA;\">Demo</span>"}'
+    - '// @ui {"widget":"group_start", "label":"Demo"}'
+    - "// @input bool demoReplay {\"hint\":\"Demo replay (off for every normal session; never save it on): at Lens start, replays one recorded real run (data/demo_replay_s1-g3nddr.log, a LEAF run with real SIK input in the preview) through the same handlers a hand reaches, under a 'Demo replay' label, and stops on any result that differs from the recording\"}"
     - '// @ui {"widget":"group_end"}'

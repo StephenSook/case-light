@@ -31,6 +31,7 @@
     againLabel: false
     buttonHeightCm: false
     buttonWidthCm: false
+    caseCheckLabel: false
     doneLabel: false
     viewDistanceCm: false
   ScriptTypesHidden:
@@ -44,6 +45,7 @@
   DefaultScriptInputs:
     - againLabel: Again
       doneLabel: Done
+      caseCheckLabel: Case check
       buttonWidthCm: 4.900000
       buttonHeightCm: 3.200000
       viewDistanceCm: !<float> 60.000000
@@ -57,6 +59,7 @@
     - '// @ui {"widget":"group_start", "label":"Settings"}'
     - '// @input string againLabel = "Again" {"hint":"Label on the button that starts a new recall pass straight away"}'
     - '// @input string doneLabel = "Done" {"hint":"Label on the button that ends the session view (nothing glowing, counts kept)"}'
+    - '// @input string caseCheckLabel = "Case check" {"hint":"Label on the button that starts the optional Case check (two letters drawn in wrong cells, pinch both)"}'
     - '// @input float buttonWidthCm = 4.1 {"hint":"Width of each button, in cm", "widget":"slider", "min":3, "max":8, "step":0.1}'
     - '// @input float buttonHeightCm = 3 {"hint":"Height of each button, in cm", "widget":"slider", "min":2.4, "max":6, "step":0.1}'
     - '// @input float viewDistanceCm = 60 {"hint":"Typical distance from the eye to these buttons, in cm (scales the label size)", "widget":"slider", "min":30, "max":110, "step":1}'

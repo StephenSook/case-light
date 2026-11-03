@@ -1,5 +1,5 @@
 // Owns: the printed face of one sample letter: the address in large print, the veteran's hold note and its plain gloss.
-// Talks to: CaseLightBundle, which creates one per letter and calls configure() and setHeld().
+// Talks to: CaseLightBundle, which creates one per letter and calls configure(), relabel() and setHeld().
 // Must not: decide when a piece counts as held (CaseLightMain / CaseLightBundle own that).
 
 /**
@@ -79,6 +79,15 @@ export class CaseLightPieceCardUI extends BaseScriptComponent {
     // The gloss only exists with a note, so it follows the note's show/hide rule exactly.
     this.glossText = this.makeText("HoldGlossText", note ? gloss ?? "" : "", GLOSS_CAP_CM, widthCm, new vec3(0, h * GLOSS_Y_FRACTION, 0), GLOSS_COLOR)
     this.setHeld(false)
+  }
+
+  /** New words for the same card (a route switch): address, hold note and gloss; sizes stay. */
+  relabel(address: string, note: string | null, gloss: string | null = null): void {
+    this.note = note
+    if (this.addressText) this.addressText.text = address
+    if (this.noteText) this.noteText.text = note ?? ""
+    if (this.glossText) this.glossText.text = note ? gloss ?? "" : ""
+    this.setHeld(this.held)
   }
 
   /** Show the large address (and the hold note, if this piece has one) only while in hand. */

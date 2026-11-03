@@ -1,6 +1,6 @@
-// Owns: the mix-up marks on the score view: per missed address a thin line and an outline on both end cells, and where each end's label goes.
-// Talks to: CaseLightMain (build, show, clear, read-outs), CaseLightGeometry (cell positions), CaseLightMeshUtil (mesh); CaseLightCaseLabelsUI draws the label text at the spots returned here.
-// Must not: decide which drops were misses, show anything during a pass, or create text itself.
+// Owns: the score-view cell marks: per missed address a thin line and an outline on both end cells (and where each end's label goes), and the Case check's found-cell outlines.
+// Talks to: CaseLightMain (build, show, clear, showCheckOutlines, clearCheckOutlines, read-outs), CaseLightGeometry (cell positions), CaseLightMeshUtil (mesh); CaseLightCaseLabelsUI draws the label text at the spots returned here.
+// Must not: decide which drops were misses or which cells are found, show anything during a pass, or create text itself.
 
 /**
  * After a recall pass ends, CaseLightMain hands over the pairs it recorded for that pass (one per
@@ -15,6 +15,8 @@
  * covering each other; and the line and outlines leave a gap wherever a label falls, so no mark
  * crosses a label. All marks are flat (one layer), so the additive pink stays pink.
  * Cleared by Again, Done or any Start press (CaseLightMain calls clear()).
+ * Case check marks (showCheckOutlines) are a separate mesh in their own colour: one flat outline per
+ * found cell, cleared when the Case check ends.
  */
 
 import { CaseGeometry, HOLD_BLOCK_SLOT, HOLD_CELLS, SEP_PITCH_CM } from "./CaseLightGeometry"
@@ -80,6 +82,11 @@ export class CaseLightMixUp extends BaseScriptComponent {
   @widget(new SliderWidget(0.1, 0.8, 0.05))
   @hint("Line thickness, in cm")
   lineThicknessCm: number = 0.25
+
+  @input("vec4", "{0.45,1,0.55,1}")
+  @widget(new ColorWidget())
+  @hint("Colour of the Case check outline on each found cell (distinct from the mix-up pink, the cyan target and the white snap outline)")
+  checkColor: vec4
   @ui.group_end
 
   private geo: CaseGeometry | null = null
@@ -89,6 +96,8 @@ export class CaseLightMixUp extends BaseScriptComponent {
   private pairs: MixUpPair[] = []
   private spots: MixUpLabelSpot[] = []
   private breaks = 0
+  private checkVisual: RenderMeshVisual | null = null
+  private checkCells: number[] = []
 
   /** Lines on screen right now. */
   get lineCount(): number {
@@ -176,6 +185,29 @@ export class CaseLightMixUp extends BaseScriptComponent {
     this.spots = []
     this.breaks = 0
     if (this.lineObj) this.lineObj.enabled = false
+  }
+
+  /** Case check: outline these cells (replacing any shown). */
+  showCheckOutlines(slots: number[]): void {
+    this.clearCheckOutlines()
+    if (!this.geo || !this.material || slots.length === 0) return
+    const c = this.checkColor
+    const m = new MeshAccumulator()
+    for (const slot of slots) this.outlineCell(m, slot, [], [c.x, c.y, c.z, c.w])
+    if (!this.checkVisual) this.checkVisual = addMeshObject(this.sceneObject, "CaseCheckMarks", m.finish(), this.material)
+    else this.checkVisual.mesh = m.finish()
+    this.checkVisual.getSceneObject().enabled = true
+    this.checkCells = slots.slice()
+  }
+
+  clearCheckOutlines(): void {
+    this.checkCells = []
+    if (this.checkVisual) this.checkVisual.getSceneObject().enabled = false
+  }
+
+  /** Cells with a Case check outline right now. */
+  get checkOutlineCells(): number[] {
+    return this.checkVisual && this.checkVisual.getSceneObject().enabled ? this.checkCells.slice() : []
   }
 
   /**

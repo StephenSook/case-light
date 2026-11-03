@@ -6,7 +6,7 @@
  * On Specs the display is additive: black is transparent, so a dark card behind text does
  * nothing on the glasses (and reads as a black box in recordings). A light tint at low opacity
  * adds a faint, even glow behind the words instead. Depth write is off so a backing never hides
- * anything behind it; it is created before its text so it draws first.
+ * anything behind it; it is created before its text so it draws underneath.
  *
  * Created with UIKit's RoundedRectangle visual (no collider, no Interactable), so a backing can
  * never catch a pinch meant for a letter or a button.

@@ -1,0 +1,8 @@
+# CaseLight LEAF, queue item 8 (per-frame recall invariant), tester session 28, one scenario per run_leaf_scenario call.
+# Lens Studio 5.23.2, log LensStudioLog-2026-11-02-17-16-46-871-5ad48.txt, Plane room. Each line appended as its verdict landed.
+# Product SHA-256: 26 scripts match mutation-backup-f8 (taken before any break).
+20:05:28.726 PASSED: extra-recall-no-glow-per-frame
+20:05:53.645 PASSED: c3-recall-miss-lights-answer
+20:06:25.475 PASSED: extra-last-letter-dark
+# Result: 3 of 3 PASSED, 0 FAILED. extra-recall-no-glow-per-frame sampled 481 frames (434 dark, 6 + 39 frames of the right answer lit after its miss). Product SHA-256 26/26 unchanged. Preview Plane.
+20:08:59.065 [ 19.685s]PASSED: c3-recall-miss-lights-answer  (coordinator, after the comment-only change to recallOrder in CaseLightRoute.ts)

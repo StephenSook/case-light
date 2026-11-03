@@ -1,0 +1,651 @@
+{
+ "attribution": "House numbers and street names from OpenStreetMap, (c) OpenStreetMap contributors, available under the Open Database License (ODbL 1.0): https://www.openstreetmap.org/copyright . Not a USPS route; no resident information. The hold piece uses a house number that does not exist on its street.",
+ "source": "OpenStreetMap API map call, bbox -84.622,34.028,-84.600,34.050, fetched 2026-11-02 about 14:28 ET",
+ "streets": [
+  "IRVIN CT",
+  "SHIRLEY DR",
+  "PINE HILL DR",
+  "DUVALL PL",
+  "DOUGLAS LN",
+  "MCGARITY LN",
+  "JEBS CT",
+  "TERRY LN NW"
+ ],
+ "osmNames": [
+  "Irvin Court",
+  "Shirley Drive",
+  "Pine Hill Drive",
+  "Duvall Place",
+  "Douglas Lane",
+  "Mcgarity Lane",
+  "Jebs Court",
+  "Terry Lane Northwest"
+ ],
+ "deliveries": 146,
+ "cells": [
+  {
+   "slot": 0,
+   "street": 0,
+   "left": 2112,
+   "right": 2108,
+   "blockStart": true
+  },
+  {
+   "slot": 1,
+   "street": 0,
+   "left": 2106,
+   "right": 2104,
+   "blockStart": false
+  },
+  {
+   "slot": 2,
+   "street": 0,
+   "left": 2102,
+   "right": 2100,
+   "blockStart": false
+  },
+  {
+   "slot": 3,
+   "street": 1,
+   "left": 3051,
+   "right": 3059,
+   "blockStart": true
+  },
+  {
+   "slot": 4,
+   "street": 1,
+   "left": 3067,
+   "right": 3089,
+   "blockStart": false
+  },
+  {
+   "slot": 5,
+   "street": 1,
+   "left": 3097,
+   "right": 3109,
+   "blockStart": false
+  },
+  {
+   "slot": 6,
+   "street": 1,
+   "left": 3125,
+   "right": 3141,
+   "blockStart": true
+  },
+  {
+   "slot": 7,
+   "street": 1,
+   "left": 3149,
+   "right": 3157,
+   "blockStart": false
+  },
+  {
+   "slot": 8,
+   "street": 1,
+   "left": 3165,
+   "right": 3173,
+   "blockStart": false
+  },
+  {
+   "slot": 9,
+   "street": 1,
+   "left": 3181,
+   "right": 3189,
+   "blockStart": false
+  },
+  {
+   "slot": 10,
+   "street": 1,
+   "left": 3197,
+   "right": 3205,
+   "blockStart": false
+  },
+  {
+   "slot": 11,
+   "street": 1,
+   "left": 3221,
+   "right": 3229,
+   "blockStart": true
+  },
+  {
+   "slot": 12,
+   "street": 1,
+   "left": 3253,
+   "right": 3262,
+   "blockStart": false
+  },
+  {
+   "slot": 13,
+   "street": 1,
+   "left": 3254,
+   "right": 3214,
+   "blockStart": true
+  },
+  {
+   "slot": 14,
+   "street": 1,
+   "left": 3204,
+   "right": 3196,
+   "blockStart": false
+  },
+  {
+   "slot": 15,
+   "street": 1,
+   "left": 3188,
+   "right": 3180,
+   "blockStart": true
+  },
+  {
+   "slot": 16,
+   "street": 1,
+   "left": 3166,
+   "right": 3142,
+   "blockStart": false
+  },
+  {
+   "slot": 17,
+   "street": 1,
+   "left": 3134,
+   "right": 3124,
+   "blockStart": false
+  },
+  {
+   "slot": 18,
+   "street": 1,
+   "left": 3114,
+   "right": 3104,
+   "blockStart": false
+  },
+  {
+   "slot": 19,
+   "street": 1,
+   "left": 3072,
+   "right": 3052,
+   "blockStart": true
+  },
+  {
+   "slot": 20,
+   "street": 2,
+   "left": 3061,
+   "right": 3075,
+   "blockStart": true
+  },
+  {
+   "slot": 21,
+   "street": 2,
+   "left": 3091,
+   "right": 3095,
+   "blockStart": false
+  },
+  {
+   "slot": 22,
+   "street": 2,
+   "left": 3107,
+   "right": 3100,
+   "blockStart": true
+  },
+  {
+   "slot": 23,
+   "street": 2,
+   "left": 3080,
+   "right": 3070,
+   "blockStart": true
+  },
+  {
+   "slot": 24,
+   "street": 3,
+   "left": 3105,
+   "right": 3115,
+   "blockStart": true
+  },
+  {
+   "slot": 25,
+   "street": 3,
+   "left": 3125,
+   "right": 3135,
+   "blockStart": false
+  },
+  {
+   "slot": 26,
+   "street": 3,
+   "left": 3145,
+   "right": 3155,
+   "blockStart": false
+  },
+  {
+   "slot": 27,
+   "street": 3,
+   "left": 3210,
+   "right": 3200,
+   "blockStart": true
+  },
+  {
+   "slot": 28,
+   "street": 3,
+   "left": 3190,
+   "right": 3180,
+   "blockStart": true
+  },
+  {
+   "slot": 29,
+   "street": 3,
+   "left": 3170,
+   "right": 3160,
+   "blockStart": false
+  },
+  {
+   "slot": 30,
+   "street": 3,
+   "left": 3150,
+   "right": 3140,
+   "blockStart": false
+  },
+  {
+   "slot": 31,
+   "street": 3,
+   "left": 3130,
+   "right": 3120,
+   "blockStart": false
+  },
+  {
+   "slot": 32,
+   "street": 3,
+   "left": 3110,
+   "right": 3100,
+   "blockStart": false
+  },
+  {
+   "slot": 33,
+   "street": 4,
+   "left": 3201,
+   "right": 3215,
+   "blockStart": true
+  },
+  {
+   "slot": 34,
+   "street": 4,
+   "left": 3227,
+   "right": 3239,
+   "blockStart": false
+  },
+  {
+   "slot": 35,
+   "street": 4,
+   "left": 3251,
+   "right": 3288,
+   "blockStart": false
+  },
+  {
+   "slot": 40,
+   "street": 4,
+   "left": 3278,
+   "right": 3272,
+   "blockStart": true
+  },
+  {
+   "slot": 41,
+   "street": 4,
+   "left": 3264,
+   "right": 3260,
+   "blockStart": false
+  },
+  {
+   "slot": 42,
+   "street": 4,
+   "left": 3250,
+   "right": 3228,
+   "blockStart": false
+  },
+  {
+   "slot": 43,
+   "street": 4,
+   "left": 3226,
+   "right": 3214,
+   "blockStart": false
+  },
+  {
+   "slot": 44,
+   "street": 4,
+   "left": 3198,
+   "right": 3170,
+   "blockStart": true
+  },
+  {
+   "slot": 45,
+   "street": 4,
+   "left": 3128,
+   "right": null,
+   "blockStart": false
+  },
+  {
+   "slot": 46,
+   "street": 5,
+   "left": 3239,
+   "right": 3249,
+   "blockStart": true
+  },
+  {
+   "slot": 47,
+   "street": 5,
+   "left": 3259,
+   "right": 3269,
+   "blockStart": false
+  },
+  {
+   "slot": 48,
+   "street": 5,
+   "left": 3279,
+   "right": 3291,
+   "blockStart": false
+  },
+  {
+   "slot": 49,
+   "street": 5,
+   "left": 3290,
+   "right": 3278,
+   "blockStart": true
+  },
+  {
+   "slot": 50,
+   "street": 5,
+   "left": 3268,
+   "right": 3258,
+   "blockStart": false
+  },
+  {
+   "slot": 51,
+   "street": 5,
+   "left": 3248,
+   "right": 3238,
+   "blockStart": false
+  },
+  {
+   "slot": 52,
+   "street": 5,
+   "left": 3228,
+   "right": null,
+   "blockStart": false
+  },
+  {
+   "slot": 53,
+   "street": 6,
+   "left": 2001,
+   "right": 2003,
+   "blockStart": true
+  },
+  {
+   "slot": 54,
+   "street": 6,
+   "left": 2005,
+   "right": 2007,
+   "blockStart": false
+  },
+  {
+   "slot": 55,
+   "street": 6,
+   "left": 2009,
+   "right": 2011,
+   "blockStart": false
+  },
+  {
+   "slot": 56,
+   "street": 6,
+   "left": 2013,
+   "right": 2015,
+   "blockStart": false
+  },
+  {
+   "slot": 57,
+   "street": 6,
+   "left": 2017,
+   "right": 2019,
+   "blockStart": false
+  },
+  {
+   "slot": 58,
+   "street": 6,
+   "left": 2021,
+   "right": 2023,
+   "blockStart": false
+  },
+  {
+   "slot": 59,
+   "street": 6,
+   "left": 2025,
+   "right": 2027,
+   "blockStart": false
+  },
+  {
+   "slot": 60,
+   "street": 6,
+   "left": 2029,
+   "right": 2054,
+   "blockStart": false
+  },
+  {
+   "slot": 61,
+   "street": 6,
+   "left": 2052,
+   "right": 2050,
+   "blockStart": true
+  },
+  {
+   "slot": 62,
+   "street": 6,
+   "left": 2048,
+   "right": 2046,
+   "blockStart": false
+  },
+  {
+   "slot": 63,
+   "street": 6,
+   "left": 2044,
+   "right": 2042,
+   "blockStart": false
+  },
+  {
+   "slot": 64,
+   "street": 6,
+   "left": 2040,
+   "right": 2038,
+   "blockStart": false
+  },
+  {
+   "slot": 65,
+   "street": 6,
+   "left": 2036,
+   "right": 2034,
+   "blockStart": false
+  },
+  {
+   "slot": 66,
+   "street": 6,
+   "left": 2032,
+   "right": 2030,
+   "blockStart": false
+  },
+  {
+   "slot": 67,
+   "street": 6,
+   "left": 2028,
+   "right": 2026,
+   "blockStart": false
+  },
+  {
+   "slot": 68,
+   "street": 6,
+   "left": 2024,
+   "right": 2022,
+   "blockStart": false
+  },
+  {
+   "slot": 69,
+   "street": 6,
+   "left": 2020,
+   "right": 2018,
+   "blockStart": false
+  },
+  {
+   "slot": 70,
+   "street": 6,
+   "left": 2016,
+   "right": 2014,
+   "blockStart": false
+  },
+  {
+   "slot": 71,
+   "street": 6,
+   "left": 2012,
+   "right": 2010,
+   "blockStart": false
+  },
+  {
+   "slot": 72,
+   "street": 6,
+   "left": 2008,
+   "right": 2006,
+   "blockStart": false
+  },
+  {
+   "slot": 73,
+   "street": 6,
+   "left": 2004,
+   "right": 2002,
+   "blockStart": false
+  },
+  {
+   "slot": 74,
+   "street": 6,
+   "left": 2000,
+   "right": null,
+   "blockStart": false
+  },
+  {
+   "slot": 75,
+   "street": 7,
+   "left": 3511,
+   "right": 3521,
+   "blockStart": true
+  },
+  {
+   "slot": 76,
+   "street": 7,
+   "left": 3531,
+   "right": 3541,
+   "blockStart": false
+  },
+  {
+   "slot": 77,
+   "street": 7,
+   "left": 3551,
+   "right": 3550,
+   "blockStart": false
+  },
+  {
+   "slot": 78,
+   "street": 7,
+   "left": 3510,
+   "right": null,
+   "blockStart": true
+  }
+ ],
+ "pieces": [
+  {
+   "street": 1,
+   "number": 3189,
+   "hold": false,
+   "address": "3189 SHIRLEY DR",
+   "slot": 9,
+   "side": 1
+  },
+  {
+   "street": 5,
+   "number": 3249,
+   "hold": false,
+   "address": "3249 MCGARITY LN",
+   "slot": 46,
+   "side": 1
+  },
+  {
+   "street": 6,
+   "number": 2015,
+   "hold": false,
+   "address": "2015 JEBS CT",
+   "slot": 56,
+   "side": 1
+  },
+  {
+   "street": 1,
+   "number": 3124,
+   "hold": false,
+   "address": "3124 SHIRLEY DR",
+   "slot": 17,
+   "side": 1
+  },
+  {
+   "street": 7,
+   "number": 3531,
+   "hold": false,
+   "address": "3531 TERRY LN NW",
+   "slot": 76,
+   "side": 0
+  },
+  {
+   "street": 1,
+   "number": 3053,
+   "hold": true,
+   "address": "3053 SHIRLEY DR"
+  },
+  {
+   "street": 2,
+   "number": 3070,
+   "hold": false,
+   "address": "3070 PINE HILL DR",
+   "slot": 23,
+   "side": 1
+  },
+  {
+   "street": 0,
+   "number": 2104,
+   "hold": false,
+   "address": "2104 IRVIN CT",
+   "slot": 1,
+   "side": 1
+  },
+  {
+   "street": 6,
+   "number": 2052,
+   "hold": false,
+   "address": "2052 JEBS CT",
+   "slot": 61,
+   "side": 0
+  },
+  {
+   "street": 4,
+   "number": 3226,
+   "hold": false,
+   "address": "3226 DOUGLAS LN",
+   "slot": 43,
+   "side": 0
+  },
+  {
+   "street": 2,
+   "number": 3075,
+   "hold": false,
+   "address": "3075 PINE HILL DR",
+   "slot": 20,
+   "side": 1
+  },
+  {
+   "street": 6,
+   "number": 2028,
+   "hold": false,
+   "address": "2028 JEBS CT",
+   "slot": 67,
+   "side": 0
+  }
+ ],
+ "holdNumber": 3053,
+ "longestAddress": "3061 PINE HILL DR",
+ "droppedNonHomes": []
+}

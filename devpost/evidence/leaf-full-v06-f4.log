@@ -1,0 +1,33 @@
+# CaseLight LEAF full suite, v0.6 with features 1-4 and option A (tester session 24), one scenario per run_leaf_scenario call.
+# Lens Studio 5.23.2, log LensStudioLog-2026-11-02-17-16-46-871-5ad48.txt. Plane room unless noted. Each line appended as its verdict landed.
+# Product SHA-256: 25 scripts match mutation-backup-f4 (taken before any break).
+18:53:25.578 PASSED: c1-pickup-and-snap
+18:53:41.508 PASSED: c2-practice-glow-and-arrow
+18:54:12.544 PASSED: c3-recall-miss-lights-answer
+18:54:32.463 PASSED: c4-hold-note-and-hold-block
+18:55:04.662 PASSED: c5-recall-unaided-score
+18:55:40.073 PASSED: extra-result-hides-and-session-total
+18:56:00.798 PASSED: extra-sound-cues
+18:57:03.997 PASSED: extra-drill-pace
+18:57:32.714 PASSED: extra-exit-again-done
+18:58:06.001 PASSED: extra-ladder-default-off
+18:59:02.568 PASSED: extra-ladder-on
+19:00:19.762 PASSED: extra-mixup-lines
+19:01:10.850 PASSED: extra-hold-cells
+19:01:34.037 PASSED: extra-print-fit
+19:01:55.120 PASSED: extra-layout-fit-and-reach
+19:02:10.321 PASSED: extra-leaf-overlay-hidden
+19:02:40.426 PASSED: extra-one-pinch-one-press
+19:03:19.625 PASSED: extra-come-back-and-retire
+19:03:42 NO VERDICT: extra-veteran-notes - Lens reset 5 s into the run by the OAuth token refresh (19:03:42 OAuthController); re-run below
+19:05:17.506 PASSED: extra-veteran-notes
+19:05:52.473 PASSED: extra-veteran-notes-in-pass
+19:06:14.499 PASSED: extra-veteran-stray-after-abort
+19:06:34.164 PASSED: extra-route-labels
+19:09:09.170 PASSED: extra-route-letters
+19:09:40.254 PASSED: extra-route-switch-resets
+19:10:02.505 PASSED: extra-last-letter-dark
+19:11:13.044 PASSED: extra-wall-refusals  [Sunlit Room, camera at the origin]
+19:11:44.449 PASSED: extra-wall-placement  [Sunlit Room, camera at (0, 0, -350)]
+19:13:38.927 PASSED: extra-replace-mid-pass  [Sunlit Room, camera at the origin, walked to (0, 0, -350) mid-run]
+# Result: 28 of 28 scenarios PASSED, 0 FAILED. One OAuth token-refresh reset (no verdict) re-run once. Product SHA-256 25/25 unchanged after the run. Preview set back to Plane, camera reset.

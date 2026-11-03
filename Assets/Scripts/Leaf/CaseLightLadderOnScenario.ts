@@ -39,6 +39,7 @@ import {hideLeafOverlay,
   waitForReady,
   waitForTopGrabbable,
 } from "./CaseLightLeafSupport"
+import {modelComeBack} from "./CaseLightRecallSupport"
 
 type Act = "right" | "miss" | "off" | "hold-wrong"
 
@@ -182,6 +183,8 @@ export class CaseLightLadderOnScenario extends Scenario {
       await ix.pressButton("StartRecallButton")
       expect(main.mode, "recall started").toBe("recall")
       let opening = true
+      let missed = -1
+      let returned = false
       while (main.mode === "recall") {
         const p = await waitForTopGrabbable(main)
         const t = targetOf(main, p)
@@ -209,20 +212,26 @@ export class CaseLightLadderOnScenario extends Scenario {
         if (opening) {
           opening = false
           expect(main.lastDropResult === "miss" || main.lastDropResult === "refused-hold", `${ctx}: opening drop is a miss`).toBe(true)
-          // After a recall miss the answer lights (criterion 3); still no ladder cue on the next grab.
-          await ix.dropTopPieceAtSlot(main, dropSlotFor(main, p), {
-            onHeld: () => {
-              expectGlowAt(main, t, `${ctx} re-grab after the miss`)
-              expectNoRegion(main, `${ctx} re-grab after the miss`)
-            },
-          })
-          expect(main.lastDropResult, `${ctx}: placed after the miss`).toBe("correct")
-          expect(JSON.stringify(rungs(main)), `${ctx}: rungs unchanged after the recall placement`).toBe(before)
+          // After a recall miss the answer lights (criterion 3) and no ladder region cue shows.
+          // v0.6 feature 2 replaces the old immediate re-grab: the letter goes back with exactly
+          // two letters before it (our model), so the next letters are grabbed with no cue at all
+          // (checked by noCue above), and it comes back unlit and is placed then (helped).
+          expectGlowAt(main, t, `${ctx} right after the miss`)
+          expectNoRegion(main, `${ctx} right after the miss`)
+          const q = main.bundleOrder
+          const want = modelComeBack([p].concat(q.filter((x) => x !== p)))
+          expect(JSON.stringify(main.currentPassOrder), `${ctx}: missed letter back with exactly 2 before it (our model)`).toBe(JSON.stringify(want))
+          missed = p
         } else {
           expect(main.lastDropResult, `${ctx}: placed`).toBe("correct")
+          if (p === missed) {
+            expect(main.isHelpedThisPass(p), `${ctx}: the returning letter is still helped`).toBe(true)
+            returned = true
+          }
         }
       }
       expect(JSON.stringify(rungs(main)), "rungs unchanged across the recall pass").toBe(before)
+      expect(returned, `the missed letter ${missed} came back and was placed in the same pass`).toBe(true)
       log(`LADDER-ON recall done, rungs ${JSON.stringify(rungs(main))}`)
     } finally {
       main.practiceLadder = false

@@ -1,0 +1,30 @@
+# v0.6 item 2 closing suite, 21 scenarios. Lens Studio 5.23.2 preview. Plane room unless noted.
+# Part 1 (tester session 20), before the 17:16 Mac logout, read from LensStudioLog-2026-11-02-13-42-27-186-a51b8.txt:
+16:58:30.105 [  3.674s]PASSED: c1-pickup-and-snap
+16:58:44.324 [  4.022s]PASSED: c2-practice-glow-and-arrow
+16:58:58.946 [  8.514s]PASSED: c3-recall-miss-lights-answer
+16:59:13.588 [  8.610s]PASSED: c4-hold-note-and-hold-block
+16:59:37.902 [ 16.805s]PASSED: c5-recall-unaided-score
+17:00:08.906 [ 20.296s]PASSED: extra-result-hides-and-session-total
+17:00:29.617 [  9.664s]PASSED: extra-sound-cues
+17:01:26.240 [ 49.434s]PASSED: extra-drill-pace
+17:01:54.953 [ 15.112s]PASSED: extra-exit-again-done
+17:02:21.885 [ 19.286s]PASSED: extra-ladder-default-off
+17:03:12.890 [ 43.792s]PASSED: extra-ladder-on
+17:04:21.897 [ 51.033s]PASSED: extra-mixup-lines
+17:05:53.262 [ 44.160s]PASSED: extra-hold-cells
+17:06:24.690 [  7.280s]PASSED: extra-print-fit
+17:06:41.170 [  6.561s]PASSED: extra-layout-fit-and-reach
+17:06:49.918 [  0.483s]PASSED: extra-leaf-overlay-hidden
+# 17:07:24.517 Running scenario: extra-one-pinch-one-press  (no verdict before the 17:16 logout; re-run below)
+# Part 2 (coordinator), after reopening the project, one scenario per call:
+17:28:46.413 [ 14.568s]PASSED: extra-one-pinch-one-press
+17:29:27.249 [ 21.836s]PASSED: extra-come-back-and-retire
+17:29:58.466 [ 10.111s]PASSED: extra-wall-refusals  (Sunlit Room, camera at the origin)
+17:30:26.571 [  9.032s]PASSED: extra-wall-placement  (Sunlit Room, camera at (0, 0, -350))
+17:31:00.432 [  1.048s]FAILED: extra-replace-mid-pass - Error: Precondition failed: this scenario needs Sunlit Room ... with the preview camera at the room origin when it starts (MovePreviewCamera reset); the wall was 154.7 cm.  (setup error by the coordinator: camera left at (0, 0, -350); the scenario refused by name before testing anything. Rerun from the origin below.)
+17:33:56.278 [152.249s]FAILED: extra-replace-mid-pass - Error: Timed out after 150000 ms waiting for: the camera moved toward the wall (MovePreviewCamera setPosition 0, 0, -350)  (Sunlit Room, camera at the origin at start; the scenario walks it to (0, 0, -350))
+#   (setup error by the coordinator: this scenario waits for the camera to be walked to (0, 0, -350) by MovePreviewCamera while it runs; it was not moved. Rerun below with the walk.)
+17:36:09.764 [ 91.741s]PASSED: extra-replace-mid-pass  (Sunlit Room, camera at the origin at start, walked to (0, 0, -350) by MovePreviewCamera while it waited)
+# Result: 21 of 21 passed (16 in part 1, 5 in part 2). Two part-2 runs of extra-replace-mid-pass failed on the coordinator's setup (camera position), each by name before any product check; the third, set up as the scenario asks, passed.
+# After the last run: 21/21 product SHA-256 fingerprints OK (mutf2.sh checkall), the same files the item 2 breaks were planted in and restored.

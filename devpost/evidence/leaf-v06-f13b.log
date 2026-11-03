@@ -1,0 +1,32 @@
+# CaseLight LEAF, queue item 13b (measured real scale), tester session 33, one scenario per run_leaf_scenario call.
+# Every run with the run parameter __leaf__diagnostic_policy = fail-fast. Lens Studio 5.23.2, log LensStudioLog-2026-11-02-17-16-46-871-5ad48.txt, Plane room, demoReplay input false.
+# Product SHA-256: 29 scripts match mutation-backup-f13b (taken before the break). Each verdict appended as it landed.
+21:43:46.261 PASSED: extra-case-real-scale  [fail-fast]
+21:45:38.526 PASSED: c1-pickup-and-snap  [fail-fast]
+# Both runs: exactly 1 LEAF runner config line with "__leaf__diagnostic_policy":"fail-fast" each.
+
+Measured real scale (extra-case-real-scale, 21:43:46 run), plain text for the README:
+- How: the CaseLines mesh's own vertex data at runtime (3360 vertices, 140 boxes of 24) put through its world transform, then into the case frame (case root position and rotation, world cm, no scale). No CaseLightGeometry constant is read.
+- Slot pitch: 2.54 cm (median of 80 separation widths, every one 2.54). Target 2.54 +/- 0.05, one-inch separations, M-41 221.2, VERIFIED. OK.
+- 40-cell span: 101.60 cm on each playable shelf (41 dividers each). Target 101.6 +/- 0.5, 40 one-inch separations. OK.
+- Shelf spacing: 15.00 cm (lower to upper divider row, bottoms and tops agree). Inside the 1974 field range 11.91 to 19.69 cm (4-11/16 to 7-3/4 in) and within 15.24 +/- 0.5 (6 in), NB-NAT-3233, VERIFIED historical. OK.
+- Shelf depth: 30.00 cm (14 board depth edges, all 30.00, bar thickness removed). Target 30.48 +/- 1 (12 in), vendor, REPORTED. OK.
+- Overall width: 122.15 cm (outer edge of the drawn lines, 0.15 cm bars included), 10.39 cm wider than the 44 in vendor shelf (111.76 cm, REPORTED). Printed, not asserted: the case stays this wide by decision.
+- Overall height: 190.15 cm (drawn floor line to top line). No USPS source; printed, not asserted.
+- Lower playable shelf top: 127.07 cm above the drawn floor, 24.80 cm below the eye in this preview (design brief, not a USPS figure). Printed, not asserted.
+- Controls: the same detector reads a 0.9 copy of the vertices as pitch 2.29 and spans 91.44; the 75 printed labels sit midway between their two dividers (worst offset 0.000 cm) and their spacing is 2.54 cm.
+#   LEAFT SCALE MEASURED (case frame, cm): 3360 vertices; divider rows 41 dividers y -28.20..-13.20, 41 dividers y -13.20..1.80; pitch median 2.54 (every separation 2.54..2.54, 80 widths); 40-cell spans 101.60 and 101.60; shelf spacing 15.00 (bottoms) / 15.00 (tops); depth 30.00 (14 edges, 30.00..30.00); overall (outer edge of the drawn lines, 0.15 cm bars included) 122.15 x 190.15; lower playable shelf top 127.07 above the drawn floor, 24.80 below the eye
+#   LEAFT SCALE control: 0.9 copy reads pitch 2.29, spans 91.44 and 91.44
+#   LEAFT SCALE control: 75 labels, worst offset from the midpoint of their dividers 0.000 cm; label pitch 2.54
+#   LEAFT SCALE CHECK ok  row 0: 41 dividers, want 41 (40 separations)
+#   LEAFT SCALE CHECK ok  row 1: 41 dividers, want 41 (40 separations)
+#   LEAFT SCALE CHECK ok  slot pitch 2.54 cm within 2.54 +/- 0.05 (one inch, M-41 221.2, VERIFIED)
+#   LEAFT SCALE CHECK ok  every separation width (2.54..2.54) within 2.54 +/- 0.05
+#   LEAFT SCALE CHECK ok  row 0: 40-cell span 101.60 cm within 101.6 +/- 0.5 (40 one-inch separations)
+#   LEAFT SCALE CHECK ok  row 1: 40-cell span 101.60 cm within 101.6 +/- 0.5 (40 one-inch separations)
+#   LEAFT SCALE CHECK ok  shelf spacing (bottoms) 15.00 cm inside the 1974 field range 11.91..19.68 (NB-NAT-3233, VERIFIED historical)
+#   LEAFT SCALE CHECK ok  shelf spacing (bottoms) 15.00 cm within 15.24 +/- 0.5 (6 in)
+#   LEAFT SCALE CHECK ok  shelf spacing (tops) 15.00 cm inside the 1974 field range 11.91..19.68 (NB-NAT-3233, VERIFIED historical)
+#   LEAFT SCALE CHECK ok  shelf spacing (tops) 15.00 cm within 15.24 +/- 0.5 (6 in)
+#   LEAFT SCALE CHECK ok  shelf depth 30.00 cm within 30.48 +/- 1 (12 in, vendor, REPORTED)
+#   LEAFT SCALE case 122.15 x 190.15 cm (width vs 44 in vendor shelf: +10.39 cm, REPORTED, printed not asserted; height: no USPS source), slot pitch 2.54 cm, 40 cells 101.60 cm, shelf spacing 15.00 cm, depth 30.00 cm, lower playable shelf top 24.80 cm below the eye and 127.07 cm above the drawn floor (design brief, not a USPS figure), real scale: pitch/span/spacing/depth OK

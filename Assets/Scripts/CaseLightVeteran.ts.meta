@@ -1,0 +1,61 @@
+- !<AssetImportMetadata/78d0a547-bea3-459e-b1f1-d1cb8a847e35>
+  ImportedAssetIds:
+    TypeScriptAsset: !<reference> 9ef80c70-9365-44c0-bb56-3b7a0bed091a
+  ImporterName: TypeScriptAssetImporter
+  PrimaryAsset: !<reference> 9ef80c70-9365-44c0-bb56-3b7a0bed091a
+  PackageType: NotAPackage
+  LegacyPackagePolicy: ~
+  ExtraData:
+    {}
+  AssetDataMap:
+    TypeScriptAsset: !<own> 4ac1b0fc-685b-4bb8-8309-1d96ec90ed20
+  DependentFiles:
+    []
+  ImporterSettings: !<AssetImporterSettings>
+    {}
+  CompressionSettings: !<own> 00000000-0000-0000-0000-000000000000
+- !<TypeScriptAssetData/4ac1b0fc-685b-4bb8-8309-1d96ec90ed20>
+  SvgIcon: ""
+  SetupScript:
+    code: ""
+  Description: ""
+  VersionMajor: 0
+  VersionMinor: 0
+  VersionPatch: 0
+  VersionPrerelease: ""
+  UpdateOrder: 0
+  ComponentUid: 11c6dee7-ead4-4ded-aa9a-0bc01448ece4
+  ExportUid: 00000000-0000-0000-0000-000000000000
+  PackagePolicy: CanBeUnpacked
+  ScriptInputsHidden:
+    caseRoot: false
+    debugCollider: false
+    ui: false
+  ScriptTypesHidden:
+    {}
+  ReadMe: !<reference> 00000000-0000-0000-0000-000000000000
+  DeclarationFile: !<reference> 00000000-0000-0000-0000-000000000000
+  Tags:
+    []
+  Attachments:
+    []
+  DefaultScriptInputs:
+    - caseRoot: !<reference.SceneObject> 00000000-0000-0000-0000-000000000000
+      ui: !<MappingBased.AssignableType_1> 00000000-0000-0000-0000-000000000000
+      debugCollider: false
+  ScriptTypes:
+    -
+      {}
+  InputLines:
+    - '// @ui {"widget":"label", "label":"<span style=\"color: #60A5FA;\">CaseLightVeteran - pin sorting reminders on slots</span>"}'
+    - '// @ui {"widget":"separator"}'
+    - '// @ui {"widget":"label", "label":"<span style=\"color: #60A5FA;\">References</span>"}'
+    - '// @ui {"widget":"group_start", "label":"References"}'
+    - '// @input SceneObject caseRoot {"hint":"The case group (the chooser and the cards are placed in its frame)"}'
+    - '// @input AssignableType_1 ui {"hint":"Veteran mode toggle, reminder chooser and pinned cards"}'
+    - '// @ui {"widget":"group_end"}'
+    - '// @ui {"widget":"separator"}'
+    - '// @ui {"widget":"label", "label":"<span style=\"color: #60A5FA;\">Debug</span>"}'
+    - '// @ui {"widget":"group_start", "label":"Debug"}'
+    - "// @input bool debugCollider {\"hint\":\"Draw the shared slot-pinch target's collider as a wireframe (CaseLightMain reads this when it makes the target; takes effect on preview restart)\"}"
+    - '// @ui {"widget":"group_end"}'

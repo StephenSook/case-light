@@ -21,6 +21,24 @@ import {CaseLightOnePressScenario} from "./CaseLightOnePressScenario"
 import {CaseLightOverlayHideScenario} from "./CaseLightOverlayHideScenario"
 import {CaseLightPrintFitScenario} from "./CaseLightPrintFitScenario"
 import {CaseLightSoundCueScenario} from "./CaseLightSoundCueScenario"
+import {CaseLightWallPlacementScenario} from "./CaseLightWallPlacementScenario"
+import {CaseLightWallRefusalScenario} from "./CaseLightWallRefusalScenario"
+import {CaseLightReplaceMidPassScenario} from "./CaseLightReplaceMidPassScenario"
+import {CaseLightComeBackRetireScenario} from "./CaseLightComeBackRetireScenario"
+import {CaseLightVeteranNotesScenario} from "./CaseLightVeteranNotesScenario"
+import {CaseLightVeteranPassScenario} from "./CaseLightVeteranPassScenario"
+import {CaseLightVeteranStrayScenario} from "./CaseLightVeteranStrayScenario"
+import {CaseLightRouteLabelsScenario} from "./CaseLightRouteLabelsScenario"
+import {CaseLightRouteLettersScenario} from "./CaseLightRouteLettersScenario"
+import {CaseLightRouteResetScenario} from "./CaseLightRouteResetScenario"
+import {CaseLightLastLetterDarkScenario} from "./CaseLightLastLetterDarkScenario"
+import {CaseLightRoutePickerInViewScenario} from "./CaseLightRoutePickerInViewScenario"
+import {CaseLightPlacementLogScenario} from "./CaseLightPlacementLogScenario"
+import {CaseLightRecallNoGlowScenario} from "./CaseLightRecallNoGlowScenario"
+import {CaseLightDemoOffScenario} from "./CaseLightDemoOffScenario"
+import {CaseLightDemoReplayScenario} from "./CaseLightDemoReplayScenario"
+import {CaseLightCaseCheckScenario} from "./CaseLightCaseCheckScenario"
+import {CaseLightRealScaleScenario} from "./CaseLightRealScaleScenario"
 
 /**
  * LEAF's diagnostic report panel hides at once after each run (0 ms), so a film captured after a
@@ -50,5 +68,23 @@ export class CaseLightLeafIndex extends BaseScriptComponent {
     {id: "extra-layout-fit-and-reach", typename: CaseLightLayoutReachScenario.getTypeName()},
     {id: "extra-leaf-overlay-hidden", typename: CaseLightOverlayHideScenario.getTypeName()},
     {id: "extra-one-pinch-one-press", typename: CaseLightOnePressScenario.getTypeName()},
+    {id: "extra-wall-placement", typename: CaseLightWallPlacementScenario.getTypeName()},
+    {id: "extra-wall-refusals", typename: CaseLightWallRefusalScenario.getTypeName()},
+    {id: "extra-replace-mid-pass", typename: CaseLightReplaceMidPassScenario.getTypeName()},
+    {id: "extra-come-back-and-retire", typename: CaseLightComeBackRetireScenario.getTypeName()},
+    {id: "extra-veteran-notes", typename: CaseLightVeteranNotesScenario.getTypeName()},
+    {id: "extra-veteran-notes-in-pass", typename: CaseLightVeteranPassScenario.getTypeName()},
+    {id: "extra-veteran-stray-after-abort", typename: CaseLightVeteranStrayScenario.getTypeName()},
+    {id: "extra-route-labels", typename: CaseLightRouteLabelsScenario.getTypeName()},
+    {id: "extra-route-letters", typename: CaseLightRouteLettersScenario.getTypeName()},
+    {id: "extra-route-switch-resets", typename: CaseLightRouteResetScenario.getTypeName()},
+    {id: "extra-last-letter-dark", typename: CaseLightLastLetterDarkScenario.getTypeName()},
+    {id: "extra-route-picker-in-view", typename: CaseLightRoutePickerInViewScenario.getTypeName()},
+    {id: "extra-placement-log", typename: CaseLightPlacementLogScenario.getTypeName()},
+    {id: "extra-recall-no-glow-per-frame", typename: CaseLightRecallNoGlowScenario.getTypeName()},
+    {id: "extra-demo-replay-off-by-default", typename: CaseLightDemoOffScenario.getTypeName()},
+    {id: "extra-demo-replay", typename: CaseLightDemoReplayScenario.getTypeName()},
+    {id: "extra-case-check", typename: CaseLightCaseCheckScenario.getTypeName()},
+    {id: "extra-case-real-scale", typename: CaseLightRealScaleScenario.getTypeName()},
   ].map((m) => ({...m, parameters: NO_REPORT_PANEL}))
 }

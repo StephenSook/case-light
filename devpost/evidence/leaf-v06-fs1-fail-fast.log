@@ -1,0 +1,5 @@
+# FS1: extra-layout-fit-and-reach run with LEAF's diagnostic policy set to fail-fast (default "fallback"), so no reach can be simulated.
+# Runner config in the Lens Studio log for each run: {"__leaf__log_level":"INFO","__leaf__timeout_secs":"600","__leaf__diagnostic_policy":"fail-fast","__leaf__diagnostic_report_duration_ms":"0"}
+21:00:17.107 [  6.168s]PASSED: extra-layout-fit-and-reach  (policy fail-fast; top letter 43.3 cm from the eye)
+21:00:59.134 [  0.206s]FAILED: extra-layout-fit-and-reach - AssertionError: top letter 68.1 cm from the eye, inside 30..55 cm Expected: "true" - Received: "false"  (policy fail-fast; planted break: CaseLightBundle.build moves the tray 25 cm further away)
+21:01:21.039 [  6.308s]PASSED: extra-layout-fit-and-reach  (policy fail-fast; after restoring CaseLightBundle.ts byte-identical, SHA-256 b128f2e5... OK)

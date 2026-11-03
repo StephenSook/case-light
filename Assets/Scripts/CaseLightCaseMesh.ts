@@ -1,5 +1,5 @@
 // Owns: the case line art as one MeshBuilder mesh (shelves, dividers, heavy street/HOLD lines, ledge, frame).
-// Talks to: CaseLightMain (build(geometry, material)), CaseLightGeometry and CaseLightRoute (sizes, street breaks).
+// Talks to: CaseLightMain (build(geometry, material), setRoute(route)), CaseLightGeometry and CaseLightRoute (sizes, street breaks).
 // Must not: hold session state or create text (labels live in CaseLightCaseLabelsUI).
 
 /**
@@ -10,7 +10,7 @@
 
 import { CaseGeometry, CASE_WIDTH_CM, HOLD_CELLS, LEDGE_DEPTH_CM, LEDGE_THICKNESS_CM, SEPS_PER_SHELF, SHELF_DEPTH_CM, SIDE_WALL_CM } from "./CaseLightGeometry"
 import { addMeshObject, MeshAccumulator, RGBA } from "./CaseLightMeshUtil"
-import { streetBoundaryColumns } from "./CaseLightRoute"
+import { DEFAULT_ROUTE, RouteId, streetBoundaryColumns } from "./CaseLightRoute"
 
 @component
 export class CaseLightCaseMesh extends BaseScriptComponent {
@@ -46,6 +46,9 @@ export class CaseLightCaseMesh extends BaseScriptComponent {
 
   private built = false
   private vertexCount = 0
+  private geo: CaseGeometry | null = null
+  private visual: RenderMeshVisual | null = null
+  private route: RouteId = DEFAULT_ROUTE
 
   /** Number of vertices in the built case mesh (0 before build). */
   get builtVertexCount(): number {
@@ -55,6 +58,18 @@ export class CaseLightCaseMesh extends BaseScriptComponent {
   build(geo: CaseGeometry, material: Material): void {
     if (this.built) return
     this.built = true
+    this.geo = geo
+    this.visual = addMeshObject(this.sceneObject, "CaseLines", this.makeMesh(geo), material)
+  }
+
+  /** Redraw for another route: only the heavy lines between streets move (same geometry, same slots). */
+  setRoute(route: RouteId): void {
+    if (this.route === route) return
+    this.route = route
+    if (this.geo && this.visual) this.visual.mesh = this.makeMesh(this.geo)
+  }
+
+  private makeMesh(geo: CaseGeometry): RenderMesh {
     const play = this.rgba(this.playableLineColor)
     const faint = this.rgba(this.faintLineColor)
     const hold = this.rgba(this.holdLineColor)
@@ -89,7 +104,7 @@ export class CaseLightCaseMesh extends BaseScriptComponent {
     // Dividers on the two playable shelves (front edges), heavy at the ends and between streets.
     for (let row = 0; row < 2; row++) {
       const shelf = geo.lowerPlayableShelf + row
-      const boundaries = streetBoundaryColumns(row)
+      const boundaries = streetBoundaryColumns(row, this.route)
       const y0 = geo.stripBottomY(shelf)
       const y1 = geo.openingTopY(shelf)
       for (let i = 0; i <= SEPS_PER_SHELF; i++) {
@@ -131,7 +146,7 @@ export class CaseLightCaseMesh extends BaseScriptComponent {
     m.lineX(-halfW, halfW, floor, LEDGE_DEPTH_CM - 4, t, faint)
 
     this.vertexCount = m.vertexCount
-    addMeshObject(this.sceneObject, "CaseLines", m.finish(), material)
+    return m.finish()
   }
 
   private rgba(c: vec4): RGBA {

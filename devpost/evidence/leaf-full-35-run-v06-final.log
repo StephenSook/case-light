@@ -1,0 +1,45 @@
+# CaseLight LEAF closing suite, v0.6 final (queue item 14), tester session 34. All 35 registered scenarios, one per run_leaf_scenario call.
+# Policy: every run with the run parameter __leaf__diagnostic_policy = fail-fast; each line carries the count of fail-fast runner config lines LEAF printed during that run.
+# Project reopened from disk by the coordinator at 21:47 (setDefaultProject, openProject); this run uses the saved project. Lens Studio 5.23.2, log LensStudioLog-2026-11-02-17-16-46-871-5ad48.txt, Preview 3.
+# Assets/Scene.scene SHA-256 at start: 0297cce0a1c68dd3117a482b7b51f6d554e6ac808c8509a04b2f43b81c7216a7. Product scripts: 29, matching mutation-backup-f13b fingerprints.
+# Rooms: Plane, except the three wall scenarios in Sunlit Room. extra-demo-replay: demoReplay set on in memory (MCP setProperty, never saved) for that run only.
+# Each line: verdict time, LEAF duration, verdict, id, then room and fail-fast count. Appended as each verdict landed.
+21:51:01.443 [3.792s] PASSED: c1-pickup-and-snap  [Plane; fail-fast runner lines 1]
+21:51:17.090 [3.676s] PASSED: c2-practice-glow-and-arrow  [Plane; fail-fast runner lines 1]
+21:51:34.679 [7.436s] PASSED: c3-recall-miss-lights-answer  [Plane; fail-fast runner lines 1]
+21:51:52.099 [7.340s] PASSED: c4-hold-note-and-hold-block  [Plane; fail-fast runner lines 1]
+21:52:16.321 [12.453s] PASSED: c5-recall-unaided-score  [Plane; fail-fast runner lines 1]
+21:52:44.509 [18.123s] PASSED: extra-result-hides-and-session-total  [Plane; fail-fast runner lines 1]
+21:53:03.002 [7.738s] PASSED: extra-sound-cues  [Plane; fail-fast runner lines 1]
+21:54:02.847 [49.422s] PASSED: extra-drill-pace  [Plane; fail-fast runner lines 1]
+21:54:27.369 [14.184s] PASSED: extra-exit-again-done  [Plane; fail-fast runner lines 1]
+21:54:55.826 [18.219s] PASSED: extra-ladder-default-off  [Plane; fail-fast runner lines 1]
+21:55:43.649 [38.297s] PASSED: extra-ladder-on  [Plane; fail-fast runner lines 1]
+21:56:36.312 [41.778s] PASSED: extra-mixup-lines  [Plane; fail-fast runner lines 1]
+21:57:20.656 [34.198s] PASSED: extra-hold-cells  [Plane; fail-fast runner lines 1]
+21:57:37.034 [5.923s] PASSED: extra-print-fit  [Plane; fail-fast runner lines 1]
+21:57:54.933 [6.072s] PASSED: extra-layout-fit-and-reach  [Plane; fail-fast runner lines 1]
+21:59:27.260 [0.066s] PASSED: extra-leaf-overlay-hidden  [Plane; fail-fast runner lines 1]
+22:00:14.770 [14.510s] PASSED: extra-one-pinch-one-press  [Plane; fail-fast runner lines 1]
+22:00:45.983 [21.991s] PASSED: extra-come-back-and-retire  [Plane; fail-fast runner lines 1]
+22:01:04.230 [6.017s] PASSED: extra-veteran-notes  [Plane; fail-fast runner lines 1]
+22:01:52.330 [14.683s] PASSED: extra-veteran-notes-in-pass  [Plane; fail-fast runner lines 1]
+22:02:07.415 [3.612s] PASSED: extra-veteran-stray-after-abort  [Plane; fail-fast runner lines 1]
+22:02:23.771 [4.590s] PASSED: extra-route-labels  [Plane; fail-fast runner lines 1]
+22:02:52.884 [16.667s] PASSED: extra-route-letters  [Plane; fail-fast runner lines 1]
+22:03:19.705 [14.252s] PASSED: extra-route-switch-resets  [Plane; fail-fast runner lines 1]
+22:03:40.024 [7.603s] PASSED: extra-last-letter-dark  [Plane; fail-fast runner lines 1]
+22:04:26.354 [0.110s] PASSED: extra-route-picker-in-view  [Plane; fail-fast runner lines 1]
+22:05:04.737 [26.383s] PASSED: extra-placement-log  [Plane; fail-fast runner lines 1]
+22:05:29.050 [14.337s] PASSED: extra-recall-no-glow-per-frame  [Plane; fail-fast runner lines 1]
+22:05:47.383 [7.251s] PASSED: extra-demo-replay-off-by-default  [Plane; demoReplay as saved (default false); fail-fast runner lines 1]
+22:06:17.775 [19.684s] PASSED: extra-case-check  [Plane; fail-fast runner lines 1]
+22:06:28.153 [0.113s] PASSED: extra-case-real-scale  [Plane; fail-fast runner lines 1]
+22:06:54.613 [7.039s] PASSED: extra-wall-refusals  [Sunlit Room, camera at the origin; fail-fast runner lines 1]
+22:07:18.184 [5.106s] PASSED: extra-wall-placement  [Sunlit Room, camera at (0, 0, -350); fail-fast runner lines 1]
+22:09:01.370 [82.156s] PASSED: extra-replace-mid-pass  [Sunlit Room, camera at the origin, walked to (0, 0, -350) at 22:08:46 while it waited; fail-fast runner lines 1]
+22:10:29.882 [68.120s] PASSED: extra-demo-replay  [Plane; demoReplay on in memory (MCP setProperty, previous false) for this run only, never saved; fail-fast runner lines 1]
+# END. 35 scenarios: 35 PASSED, 0 FAILED, 0 NO VERDICT. Suite started 21:50:42 (log mark before c1-pickup-and-snap), last verdict 22:10:29.882.
+# Fail-fast runner config lines counted in the Lens Studio log from the suite's start mark: 35 (35 runner config lines in all, 35 RUNS lines); no OAuth token refresh or "Widget is not initialized" line during the suite; no re-run was needed.
+# After the suite: Assets/Scene.scene SHA-256 0297cce0a1c68dd3117a482b7b51f6d554e6ac808c8509a04b2f43b81c7216a7 (unchanged; the file still stores demoReplay at its default, ScriptInputsDefault true, stored false). In-memory demoReplay false (a second setProperty false reported previous false). 29/29 product script fingerprints unchanged (mutation-backup-f13b).
+# Preview left on Plane (Interactive, SPECS 27), camera reset to the origin (pose 0,0,0 / 0,0,0).

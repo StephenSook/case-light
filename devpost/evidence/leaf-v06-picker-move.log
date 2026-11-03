@@ -1,0 +1,11 @@
+# Route picker moved into the opening view (builder session 25, scene SHA-256 f616b910...). Layout-dependent scenarios re-run by the coordinating agent, one per call, Plane, camera at the origin.
+19:22:36.698 [  6.135s]PASSED: extra-layout-fit-and-reach
+19:22:54.078 [  4.555s]PASSED: extra-route-labels
+19:23:18.989 [ 17.293s]PASSED: extra-route-letters
+19:23:45.253 [ 15.891s]PASSED: extra-route-switch-resets
+19:24:09.146 [ 14.850s]PASSED: extra-one-pinch-one-press
+19:25:06.197 [ 49.438s]PASSED: extra-drill-pace
+# Result: 6 of 6 PASSED after the move (layout fit, the 3 route scenarios, one pinch one press, and drill pace, whose caption moved with the Start row).
+19:26:22.015 [  0.066s]PASSED: extra-route-picker-in-view
+19:27:01.872 [  0.053s]PASSED: extra-route-picker-in-view
+# Planted break (coordinator): picker put back at its old spot turned this scenario red at 19:26:48 (see break-proofs.log); restored byte-identical, then green again.

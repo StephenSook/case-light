@@ -1,0 +1,63 @@
+- !<AssetImportMetadata/d2c54a9c-18cc-47fd-a979-5e67c1f1dfba>
+  ImportedAssetIds:
+    TypeScriptAsset: !<reference> 3578b021-f24e-4edc-9d3a-feedf1741d8f
+  ImporterName: TypeScriptAssetImporter
+  PrimaryAsset: !<reference> 3578b021-f24e-4edc-9d3a-feedf1741d8f
+  PackageType: NotAPackage
+  LegacyPackagePolicy: ~
+  ExtraData:
+    {}
+  AssetDataMap:
+    TypeScriptAsset: !<own> ad187f7b-323d-4219-a46a-88cc1d722fe0
+  DependentFiles:
+    []
+  ImporterSettings: !<AssetImporterSettings>
+    {}
+  CompressionSettings: !<own> 00000000-0000-0000-0000-000000000000
+- !<TypeScriptAssetData/ad187f7b-323d-4219-a46a-88cc1d722fe0>
+  SvgIcon: ""
+  SetupScript:
+    code: ""
+  Description: ""
+  VersionMajor: 0
+  VersionMinor: 0
+  VersionPatch: 0
+  VersionPrerelease: ""
+  UpdateOrder: 0
+  ComponentUid: 8d8a03ac-f32a-4882-a0b7-d699b66686d3
+  ExportUid: 00000000-0000-0000-0000-000000000000
+  PackagePolicy: CanBeUnpacked
+  ScriptInputsHidden:
+    buttonHeightCm: false
+    buttonWidthCm: false
+    placeInFrontLabel: false
+    placeOnWallLabel: false
+    viewDistanceCm: false
+  ScriptTypesHidden:
+    {}
+  ReadMe: !<reference> 00000000-0000-0000-0000-000000000000
+  DeclarationFile: !<reference> 00000000-0000-0000-0000-000000000000
+  Tags:
+    []
+  Attachments:
+    []
+  DefaultScriptInputs:
+    - placeOnWallLabel: Place on wall
+      placeInFrontLabel: Place in front of me
+      buttonWidthCm: 9.500000
+      buttonHeightCm: 2.500000
+      viewDistanceCm: !<float> 60.000000
+  ScriptTypes:
+    -
+      {}
+  InputLines:
+    - '// @ui {"widget":"label", "label":"<span style=\"color: #60A5FA;\">CaseLightPlacementUI - Place on wall / Place in front of me</span>"}'
+    - '// @ui {"widget":"separator"}'
+    - '// @ui {"widget":"label", "label":"<span style=\"color: #60A5FA;\">Settings</span>"}'
+    - '// @ui {"widget":"group_start", "label":"Settings"}'
+    - '// @input string placeOnWallLabel = "Place on wall" {"hint":"Label on the toggle that turns wall aiming on (aim at a wall, then pinch)"}'
+    - '// @input string placeInFrontLabel = "Place in front of me" {"hint":"Label on the button that puts the case back in front of you"}'
+    - '// @input float buttonWidthCm = 9.5 {"hint":"Width of each button, in cm", "widget":"slider", "min":6, "max":14, "step":0.1}'
+    - '// @input float buttonHeightCm = 2.5 {"hint":"Height of each button, in cm", "widget":"slider", "min":2, "max":5, "step":0.1}'
+    - '// @input float viewDistanceCm = 60 {"hint":"Typical distance from the eye to these buttons, in cm (scales the label size)", "widget":"slider", "min":30, "max":110, "step":1}'
+    - '// @ui {"widget":"group_end"}'

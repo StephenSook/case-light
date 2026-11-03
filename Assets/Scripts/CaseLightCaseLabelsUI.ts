@@ -1,5 +1,5 @@
 // Owns: all text printed on the case: cell label strips, street names (block start + repeats), HOLD label, caption, end result, mix-up end labels, and the lit label highlight.
-// Talks to: CaseLightMain (build(geometry), showResult, hideResult, showMixUpLabels, clearMixUpLabels), CaseLightGeometry and CaseLightRoute (positions, data), CaseLightMixUp (label spots).
+// Talks to: CaseLightMain (build(geometry), setRoute, showResult, showAllRetired, showResultLine2, hideResult, showMixUpLabels, clearMixUpLabels), CaseLightGeometry and CaseLightRoute (positions, data), CaseLightMixUp (label spots), CaseLightPassLogic (card wording).
 // Must not: count anything or decide when the result shows (CaseLightMain owns that).
 
 /**
@@ -7,8 +7,8 @@
  * top, right-side below; one number when a cell has one delivery), each street in its own light
  * colour, the street name in larger type at the start of each street's run of cells on a shelf, and
  * "HOLD" under the HOLD block. The caption "Practice mail, real house numbers" with its small print
- * ("Not a USPS route. Address data (c) OpenStreetMap contributors"), and the end-of-recall score card ("From memory: X of Y this session" by default; the template
- * is an Inspector setting) sit on authored anchors (CaptionAnchor, ResultAnchor), placed inside
+ * ("Not a USPS route. Address data (c) OpenStreetMap contributors"), and the end-of-recall score card ("From memory: X of Y this session" by default, with a second
+ * line "Came back: N"; the templates are Inspector settings) sit on authored anchors (CaptionAnchor, ResultAnchor), placed inside
  * the glasses' view at the start position. After a recall pass, the mix-up end labels ("<address>
  * was put here", "goes here") are printed at the spots CaseLightMixUp lays out, on a light tint.
  *
@@ -22,9 +22,10 @@
 import { RoundedRectangle } from "SpectaclesUIKit.lspkg/Scripts/Visuals/RoundedRectangle/RoundedRectangle"
 import { addBacking, DEFAULT_BACKING_COLOR, setBackingSize } from "./CaseLightBackingUI"
 import { CaseGeometry, HOLD_BLOCK_SLOT, HOLD_CELLS, LABEL_STRIP_CM, NO_SLOT, SEP_PITCH_CM, SEPS_PER_SHELF } from "./CaseLightGeometry"
-import { cellLabels, STREETS, streetRuns } from "./CaseLightRoute"
+import { cellLabels, DEFAULT_ROUTE, RouteId, routeStreets, streetRuns } from "./CaseLightRoute"
 import { MIXUP_LABEL_CAP_CM, MixUpLabelSpot } from "./CaseLightMixUp"
 import { CASELIGHT_VERSION } from "./CaseLightVersion"
+import { formatCameBack, formatScore } from "./CaseLightPassLogic"
 
 const EM_PER_CM = 43.886
 const CAP_PER_EM = 0.7
@@ -34,6 +35,16 @@ const LABEL_Z = 0.14
 const VERSION_OFFSET_X_CM = 8.9
 const RESULT_WIDTH_CM = 9.2
 const RESULT_HEIGHT_CM = 2.4
+/** The card's second line ("Came back: N"), under the main text (cm). */
+const CAME_BACK_HEIGHT_CM = 1.0
+const CAME_BACK_CAP_CM = 0.56
+/**
+ * The card grows upward for the second line, so its bottom edge (nearest the tray) stays where it
+ * was: centre of the backing, main text and second line, relative to ResultAnchor (cm).
+ */
+const RESULT_BACKING_Y_CM = CAME_BACK_HEIGHT_CM / 2
+const RESULT_TEXT_Y_CM = CAME_BACK_HEIGHT_CM / 2 + CAME_BACK_HEIGHT_CM / 2
+const CAME_BACK_Y_CM = RESULT_TEXT_Y_CM - RESULT_HEIGHT_CM / 2 - CAME_BACK_HEIGHT_CM / 2
 /** Backing sizes (cm): a little larger than the text they sit behind. */
 const CAPTION_BACKING_W = 18.4
 const CAPTION_BACKING_H = 2.0
@@ -93,24 +104,36 @@ export class CaseLightCaseLabelsUI extends BaseScriptComponent {
   @hint("End-of-recall card text; {x} = letters placed from memory (helped letters never count), {y} = letters placed. The earlier wording was \"Unaided: {x}/{y} this session\"")
   resultTemplate: string = "From memory: {x} of {y} this session"
 
+  @input
+  @hint("Second line of the end-of-recall card; {n} = times a missed letter came back in that pass")
+  cameBackTemplate: string = "Came back: {n}"
+
+  @input
+  @hint("Card text when every letter is retired (placed from memory in two recall passes in a row), so recall has nothing left")
+  allRetiredText: string = "All letters learned"
+
+  @input
+  @hint("Second line of that card (Done clears the retired letters)")
+  allRetiredLine2Text: string = "Done starts over"
+
   @input("vec4", "{0.6,0.82,1,1}")
   @widget(new ColorWidget())
-  @hint("Label colour for street 0 (FAIRWAYS CT)")
+  @hint("Label colour for streets 0 and 4 in case order (Route 1: FAIRWAYS CT; Route 2: IRVIN CT, DOUGLAS LN)")
   street0Color: vec4
 
   @input("vec4", "{0.6,0.96,0.64,1}")
   @widget(new ColorWidget())
-  @hint("Label colour for street 1 (LEE CT)")
+  @hint("Label colour for streets 1 and 5 in case order (Route 1: LEE CT; Route 2: SHIRLEY DR, MCGARITY LN)")
   street1Color: vec4
 
   @input("vec4", "{1,0.9,0.55,1}")
   @widget(new ColorWidget())
-  @hint("Label colour for street 2 (FREY LAKE RD)")
+  @hint("Label colour for streets 2 and 6 in case order (Route 1: FREY LAKE RD; Route 2: PINE HILL DR, JEBS CT)")
   street2Color: vec4
 
   @input("vec4", "{0.96,0.7,0.96,1}")
   @widget(new ColorWidget())
-  @hint("Label colour for street 3 (TRIBUTARY CT)")
+  @hint("Label colour for streets 3 and 7 in case order (Route 1: TRIBUTARY CT; Route 2: DUVALL PL, TERRY LN NW)")
   street3Color: vec4
 
   @input("vec4", "{1,0.72,0.38,1}")
@@ -141,12 +164,26 @@ export class CaseLightCaseLabelsUI extends BaseScriptComponent {
   private creditTextComp: Text | null = null
   private versionTextComp: Text | null = null
   private resultBacking: RoundedRectangle | null = null
+  private cameBackText: Text | null = null
   private cellLabelCount = 0
+  private route: RouteId = DEFAULT_ROUTE
+  private routeRoot: SceneObject | null = null
+  private streetNameTexts: Text[] = []
   private mixUpRoot: SceneObject | null = null
   private mixUpLabels: Array<{ spot: MixUpLabelSpot; text: Text }> = []
 
   get isResultVisible(): boolean {
     return !!this.resultText && this.resultText.getSceneObject().enabled
+  }
+
+  /** The card's second line as set (e.g. "Came back: 2"), empty until a card shows. */
+  get cameBackString(): string {
+    return this.cameBackText ? this.cameBackText.text : ""
+  }
+
+  /** True while the card's second line is on screen. */
+  get isCameBackVisible(): boolean {
+    return !!this.cameBackText && this.cameBackText.getSceneObject().enabled
   }
 
   /** Mix-up end labels on screen right now (two per shown pair). */
@@ -170,7 +207,7 @@ export class CaseLightCaseLabelsUI extends BaseScriptComponent {
     const tint = new vec4(lineColor.x * MIXUP_PLATE_LEVEL, lineColor.y * MIXUP_PLATE_LEVEL, lineColor.z * MIXUP_PLATE_LEVEL, MIXUP_PLATE_ALPHA)
     for (const spot of spots) {
       const name = `MixUpLabel_${spot.pair}_${spot.end}`
-      // Tint first so it draws behind its text.
+      // Tint before the text so it draws behind it.
       const plate = addBacking(this.mixUpRoot, `${name}_Backing`, spot.width, spot.height, tint, new vec3(spot.x, spot.y, spot.z - 0.05), 0.35)
       plate.renderMeshVisual.setRenderOrder(MIXUP_RENDER_ORDER)
       const t = this.makeText(name, spot.text, sizeForCap(MIXUP_LABEL_CAP_CM), new vec3(spot.x, spot.y, spot.z), spot.width - 0.2, spot.height, HorizontalAlignment.Center, MIXUP_TEXT_COLOR, 700, this.mixUpRoot)
@@ -221,6 +258,17 @@ export class CaseLightCaseLabelsUI extends BaseScriptComponent {
 
   isLabelLit(slot: number): boolean {
     return slot !== NO_SLOT && slot === this.litSlot
+  }
+
+  /** The numbers printed under a separation ("2005\n2015", or one number), or "" when it has no label. */
+  cellLabelText(slot: number): string {
+    const e = this.labelTexts.get(slot)
+    return e ? e.text.text : ""
+  }
+
+  /** The street names printed at the start of each run, in case order. */
+  get streetNameStrings(): string[] {
+    return this.streetNameTexts.map((t) => t.text)
   }
 
   /** How many smaller repeated street names were printed along the blocks. */
@@ -275,47 +323,16 @@ export class CaseLightCaseLabelsUI extends BaseScriptComponent {
     if (this.built) return
     this.built = true
     this.geo = geo
-    const colors = [this.street0Color, this.street1Color, this.street2Color, this.street3Color]
 
     // The lit label tint: created before the labels so it draws behind them; hidden until a cell lights.
     this.litHighlight = addBacking(this.sceneObject, "LabelHighlight", SEP_PITCH_CM - 0.16, LABEL_STRIP_CM - 0.2, DEFAULT_BACKING_COLOR, vec3.zero(), 0.25)
     this.litHighlight.getSceneObject().enabled = false
 
-    // per-tile factory - Hard Rule 3 grid-cell carve-out (N = 76): one label per separation,
-    // placed on the case's fixed one-inch pitch from CaseLightGeometry.
-    for (const cell of cellLabels()) {
-      const shelf = geo.shelfOfSlot(cell.slot)
-      const c = geo.slotCenterLocal(cell.slot)
-      // Two house numbers, 0.74 cm capitals: the largest four digits that fit a one-inch cell.
-      const y = geo.boardTopY(shelf) - 1.2
-      const numbers = cell.right === null ? `${cell.left}` : `${cell.left}\n${cell.right}`
-      const t = this.makeText(`Label_${cell.slot}`, numbers, sizeForCap(0.74), new vec3(c.x, y, LABEL_Z), SEP_PITCH_CM - 0.12, 2.3, HorizontalAlignment.Center, colors[cell.street], 500)
-      this.labelTexts.set(cell.slot, { text: t, color: colors[cell.street] })
-      this.cellLabelCount++
-    }
-
-    // Street name in larger type at the start of each street's run of cells on a shelf, under those cells.
-    const runs = streetRuns()
-    for (let i = 0; i < runs.length; i++) {
-      const b = runs[i]
-      const shelf = geo.shelfOfSlot(b.firstSlot)
-      const col = b.firstSlot % SEPS_PER_SHELF
-      // Start clear of the heavy street line drawn on the block's left divider.
-      const left = geo.dividerX(col) + 0.5
-      const width = b.cells * SEP_PITCH_CM - 0.7
-      const y = geo.stripBottomY(shelf) + 0.62
-      this.makeText(`StreetName_${i}`, STREETS[b.street].name, sizeForCap(0.82), new vec3(left + width / 2, y, LABEL_Z), width, 1.2, HorizontalAlignment.Left, colors[b.street], 700)
-
-      // Smaller repeats along the block, so a view turned onto the middle of a block still shows
-      // the street. Only where three cells remain, so the longest name (12 characters) fits at full size.
-      const every = Math.max(4, Math.round(this.streetNameRepeatCells))
-      for (let k = every; k + 3 <= b.cells; k += every) {
-        const rx = geo.dividerX(col + k) + 0.25
-        const rw = Math.min(b.cells - k, 3) * SEP_PITCH_CM - 0.4
-        this.makeText(`StreetNameRepeat_${b.firstSlot + k}`, STREETS[b.street].name, sizeForCap(0.6), new vec3(rx + rw / 2, geo.stripBottomY(shelf) + 0.55, LABEL_Z), rw, 1.0, HorizontalAlignment.Left, colors[b.street], 500)
-        this.repeatCount++
-      }
-    }
+    // The route's labels (cell numbers, street names) live under one object so a route switch can
+    // replace them; created here, after the highlight, so the highlight draws behind them.
+    this.routeRoot = global.scene.createSceneObject("RouteLabels")
+    this.routeRoot.setParent(this.sceneObject)
+    this.buildRouteLabels()
 
     // HOLD under the HOLD block (right end of the lower playable shelf).
     const hs = geo.lowerPlayableShelf
@@ -340,28 +357,115 @@ export class CaseLightCaseLabelsUI extends BaseScriptComponent {
     // wide; the default anchor is the upper left of the start view, where the tray is empty once
     // every letter of the pass is in the case.
     const resParent = this.resultAnchor ? this.resultAnchor : this.sceneObject
-    this.resultBacking = addBacking(resParent, "ResultBacking", RESULT_WIDTH_CM + RESULT_BACKING_PAD, RESULT_HEIGHT_CM + 2 * RESULT_BACKING_PAD, this.backingColor, new vec3(0, 0, -0.04))
+    this.resultBacking = addBacking(resParent, "ResultBacking", RESULT_WIDTH_CM + RESULT_BACKING_PAD, RESULT_HEIGHT_CM + CAME_BACK_HEIGHT_CM + 2 * RESULT_BACKING_PAD, this.backingColor, new vec3(0, RESULT_BACKING_Y_CM, -0.04))
     this.resultBacking.getSceneObject().enabled = false
-    this.resultText = this.makeText("ResultText", "", sizeForCap(0.72), vec3.zero(), RESULT_WIDTH_CM, RESULT_HEIGHT_CM, HorizontalAlignment.Center, new vec4(1, 1, 1, 1), 700, resParent)
+    this.resultText = this.makeText("ResultText", "", sizeForCap(0.72), new vec3(0, RESULT_TEXT_Y_CM, 0), RESULT_WIDTH_CM, RESULT_HEIGHT_CM, HorizontalAlignment.Center, new vec4(1, 1, 1, 1), 700, resParent)
     this.resultText.horizontalOverflow = HorizontalOverflow.Wrap
     this.resultText.getSceneObject().enabled = false
+    // Second line: how often a missed letter came back this pass (secondary, a little smaller).
+    this.cameBackText = this.makeText("ResultCameBackText", "", sizeForCap(CAME_BACK_CAP_CM), new vec3(0, CAME_BACK_Y_CM, 0), RESULT_WIDTH_CM, CAME_BACK_HEIGHT_CM, HorizontalAlignment.Center, new vec4(0.92, 0.94, 0.98, 1), 500, resParent)
+    this.cameBackText.getSceneObject().enabled = false
   }
 
-  /** Show the score card: resultTemplate with {x} = from memory (unaided), {y} = placed (total). */
-  showResult(unaided: number, total: number): void {
+  /** Relabel the case for another route: every cell's numbers and the street names (same slots). */
+  setRoute(route: RouteId): void {
+    if (route === this.route) return
+    this.route = route
+    if (!this.built || !this.routeRoot) return
+    this.restoreLitLabel()
+    for (let i = this.routeRoot.getChildrenCount() - 1; i >= 0; i--) this.routeRoot.getChild(i).destroy()
+    this.labelTexts.clear()
+    this.cellLabelCount = 0
+    this.repeatCount = 0
+    this.streetNameTexts = []
+    this.buildRouteLabels()
+  }
+
+  private buildRouteLabels(): void {
+    const geo = this.geo!
+    const parent = this.routeRoot ? this.routeRoot : this.sceneObject
+    const palette = [this.street0Color, this.street1Color, this.street2Color, this.street3Color]
+    // Four light colours, repeated in case order, so neighbouring streets always differ.
+    const colorOf = (street: number) => palette[street % palette.length]
+    const streets = routeStreets(this.route)
+
+    // per-tile factory - Hard Rule 3 grid-cell carve-out (N = 75): one label per separation,
+    // placed on the case's fixed one-inch pitch from CaseLightGeometry.
+    for (const cell of cellLabels(this.route)) {
+      const shelf = geo.shelfOfSlot(cell.slot)
+      const c = geo.slotCenterLocal(cell.slot)
+      // Two house numbers, 0.74 cm capitals: the largest four digits that fit a one-inch cell.
+      // A one-number separation (the end of a street) prints its single number.
+      const y = geo.boardTopY(shelf) - 1.2
+      const numbers = cell.right === null ? `${cell.left}` : `${cell.left}\n${cell.right}`
+      const t = this.makeText(`Label_${cell.slot}`, numbers, sizeForCap(0.74), new vec3(c.x, y, LABEL_Z), SEP_PITCH_CM - 0.12, 2.3, HorizontalAlignment.Center, colorOf(cell.street), 500, parent)
+      this.labelTexts.set(cell.slot, { text: t, color: colorOf(cell.street) })
+      this.cellLabelCount++
+    }
+
+    // Street name in larger type at the start of each street's run of cells on a shelf, under those cells.
+    const runs = streetRuns(this.route)
+    for (let i = 0; i < runs.length; i++) {
+      const b = runs[i]
+      const shelf = geo.shelfOfSlot(b.firstSlot)
+      const col = b.firstSlot % SEPS_PER_SHELF
+      // Start clear of the heavy street line drawn on the block's left divider.
+      const left = geo.dividerX(col) + 0.5
+      const width = b.cells * SEP_PITCH_CM - 0.7
+      const y = geo.stripBottomY(shelf) + 0.62
+      const name = streets[b.street].name
+      this.streetNameTexts.push(this.makeText(`StreetName_${i}`, name, sizeForCap(0.82), new vec3(left + width / 2, y, LABEL_Z), width, 1.2, HorizontalAlignment.Left, colorOf(b.street), 700, parent))
+
+      // Smaller repeats along the block, so a view turned onto the middle of a block still shows
+      // the street. Only where three cells remain, so the longest name (12 characters) fits at full size.
+      const every = Math.max(4, Math.round(this.streetNameRepeatCells))
+      for (let k = every; k + 3 <= b.cells; k += every) {
+        const rx = geo.dividerX(col + k) + 0.25
+        const rw = Math.min(b.cells - k, 3) * SEP_PITCH_CM - 0.4
+        this.makeText(`StreetNameRepeat_${b.firstSlot + k}`, name, sizeForCap(0.6), new vec3(rx + rw / 2, geo.stripBottomY(shelf) + 0.55, LABEL_Z), rw, 1.0, HorizontalAlignment.Left, colorOf(b.street), 500, parent)
+        this.repeatCount++
+      }
+    }
+  }
+
+  /**
+   * Show the score card: resultTemplate with {x} = from memory (unaided), {y} = placed (total),
+   * and under it cameBackTemplate with {n} = times a missed letter came back in the pass.
+   */
+  showResult(unaided: number, total: number, comeBacks: number = 0): void {
+    this.showCard(this.formatResult(unaided, total), formatCameBack(this.cameBackTemplate, comeBacks))
+  }
+
+  /** Show the score card again with its main line as last set and a new second line (the Case check line). */
+  showResultLine2(line2: string): void {
     if (!this.resultText) return
-    this.resultText.text = this.formatResult(unaided, total)
-    this.resultText.getSceneObject().enabled = true
-    if (this.resultBacking) this.resultBacking.getSceneObject().enabled = true
+    this.showCard(this.resultText.text, line2)
+  }
+
+  /** The card when every letter is retired: recall has nothing left until Done. */
+  showAllRetired(): void {
+    this.showCard(this.allRetiredText, this.allRetiredLine2Text)
   }
 
   /** The card text for these counts (exactly what showResult displays). */
   formatResult(unaided: number, total: number): string {
-    return this.resultTemplate.split("{x}").join(`${unaided}`).split("{y}").join(`${total}`)
+    return formatScore(this.resultTemplate, unaided, total)
+  }
+
+  private showCard(main: string, line2: string): void {
+    if (!this.resultText) return
+    this.resultText.text = main
+    this.resultText.getSceneObject().enabled = true
+    if (this.cameBackText) {
+      this.cameBackText.text = line2
+      this.cameBackText.getSceneObject().enabled = true
+    }
+    if (this.resultBacking) this.resultBacking.getSceneObject().enabled = true
   }
 
   hideResult(): void {
     if (this.resultText) this.resultText.getSceneObject().enabled = false
+    if (this.cameBackText) this.cameBackText.getSceneObject().enabled = false
     if (this.resultBacking) this.resultBacking.getSceneObject().enabled = false
   }
 

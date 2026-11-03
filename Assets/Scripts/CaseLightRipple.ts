@@ -61,7 +61,7 @@ export class CaseLightRipple extends BaseScriptComponent {
     return this.played
   }
 
-  /** Where the last ripple was centred, or null before the first one. */
+  /** Where the last ripple was centred, or null before any ripple. */
   get lastRipplePoint(): vec3 | null {
     return this.lastPoint
   }

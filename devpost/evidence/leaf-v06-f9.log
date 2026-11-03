@@ -1,0 +1,7 @@
+# CaseLight LEAF, queue item 9 (demo replay), tester session 30, one scenario per run_leaf_scenario call.
+# Lens Studio 5.23.2, log LensStudioLog-2026-11-02-17-16-46-871-5ad48.txt, Plane room. Each line appended as its verdict landed.
+# Product SHA-256: 27 scripts match mutation-backup-f9 (taken before any break). demoReplay input on (MCP setProperty, never saved) only for the extra-demo-replay run; off for every other run.
+20:35:42.155 PASSED: extra-demo-replay-off-by-default  [input off; DEMO-OFF 323 frames sampled; label drawn on 0, replay seen on 0; 10 log lines, sessions ["s1-0u9pnc"]]
+20:37:11.547 PASSED: extra-demo-replay  [input on for this run only, then set back to false; DEMO 2636 frames sampled, label missing on 0; scenes ["replay-start","practice-start","off-case","refused-hold","pass-end","recall-start","miss","come-back","refused-hold","come-back","result","recall-start","miss","come-back","result","replay-end"]; stop reason ""; session r1-tu2w9v; cards seen ["From memory: 6 of 8 this session / Came back: 2","From memory: 13 of 16 this session / Came back: 1"]]
+20:37:53.344 PASSED: extra-placement-log  [input off]
+20:38:07.771 PASSED: c1-pickup-and-snap  [input off]

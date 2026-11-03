@@ -17,6 +17,9 @@
  * Ends (v0.4, expectMixUpEnds): outlines read from the drawn mesh, label words checked against
  * the address printed on that letter's own AddressText, label positions measured from the eye.
  * A Start press is made only after the 0.6 s Start guard that follows Done has passed.
+ * v0.6 feature 2: every recall pass is played by playRecallPass (CaseLightRecallSupport), which
+ * checks the live queue against the test's own come-back model before every drop; a missed letter
+ * is dropped again (wrong or right) when it comes back with two letters before it.
  */
 import {Scenario} from "Leaf.lspkg/Scenarios/scenario/Scenario"
 import {expect} from "Leaf.lspkg/Utils/common/Expect"
@@ -35,6 +38,7 @@ import {hideLeafOverlay, mixUpLabelObjectsShown, expectMixUpEnds, waitUntil,
   waitForReady,
   waitForTopGrabbable,
 } from "./CaseLightLeafSupport"
+import {OwnModel, playRecallPass} from "./CaseLightRecallSupport"
 import {findSceneObjectByName} from "Leaf.lspkg/Utils/common/Utils"
 
 interface Pair {
@@ -98,13 +102,17 @@ export class CaseLightMixUpScenario extends Scenario {
       return {piece: p, result: main.lastDropResult}
     }
 
-    /** Run the rest of a recall pass with right drops only. */
-    const finishPass = async (label: string): Promise<void> => {
-      while (main.mode === "recall") {
-        const p = await waitForTopGrabbable(main)
-        const r = await dropAt(dropSlotFor(main, p), `${label} piece ${p} right`)
-        expect(r.result, `${label} piece ${p} placed`).toBe("correct")
-      }
+    const model = new OwnModel(main.pieceCount)
+    /** The recall pass just started: its top letter missed once (cell 23 for the hold piece), all else right. Returns the expected pair. */
+    const onePassOneMiss = async (label: string): Promise<Pair[]> => {
+      model.startPass()
+      const opener = main.bundleOrder[0]
+      const t = targetOf(main, opener)
+      const a = t === -2 ? 23 : neighbourSlot(t)
+      await playRecallPass(ix, main, model, label, (p, k) => (p === opener && k === 0 ? a : false), (d) => {
+        deferred.push(observe(main, `${main.mode} pass, after ${label} piece ${d.piece} drop ${d.k + 1} in ${d.slot} (${d.result})`))
+      })
+      return [{dropped: a, right: t, piece: opener}]
     }
 
     try {
@@ -123,35 +131,45 @@ export class CaseLightMixUpScenario extends Scenario {
       deferred.push(observe(main, "after the practice pass with a miss"))
 
       // Recall pass 1: three addresses missed, one of them twice, plus the hold piece refused.
+      // v0.6 feature 2: a missed letter comes back with exactly two letters before it, so its
+      // second wrong drop and its right drop happen when it comes back (our model checks the live
+      // queue before every drop; replaces the old "wrong, wrong, right in a row" sequence).
       await ix.pressButton("StartRecallButton")
       const order = main.bundleOrder
       log(`MIXUP recall 1 order ${JSON.stringify(order)}`)
+      model.startPass()
       const want: Pair[] = []
       const nonHold = order.filter((i) => targetOf(main, i) !== -2)
       const twice = nonHold[0]
       const once = nonHold[2]
       let holdRefused = false
-      while (main.mode === "recall") {
-        const p = await waitForTopGrabbable(main)
-        const t = targetOf(main, p)
-        if (p === twice) {
-          const a = neighbourSlot(t)
-          const b = secondWrong(t, a)
-          expect((await dropAt(a, `recall 1 piece ${p} 1st wrong`)).result, "1st wrong drop is a miss").toBe("miss")
-          expect((await dropAt(b, `recall 1 piece ${p} 2nd wrong`)).result, "2nd wrong drop is a miss").toBe("miss")
-          want.push({dropped: a, right: t, piece: p})
-        } else if (p === once) {
-          const a = neighbourSlot(t)
-          expect((await dropAt(a, `recall 1 piece ${p} wrong`)).result, "wrong drop is a miss").toBe("miss")
-          want.push({dropped: a, right: t, piece: p})
-        } else if (t === -2) {
-          expect((await dropAt(23, `recall 1 hold piece ${p} in cell 23`)).result, "hold refused").toBe("refused-hold")
-          want.push({dropped: 23, right: -2, piece: p})
+      const tA = targetOf(main, twice)
+      const aTwice = neighbourSlot(tA)
+      const bTwice = secondWrong(tA, aTwice)
+      const aOnce = neighbourSlot(targetOf(main, once))
+      await playRecallPass(ix, main, model, "recall 1", (p, k) => {
+        if (p === twice && k === 0) return aTwice
+        if (p === twice && k === 1) return bTwice
+        if (p === once && k === 0) return aOnce
+        if (targetOf(main, p) === -2 && k === 0) return 23
+        return false
+      }, (d) => {
+        deferred.push(observe(main, `${main.mode} pass, after recall 1 piece ${d.piece} drop ${d.k + 1} in ${d.slot} (${d.result})`))
+        if (d.piece === twice && d.k === 1) expect(d.result, "2nd wrong drop is a miss").toBe("miss")
+        if (d.piece === twice && d.k === 0) {
+          expect(d.result, "1st wrong drop is a miss").toBe("miss")
+          want.push({dropped: aTwice, right: tA, piece: twice})
+        }
+        if (d.piece === once && d.k === 0) {
+          expect(d.result, "wrong drop is a miss").toBe("miss")
+          want.push({dropped: aOnce, right: targetOf(main, once), piece: once})
+        }
+        if (targetOf(main, d.piece) === -2 && d.k === 0) {
+          expect(d.result, "hold refused").toBe("refused-hold")
+          want.push({dropped: 23, right: -2, piece: d.piece})
           holdRefused = true
         }
-        const r = await dropAt(dropSlotFor(main, p), `recall 1 piece ${p} right`)
-        expect(r.result, `recall 1 piece ${p} placed`).toBe("correct")
-      }
+      })
       expect(holdRefused, "the hold piece was refused once in recall 1").toBe(true)
       expect(want.length, "three addresses missed in recall 1").toBe(3)
       log(`MIXUP recall 1 expected ${pairsKey(want)}, shown ${pairsKey(main.mixUpPairs)}, lines ${main.mixUpLineCount}`)
@@ -166,22 +184,14 @@ export class CaseLightMixUpScenario extends Scenario {
       await ix.pressButton("AgainButton")
       expect(main.mode, "Again starts a recall pass").toBe("recall")
       expectNoMixUp(main, "after Again")
-      const want2: Pair[] = []
-      {
-        const p = await waitForTopGrabbable(main)
-        const t = targetOf(main, p)
-        const a = t === -2 ? 23 : neighbourSlot(t)
-        await dropAt(a, `recall 2 piece ${p} wrong`)
-        want2.push({dropped: a, right: t, piece: p})
-        await dropAt(dropSlotFor(main, p), `recall 2 piece ${p} right`)
-      }
-      await finishPass("recall 2")
+      const want2 = await onePassOneMiss("recall 2")
       expectMixUp(main, want2, "after recall 2 (one miss)")
       expectMixUpEnds(main, want2, "after recall 2")
       checkDeferred("after recall 2")
 
       // Done clears them.
       await ix.pressButton("DoneButton")
+      model.done()
       expect(main.mode, "Done goes idle").toBe("idle")
       expectNoMixUp(main, "after Done")
 
@@ -189,16 +199,7 @@ export class CaseLightMixUpScenario extends Scenario {
       // out the Start guard that follows Done (a press inside it is ignored by design).
       await waitUntil(() => getTime() - main.lastExitPressTime > main.startGuardSeconds + 0.15, 3000, "Start guard after Done passed")
       await ix.pressButton("StartRecallButton")
-      const want3: Pair[] = []
-      {
-        const p = await waitForTopGrabbable(main)
-        const t = targetOf(main, p)
-        const a = t === -2 ? 23 : neighbourSlot(t)
-        await dropAt(a, `recall 3 piece ${p} wrong`)
-        want3.push({dropped: a, right: t, piece: p})
-        await dropAt(dropSlotFor(main, p), `recall 3 piece ${p} right`)
-      }
-      await finishPass("recall 3")
+      const want3 = await onePassOneMiss("recall 3")
       expectMixUp(main, want3, "after recall 3 (one miss)")
       expectMixUpEnds(main, want3, "after recall 3")
       checkDeferred("after recall 3")
@@ -208,13 +209,7 @@ export class CaseLightMixUpScenario extends Scenario {
 
       // mixUpLines off: recall 4 with a miss draws nothing (lines were seen on after recall 3).
       main.mixUpLines = false
-      {
-        const p = await waitForTopGrabbable(main)
-        const t = targetOf(main, p)
-        await dropAt(t === -2 ? 23 : neighbourSlot(t), `recall 4 piece ${p} wrong`)
-        await dropAt(dropSlotFor(main, p), `recall 4 piece ${p} right`)
-      }
-      await finishPass("recall 4")
+      await onePassOneMiss("recall 4")
       expect(main.isExitVisible, "recall 4 finished (exit shown)").toBe(true)
       expectNoMixUp(main, "after recall 4 with mixUpLines off")
       checkDeferred("after recall 4")
@@ -223,6 +218,7 @@ export class CaseLightMixUpScenario extends Scenario {
       main.mixUpLines = true
       main.practiceLadder = true
       await ix.pressButton("StartRecallButton")
+      expect(JSON.stringify(main.bundleOrder), "recall 5 order = our model (retired letters left out)").toBe(JSON.stringify(model.startPass()))
       {
         const p = await waitForTopGrabbable(main)
         const t = targetOf(main, p)

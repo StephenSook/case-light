@@ -17,6 +17,7 @@ import {Scenario} from "Leaf.lspkg/Scenarios/scenario/Scenario"
 import {expect} from "Leaf.lspkg/Utils/common/Expect"
 import {CaseLightMain} from "../CaseLightMain"
 import {hideLeafOverlay, CaseLightLeafInteractor, dropSlotFor, expectGlowAt, log, targetOf, waitForReady, waitForTopGrabbable} from "./CaseLightLeafSupport"
+import {modelComeBack} from "./CaseLightRecallSupport"
 
 interface Counts {
   u: number
@@ -88,20 +89,30 @@ export class CaseLightHoldCellsScenario extends Scenario {
     let movedByRight = false
     let holdDelta = null as Counts | null
     let afterRefusal = null as Counts | null
+    let holdSeen = 0
     await pass(
       "StartRecallButton",
       "recall 1",
       async (p) => {
+        // v0.6 feature 2: a refused hold piece in recall goes back with exactly two letters before
+        // it (our model), so it is accepted when it comes back, not at once (replaces the old
+        // "refused, then accepted straight after" step).
+        if (holdSeen++ === 0) {
+          const c = counts(main)
+          const q = main.currentPassOrder
+          await ix.dropTopPieceAtSlot(main, 23)
+          expect(main.lastDropResult, "recall 1: hold piece refused in 23").toBe("refused-hold")
+          const a = counts(main)
+          afterRefusal = {u: a.u - c.u, h: a.h - c.h, t: a.t - c.t}
+          expect(JSON.stringify(main.currentPassOrder), "recall 1: refused hold piece back with exactly 2 letters before it (our model)").toBe(JSON.stringify(modelComeBack(q)))
+          await waitForTopGrabbable(main)
+          expectGlowAt(main, -2, "recall 1: HOLD block lit after the refusal")
+          return
+        }
         const c = counts(main)
-        await ix.dropTopPieceAtSlot(main, 23)
-        expect(main.lastDropResult, "recall 1: hold piece refused in 23").toBe("refused-hold")
-        afterRefusal = counts(main)
-        await waitForTopGrabbable(main)
-        expectGlowAt(main, -2, "recall 1: HOLD block lit after the refusal")
         await accept(p, 38, "recall 1")
         const a = counts(main)
         holdDelta = {u: a.u - c.u, h: a.h - c.h, t: a.t - c.t}
-        if (afterRefusal) afterRefusal = {u: afterRefusal.u - c.u, h: afterRefusal.h - c.h, t: afterRefusal.t - c.t}
       },
       (p, c) => {
         const a = counts(main)
@@ -120,6 +131,7 @@ export class CaseLightHoldCellsScenario extends Scenario {
     expect(hd.u, "and not as unaided").toBe(0)
     expect(hd.t, "and once in the total").toBe(1)
     expect(main.totalCount - r0.t, "recall 1 placed every piece once").toBe(main.pieceCount)
+    expect(holdSeen, "recall 1: the hold piece was on top twice (refused, then back and accepted)").toBe(2)
 
     // Recall 2 (Again): accept 39 at once -> unaided +1.
     let hold2 = null as Counts | null

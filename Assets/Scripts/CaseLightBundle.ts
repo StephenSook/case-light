@@ -1,5 +1,5 @@
 // Owns: the bundle tray and the sample letters (Piece_<i>): SIK grab/move, stacking, snap-in, return to hand.
-// Talks to: CaseLightMain (build, layout, setActivePiece, placeIn, snapThenReturn; onGrab/onDragMove/onRelease), CaseLightPieceCardUI.
+// Talks to: CaseLightMain (build, relabel, layout, requeue, setActivePiece, placeIn, snapThenReturn; onGrab/onDragMove/onRelease), CaseLightPieceCardUI.
 // Must not: decide right or wrong, count anything, or light slots (CaseLightMain owns that).
 
 /**
@@ -176,19 +176,53 @@ export class CaseLightBundle extends BaseScriptComponent {
     }
   }
 
-  /** Put every piece back in the tray, stacked in the given order (order[0] on top). */
+  /**
+   * Put the pieces of a pass back in the tray, stacked in the given order (order[0] on top). A
+   * piece left out of the order (a retired letter in a recall pass) is hidden until a pass uses it.
+   */
   layout(order: number[]): void {
     this.stackOrder = order.slice()
     this.heldIndex = -1
-    for (const p of this.pieces) {
+    for (let i = 0; i < this.pieces.length; i++) {
+      const p = this.pieces[i]
       if (p.cancel) p.cancel()
       p.cancel = null
       p.placed = false
       p.busy = false
+      p.obj.enabled = order.indexOf(i) >= 0
       this.showHeld(p, false)
     }
     this.restack()
     this.setActivePiece(-1)
+  }
+
+  /** New addresses for the same letters (a route switch): same slots, same hold letter position. */
+  relabel(pieces: SamplePiece[]): void {
+    for (let i = 0; i < this.pieces.length && i < pieces.length; i++) {
+      this.pieces[i].card.relabel(pieces[i].address, pieces[i].note, pieces[i].gloss)
+    }
+  }
+
+  /** The address printed on a letter (empty if there is no such letter). */
+  addressOf(index: number): string {
+    const p = this.pieces[index]
+    return p ? p.card.addressString : ""
+  }
+
+  /** True while a piece is shown (false for a letter left out of the current pass). */
+  isShown(index: number): boolean {
+    const p = this.pieces[index]
+    return !!p && p.obj.enabled
+  }
+
+  /**
+   * The letters still in the bundle, in a new order (top letter at index 0), after a missed letter came back
+   * behind others. Letters at rest move to their new places at once; a letter flying back lands in
+   * its new place (see snapThenReturn).
+   */
+  requeue(remaining: number[]): void {
+    this.stackOrder = remaining.slice()
+    this.restackResting()
   }
 
   /** Only this piece can be grabbed (or none, with -1). */
@@ -288,8 +322,11 @@ export class CaseLightBundle extends BaseScriptComponent {
     if (this.activeIndex === index) this.setActivePiece(-1)
   }
 
-  /** Snap into the dropped separation briefly, then fly back to the hand. */
-  snapThenReturn(index: number, worldPosition: vec3, worldRotation: quat, onReturned: () => void): void {
+  /**
+   * Snap into the dropped separation briefly, then fly back to the hand: to the top of the bundle,
+   * or (toQueuePlace) to this letter's place in the order last given to requeue().
+   */
+  snapThenReturn(index: number, worldPosition: vec3, worldRotation: quat, onReturned: () => void, toQueuePlace: boolean = false): void {
     const p = this.pieces[index]
     if (!p) return
     if (p.cancel) p.cancel()
@@ -301,11 +338,11 @@ export class CaseLightBundle extends BaseScriptComponent {
     p.cancel = animate({
       duration: MISS_HOLD_SECONDS,
       update: () => {},
-      ended: () => this.flyToHand(index, onReturned)
+      ended: () => this.flyToHand(index, onReturned, toQueuePlace)
     })
   }
 
-  /** Fly back to the top of the bundle (no snap first). */
+  /** Fly back to the top of the bundle (no snap beforehand). */
   returnToHand(index: number, onReturned: () => void): void {
     const p = this.pieces[index]
     if (!p) return
@@ -316,12 +353,13 @@ export class CaseLightBundle extends BaseScriptComponent {
     this.flyToHand(index, onReturned)
   }
 
-  private flyToHand(index: number, onReturned: () => void): void {
+  private flyToHand(index: number, onReturned: () => void, toQueuePlace: boolean = false): void {
     const p = this.pieces[index]
     const t = p.obj.getTransform()
     const fromPos = t.getWorldPosition()
     const fromRot = t.getWorldRotation()
-    const toPos = this.topSpotWorld()
+    const k = toQueuePlace ? this.stackOrder.indexOf(index) : -1
+    const toPos = k >= 0 ? this.stackSpotWorld(k, this.stackOrder.length) : this.topSpotWorld()
     const toRot = this.faceCameraRotation(toPos)
     p.cancel = animate({
       duration: RETURN_SECONDS,
@@ -333,6 +371,8 @@ export class CaseLightBundle extends BaseScriptComponent {
       ended: () => {
         p.cancel = null
         p.busy = false
+        // After a come-back, settle every resting letter in its place (the case may have moved).
+        if (k >= 0) this.restackResting()
         this.setActivePiece(this.activeIndex)
         onReturned()
       }
@@ -341,15 +381,32 @@ export class CaseLightBundle extends BaseScriptComponent {
 
   private restack(): void {
     const n = this.stackOrder.length
-    const step = n > 1 ? Math.min(1.3, (TRAY_D - 2.5) / (n - 1)) : 0
-    const trayT = this.getTransform().getWorldTransform()
     for (let k = 0; k < n; k++) {
       const p = this.pieces[this.stackOrder[k]]
       if (!p) continue
-      const pos = trayT.multiplyPoint(new vec3(0, LETTER_H / 2 + 0.6, TOP_SPOT_Z - k * step))
+      const pos = this.stackSpotWorld(k, n)
       p.obj.getTransform().setWorldPosition(pos)
       p.obj.getTransform().setWorldRotation(this.faceCameraRotation(pos))
     }
+  }
+
+  /** Like restack(), but leaves alone any letter placed, in flight or in hand. */
+  private restackResting(): void {
+    const n = this.stackOrder.length
+    for (let k = 0; k < n; k++) {
+      const i = this.stackOrder[k]
+      const p = this.pieces[i]
+      if (!p || p.placed || p.busy || i === this.heldIndex) continue
+      const pos = this.stackSpotWorld(k, n)
+      p.obj.getTransform().setWorldPosition(pos)
+      p.obj.getTransform().setWorldRotation(this.faceCameraRotation(pos))
+    }
+  }
+
+  /** Place k (0 = top) in a stack of n letters, in world space. */
+  private stackSpotWorld(k: number, n: number): vec3 {
+    const step = n > 1 ? Math.min(1.3, (TRAY_D - 2.5) / (n - 1)) : 0
+    return this.getTransform().getWorldTransform().multiplyPoint(new vec3(0, LETTER_H / 2 + 0.6, TOP_SPOT_Z - k * step))
   }
 
   private lateUpdate(): void {

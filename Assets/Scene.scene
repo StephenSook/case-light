@@ -6,8 +6,8 @@
     - !<own> f5d74682-203a-4970-81ea-9fa7b88c96bb
     - !<own> de9b9b93-38d0-40e0-9e94-7e5719dbba0c
     - !<own> 5677e55c-d2e0-4b93-9c39-4e2b98edbd67
-    - !<own> f8cffc97-2710-4550-b720-da68b51f0688
-    - !<own> 5763885e-4215-4cef-84f2-da59f5032c88
+    - !<own> 04f60cc5-0257-4ad6-8327-784060854770
+    - !<own> 24708d05-17a7-4847-9eb7-8a37d67ccdf4
   layers: !<Layers/267ee9a7-aff2-4f9d-9a49-f71214747d03>
     userLayers:
       - id: 1
@@ -223,6 +223,22 @@
     []
   Components:
     - !<own> 68ae81f3-3c5b-44e6-9ad3-82a13281307b
+- !<SceneObject/04f60cc5-0257-4ad6-8327-784060854770>
+  PrefabRemaps:
+    []
+  Name: AiPreviewAgent Handler
+  Enabled: true
+  Layers: 1
+  LocalTransform: !<TransformEntity>
+    Position: {x: 0.000000, y: 0.000000, z: 0.000000}
+    Rotation: {x: 0.000000, y: 0.000000, z: 0.000000}
+    Scale: {x: 1.000000, y: 1.000000, z: 1.000000}
+    HasSegmentScaleCompensation: false
+  Children:
+    []
+  Components:
+    - !<own> 5283120e-1f3d-4d92-93a0-1833423e470a
+    - !<own> 08867839-c53f-4787-8393-20c5950fec77
 - !<SceneObject/05147ea1-cb6b-4629-9484-199a4aa4d92a>
   PrefabRemaps:
     []
@@ -338,6 +354,22 @@
   ScriptTypes:
     "":
       {}
+- !<ScriptComponent/08867839-c53f-4787-8393-20c5950fec77>
+  PrefabRemaps:
+    []
+  Name: AgentInteractScript
+  Enabled: true
+  ScriptAsset: !<reference> 29091811-e792-46be-bfa4-28ddec5f11be
+  ScriptInputsDefault:
+    {}
+  ScriptTypesDefault:
+    {}
+  ScriptInputs:
+    "":
+      {}
+  ScriptTypes:
+    "":
+      {}
 - !<SceneObject/08e3cc22-f2e1-49fb-9ddc-145fe6547ce3>
   PrefabRemaps:
     []
@@ -375,7 +407,7 @@
   Enabled: true
   Layers: 1
   LocalTransform: !<TransformEntity>
-    Position: {x: 0.000000, y: 13.600000, z: 3.000000}
+    Position: {x: -1.575000, y: 13.600000, z: 3.000000}
     Rotation: {x: 14.000000, y: 0.000000, z: 0.000000}
     Scale: {x: 1.000000, y: 1.000000, z: 1.000000}
     HasSegmentScaleCompensation: false
@@ -396,6 +428,7 @@
     practiceLadder: true
     mixUpLines: true
     startGuardSeconds: true
+    demoReplay: true
   ScriptTypesDefault:
     {}
   ScriptInputs:
@@ -412,6 +445,9 @@
       pace: !<MappingBased.AssignableType_9> 68ae81f3-3c5b-44e6-9ad3-82a13281307b
       exitControls: !<MappingBased.AssignableType_10> d04b018b-0067-495f-9ef0-b8d9640507ff
       mixUps: !<MappingBased.AssignableType_11> a1a6834b-1c6d-4b1a-83b9-886bf1ca4978
+      placement: !<MappingBased.AssignableType_12> c8abd068-454d-4255-abbe-a8b25068fa3c
+      veteran: !<MappingBased.AssignableType_13> 4c759e7c-7ff0-4d5b-bc61-bdeaaa49aeb2
+      routePicker: !<MappingBased.AssignableType_14> e3349d6a-5d6a-47ab-b988-6e2df29ae40a
       lineMaterial: !<reference.Material> 70d03593-c7b4-410a-ae5c-75cb82ee32dc
       shelfCount: !<float> 6.000000
       bundleCount: !<float> 8.000000
@@ -419,6 +455,7 @@
       practiceLadder: false
       mixUpLines: true
       startGuardSeconds: 0.600000
+      demoReplay: false
   ScriptTypes:
     "":
       {}
@@ -596,6 +633,9 @@
   ScriptAsset: !<reference> cb96f5dd-c2da-4bf1-b422-831f75b2aef6
   ScriptInputsDefault:
     resultTemplate: true
+    cameBackTemplate: true
+    allRetiredText: true
+    allRetiredLine2Text: true
     street0Color: true
     street1Color: true
     street2Color: true
@@ -611,6 +651,9 @@
       captionAnchor: !<reference.SceneObject> 725b5a4e-3ad0-478e-9891-713331d60b5f
       captionText: "Practice mail, real house numbers"
       resultTemplate: "From memory: {x} of {y} this session"
+      cameBackTemplate: "Came back: {n}"
+      allRetiredText: All letters learned
+      allRetiredLine2Text: Done starts over
       street0Color: !<Vec4> {x: 0.600000, y: 0.820000, z: 1.000000, w: 1.000000}
       street1Color: !<Vec4> {x: 0.600000, y: 0.960000, z: 0.640000, w: 1.000000}
       street2Color: !<Vec4> {x: 1.000000, y: 0.900000, z: 0.550000, w: 1.000000}
@@ -666,22 +709,6 @@
     []
   Components:
     - !<own> 0dd1db4b-3f37-4dea-b7ee-2c263fafd1ca
-- !<ScriptComponent/1d3547a2-90b2-4b73-a6b7-1c66783c1dc5>
-  PrefabRemaps:
-    []
-  Name: AgentInteractScript
-  Enabled: true
-  ScriptAsset: !<reference> 29091811-e792-46be-bfa4-28ddec5f11be
-  ScriptInputsDefault:
-    {}
-  ScriptTypesDefault:
-    {}
-  ScriptInputs:
-    "":
-      {}
-  ScriptTypes:
-    "":
-      {}
 - !<RenderMeshVisual/1f969daa-5809-4500-b314-98d91ccba131>
   PrefabRemaps:
     []
@@ -777,6 +804,21 @@
     []
   Components:
     []
+- !<SceneObject/24708d05-17a7-4847-9eb7-8a37d67ccdf4>
+  PrefabRemaps:
+    []
+  Name: LEAF Plugin Bridge
+  Enabled: true
+  Layers: 1
+  LocalTransform: !<TransformEntity>
+    Position: {x: 0.000000, y: 0.000000, z: 0.000000}
+    Rotation: {x: 0.000000, y: 0.000000, z: 0.000000}
+    Scale: {x: 1.000000, y: 1.000000, z: 1.000000}
+    HasSegmentScaleCompensation: false
+  Children:
+    []
+  Components:
+    - !<own> e58f0cb9-e0bd-466c-96ef-4b29ee0cc988
 - !<SceneObject/264571d0-f879-411b-8deb-ff6d9921317f>
   PrefabRemaps:
     []
@@ -894,6 +936,21 @@
     - !<own> a7da4af4-3d84-4acd-a31e-920a56b4c5c8
   Components:
     []
+- !<SceneObject/2eba5455-36e9-4e66-92bb-b247d877549c>
+  PrefabRemaps:
+    []
+  Name: WallPlacement
+  Enabled: true
+  Layers: 1
+  LocalTransform: !<TransformEntity>
+    Position: {x: 0.000000, y: 0.000000, z: 0.000000}
+    Rotation: {x: 0.000000, y: 0.000000, z: 0.000000}
+    Scale: {x: 1.000000, y: 1.000000, z: 1.000000}
+    HasSegmentScaleCompensation: false
+  Children:
+    []
+  Components:
+    - !<own> c8abd068-454d-4255-abbe-a8b25068fa3c
 - !<SceneObject/2f3c5396-b6dc-4bb5-80b9-f170da3f33c9>
   PrefabRemaps:
     []
@@ -1076,6 +1133,21 @@
     - !<own> 4051028a-c608-4a97-b3d5-1a3912a7c007
   Components:
     []
+- !<SceneObject/3961398c-721e-427b-be30-561d6e3c5408>
+  PrefabRemaps:
+    []
+  Name: VeteranControls
+  Enabled: true
+  Layers: 1
+  LocalTransform: !<TransformEntity>
+    Position: {x: 19.500000, y: 7.300000, z: 3.000000}
+    Rotation: {x: 7.200000, y: -19.900000, z: 0.000000}
+    Scale: {x: 1.000000, y: 1.000000, z: 1.000000}
+    HasSegmentScaleCompensation: false
+  Children:
+    []
+  Components:
+    - !<own> b00be1bb-af6b-431a-9c74-abcc5c455075
 - !<SceneObject/3a794764-c758-4d72-9d89-bf3ed978113f>
   PrefabRemaps:
     []
@@ -1242,6 +1314,24 @@
     - !<own> 9c3a7929-faa9-4369-a85c-c75a6ab4eee7
   Components:
     []
+- !<ScriptComponent/4c759e7c-7ff0-4d5b-bc61-bdeaaa49aeb2>
+  PrefabRemaps:
+    []
+  Name: CaseLightVeteran
+  Enabled: true
+  ScriptAsset: !<reference> 9ef80c70-9365-44c0-bb56-3b7a0bed091a
+  ScriptInputsDefault:
+    debugCollider: true
+  ScriptTypesDefault:
+    {}
+  ScriptInputs:
+    "":
+      caseRoot: !<reference.SceneObject> a92d6208-9f6d-4766-a3cb-33c77c248285
+      ui: !<MappingBased.AssignableType_1> b00be1bb-af6b-431a-9c74-abcc5c455075
+      debugCollider: false
+  ScriptTypes:
+    "":
+      {}
 - !<SceneObject/4cb212ad-5246-4215-adf1-aaf3ccfc0e9c>
   PrefabRemaps:
     []
@@ -1257,6 +1347,22 @@
     []
   Components:
     - !<own> 5f153ad7-2baa-4fd9-a298-0dcfad86da3b
+- !<ScriptComponent/5283120e-1f3d-4d92-93a0-1833423e470a>
+  PrefabRemaps:
+    []
+  Name: AgentInspectScript
+  Enabled: true
+  ScriptAsset: !<reference> 0b25079c-f5bf-4c6d-96c4-f43b89dfa213
+  ScriptInputsDefault:
+    {}
+  ScriptTypesDefault:
+    {}
+  ScriptInputs:
+    "":
+      {}
+  ScriptTypes:
+    "":
+      {}
 - !<SceneObject/52ecefe4-5642-445a-ad16-52ce818076bc>
   PrefabRemaps:
     []
@@ -1302,21 +1408,6 @@
     []
   Components:
     - !<own> 4bbda018-5471-46cc-8496-754098857979
-- !<SceneObject/5763885e-4215-4cef-84f2-da59f5032c88>
-  PrefabRemaps:
-    []
-  Name: LEAF Plugin Bridge
-  Enabled: true
-  Layers: 1
-  LocalTransform: !<TransformEntity>
-    Position: {x: 0.000000, y: 0.000000, z: 0.000000}
-    Rotation: {x: 0.000000, y: 0.000000, z: 0.000000}
-    Scale: {x: 1.000000, y: 1.000000, z: 1.000000}
-    HasSegmentScaleCompensation: false
-  Children:
-    []
-  Components:
-    - !<own> df8d50b1-314b-48b4-ad69-a00513029e74
 - !<SceneObject/58ef319f-850e-40dd-8295-e6dc36ab4854>
   PrefabRemaps:
     []
@@ -1380,6 +1471,21 @@
   ScriptTypes:
     "":
       {}
+- !<SceneObject/62f2bd5d-8da7-43c2-88c1-f8528aae3eab>
+  PrefabRemaps:
+    []
+  Name: RoutePicker
+  Enabled: true
+  Layers: 1
+  LocalTransform: !<TransformEntity>
+    Position: {x: 9.400000, y: 14.692000, z: 3.272000}
+    Rotation: {x: 14.000000, y: 0.000000, z: 0.000000}
+    Scale: {x: 1.000000, y: 1.000000, z: 1.000000}
+    HasSegmentScaleCompensation: false
+  Children:
+    []
+  Components:
+    - !<own> e3349d6a-5d6a-47ab-b988-6e2df29ae40a
 - !<ScriptComponent/64f27597-c99d-4c59-8a08-05459cc2258d>
   PrefabRemaps:
     []
@@ -1719,6 +1825,21 @@
     []
   Components:
     - !<own> c8e031d3-a8a1-468a-a419-427f8556de4c
+- !<SceneObject/79d2c695-77cb-4765-adad-0ab8f8594bbc>
+  PrefabRemaps:
+    []
+  Name: VeteranNotes
+  Enabled: true
+  Layers: 1
+  LocalTransform: !<TransformEntity>
+    Position: {x: 0.000000, y: 0.000000, z: 0.000000}
+    Rotation: {x: 0.000000, y: 0.000000, z: 0.000000}
+    Scale: {x: 1.000000, y: 1.000000, z: 1.000000}
+    HasSegmentScaleCompensation: false
+  Children:
+    []
+  Components:
+    - !<own> 4c759e7c-7ff0-4d5b-bc61-bdeaaa49aeb2
 - !<SceneObject/7aa85bd8-d423-42cd-b190-473711e94929>
   PrefabRemaps:
     []
@@ -1798,6 +1919,30 @@
     - !<own> 052b8709-3290-4765-869b-a43fee99cb12
   Components:
     []
+- !<ScriptComponent/803cd735-c799-461a-a7fd-acea9611a656>
+  PrefabRemaps:
+    []
+  Name: CaseLightPlacementUI
+  Enabled: true
+  ScriptAsset: !<reference> 3578b021-f24e-4edc-9d3a-feedf1741d8f
+  ScriptInputsDefault:
+    placeOnWallLabel: true
+    placeInFrontLabel: true
+    buttonWidthCm: true
+    buttonHeightCm: true
+    viewDistanceCm: true
+  ScriptTypesDefault:
+    {}
+  ScriptInputs:
+    "":
+      placeOnWallLabel: Place on wall
+      placeInFrontLabel: Place in front of me
+      buttonWidthCm: 9.500000
+      buttonHeightCm: 2.500000
+      viewDistanceCm: !<float> 60.000000
+  ScriptTypes:
+    "":
+      {}
 - !<SceneObject/80574bd1-697b-4bb5-b9ce-13b340146d82>
   PrefabRemaps:
     []
@@ -1891,22 +2036,6 @@
     - !<own> 1fc7fa3e-6910-4741-b8a7-1b6660a39a9d
   Components:
     - !<own> 28e05826-1521-46fa-a54c-80f2957ec80c
-- !<ScriptComponent/884b90bd-d156-47a0-8e6a-290441115516>
-  PrefabRemaps:
-    []
-  Name: AgentInspectScript
-  Enabled: true
-  ScriptAsset: !<reference> 0b25079c-f5bf-4c6d-96c4-f43b89dfa213
-  ScriptInputsDefault:
-    {}
-  ScriptTypesDefault:
-    {}
-  ScriptInputs:
-    "":
-      {}
-  ScriptTypes:
-    "":
-      {}
 - !<SceneObject/8b02aa08-15fc-413d-b06d-49a7d06e8be0>
   PrefabRemaps:
     []
@@ -2132,12 +2261,14 @@
   ScriptInputsDefault:
     lineColor: true
     lineThicknessCm: true
+    checkColor: true
   ScriptTypesDefault:
     {}
   ScriptInputs:
     "":
       lineColor: !<Vec4> {x: 1.000000, y: 0.500000, z: 0.920000, w: 1.000000}
       lineThicknessCm: 0.250000
+      checkColor: !<Vec4> {x: 0.450000, y: 1.000000, z: 0.550000, w: 1.000000}
   ScriptTypes:
     "":
       {}
@@ -2273,6 +2404,11 @@
     - !<own> 045880a6-77bb-49b9-9b88-14f124ac0e9b
     - !<own> 31122bbf-ec73-4d2d-821f-8b6a5a810bf4
     - !<own> 96ebae4c-7047-4ef7-8833-66fe88abaca3
+    - !<own> c3d373e1-d986-4e99-846f-b632e081cee8
+    - !<own> 2eba5455-36e9-4e66-92bb-b247d877549c
+    - !<own> 3961398c-721e-427b-be30-561d6e3c5408
+    - !<own> 79d2c695-77cb-4765-adad-0ab8f8594bbc
+    - !<own> 62f2bd5d-8da7-43c2-88c1-f8528aae3eab
   Components:
     []
 - !<SceneObject/a98a7d22-28b9-4357-97cd-1486e721ac5d>
@@ -2305,6 +2441,36 @@
     - !<own> f6687ab7-52ac-408d-a892-8a9559125450
   Components:
     []
+- !<ScriptComponent/b00be1bb-af6b-431a-9c74-abcc5c455075>
+  PrefabRemaps:
+    []
+  Name: CaseLightVeteranUI
+  Enabled: true
+  ScriptAsset: !<reference> 6c71e257-00d4-40f3-abac-405e101909ef
+  ScriptInputsDefault:
+    veteranLabel: true
+    toggleWidthCm: true
+    chooserButtonWidthCm: true
+    buttonHeightCm: true
+    viewDistanceCm: true
+    noteWidthCm: true
+    noteTextColor: true
+    notePlateColor: true
+  ScriptTypesDefault:
+    {}
+  ScriptInputs:
+    "":
+      veteranLabel: Veteran mode
+      toggleWidthCm: 9.500000
+      chooserButtonWidthCm: !<float> 11.000000
+      buttonHeightCm: 2.400000
+      viewDistanceCm: !<float> 60.000000
+      noteWidthCm: 9.600000
+      noteTextColor: !<Vec4> {x: 1.000000, y: 0.860000, z: 0.550000, w: 1.000000}
+      notePlateColor: !<Vec4> {x: 0.300000, y: 0.220000, z: 0.100000, w: 0.750000}
+  ScriptTypes:
+    "":
+      {}
 - !<SceneObject/b22d97e6-4c06-4135-af29-d26adb2b9d86>
   PrefabRemaps:
     []
@@ -2485,6 +2651,49 @@
     []
   Components:
     []
+- !<SceneObject/c3d373e1-d986-4e99-846f-b632e081cee8>
+  PrefabRemaps:
+    []
+  Name: PlacementControls
+  Enabled: true
+  Layers: 1
+  LocalTransform: !<TransformEntity>
+    Position: {x: 19.500000, y: 13.600000, z: 3.000000}
+    Rotation: {x: 13.300000, y: -19.900000, z: 0.000000}
+    Scale: {x: 1.000000, y: 1.000000, z: 1.000000}
+    HasSegmentScaleCompensation: false
+  Children:
+    []
+  Components:
+    - !<own> 803cd735-c799-461a-a7fd-acea9611a656
+- !<ScriptComponent/c8abd068-454d-4255-abbe-a8b25068fa3c>
+  PrefabRemaps:
+    []
+  Name: CaseLightPlacement
+  Enabled: true
+  ScriptAsset: !<reference> 49791f78-cd63-4fba-bd91-fed60a493b32
+  ScriptInputsDefault:
+    maxWallTiltDeg: true
+    minWallDistanceCm: true
+    maxWallDistanceCm: true
+    wallGapCm: true
+    aimColor: true
+    refuseColor: true
+  ScriptTypesDefault:
+    {}
+  ScriptInputs:
+    "":
+      caseRoot: !<reference.SceneObject> a92d6208-9f6d-4766-a3cb-33c77c248285
+      controls: !<MappingBased.AssignableType_1> 803cd735-c799-461a-a7fd-acea9611a656
+      maxWallTiltDeg: !<float> 30.000000
+      minWallDistanceCm: !<float> 50.000000
+      maxWallDistanceCm: !<float> 300.000000
+      wallGapCm: !<float> 0.000000
+      aimColor: !<Vec4> {x: 0.550000, y: 0.900000, z: 1.000000, w: 1.000000}
+      refuseColor: !<Vec4> {x: 1.000000, y: 0.720000, z: 0.300000, w: 1.000000}
+  ScriptTypes:
+    "":
+      {}
 - !<ScriptComponent/c8e031d3-a8a1-468a-a419-427f8556de4c>
   PrefabRemaps:
     []
@@ -2622,6 +2831,7 @@
   ScriptInputsDefault:
     againLabel: true
     doneLabel: true
+    caseCheckLabel: true
     viewDistanceCm: true
   ScriptTypesDefault:
     {}
@@ -2629,6 +2839,7 @@
     "":
       againLabel: Again
       doneLabel: Done
+      caseCheckLabel: Case check
       buttonWidthCm: 4.100000
       buttonHeightCm: !<float> 3.000000
       viewDistanceCm: !<float> 60.000000
@@ -2806,22 +3017,6 @@
     - !<own> 2f3c5396-b6dc-4bb5-80b9-f170da3f33c9
   Components:
     - !<own> 0a08adc4-2170-488a-946a-0744996f90e4
-- !<ScriptComponent/df8d50b1-314b-48b4-ad69-a00513029e74>
-  PrefabRemaps:
-    []
-  Name: MessagingBridge
-  Enabled: true
-  ScriptAsset: !<reference> 9aa407db-2872-4afc-a162-cf7faf2a0f29
-  ScriptInputsDefault:
-    {}
-  ScriptTypesDefault:
-    {}
-  ScriptInputs:
-    "":
-      {}
-  ScriptTypes:
-    "":
-      {}
 - !<RenderMeshVisual/e1031f7e-3474-489f-a529-282f7192f812>
   PrefabRemaps:
     []
@@ -2857,6 +3052,24 @@
     - !<own> 7e2075c6-0882-4275-8365-16a03da73298
   Components:
     []
+- !<ScriptComponent/e3349d6a-5d6a-47ab-b988-6e2df29ae40a>
+  PrefabRemaps:
+    []
+  Name: CaseLightRouteUI
+  Enabled: true
+  ScriptAsset: !<reference> b205ea4c-3b2a-4de4-ab20-9c21963241e1
+  ScriptInputsDefault:
+    {}
+  ScriptTypesDefault:
+    {}
+  ScriptInputs:
+    "":
+      buttonWidthCm: !<float> 2.000000
+      buttonHeightCm: 2.450000
+      labelCapCm: 0.480000
+  ScriptTypes:
+    "":
+      {}
 - !<ScriptComponent/e3aa7faf-0cfe-4d77-ab10-d20bcd7df4cd>
   PrefabRemaps:
     []
@@ -2929,6 +3142,22 @@
     InvertRotation: false
   SurfaceOptions: !<SurfaceOptions>
     EnhanceWithNativeAR: false
+- !<ScriptComponent/e58f0cb9-e0bd-466c-96ef-4b29ee0cc988>
+  PrefabRemaps:
+    []
+  Name: MessagingBridge
+  Enabled: true
+  ScriptAsset: !<reference> 9aa407db-2872-4afc-a162-cf7faf2a0f29
+  ScriptInputsDefault:
+    {}
+  ScriptTypesDefault:
+    {}
+  ScriptInputs:
+    "":
+      {}
+  ScriptTypes:
+    "":
+      {}
 - !<SceneObject/e76a5053-8f30-4cda-9cd1-def2036e3255>
   PrefabRemaps:
     []
@@ -3204,22 +3433,6 @@
     - !<own> a7526b33-fca3-4f28-8e32-b0e9aa13c4b4
   Components:
     []
-- !<SceneObject/f8cffc97-2710-4550-b720-da68b51f0688>
-  PrefabRemaps:
-    []
-  Name: AiPreviewAgent Handler
-  Enabled: true
-  Layers: 1
-  LocalTransform: !<TransformEntity>
-    Position: {x: 0.000000, y: 0.000000, z: 0.000000}
-    Rotation: {x: 0.000000, y: 0.000000, z: 0.000000}
-    Scale: {x: 1.000000, y: 1.000000, z: 1.000000}
-    HasSegmentScaleCompensation: false
-  Children:
-    []
-  Components:
-    - !<own> 884b90bd-d156-47a0-8e6a-290441115516
-    - !<own> 1d3547a2-90b2-4b73-a6b7-1c66783c1dc5
 - !<SceneObject/fcc185fc-4e88-4e9e-9c71-40bd83b1b0ed>
   PrefabRemaps:
     []

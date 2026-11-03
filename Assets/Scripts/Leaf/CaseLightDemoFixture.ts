@@ -1,0 +1,43 @@
+// Owns: the tester's copy of the demo replay's recording (the CASELIGHT_LOG v1 lines of session s1-g3nddr), cut from data/demo_replay_s1-g3nddr.log by the tester's own script.
+// Talks to: nothing (pure data); read by the demo replay scenario.
+// Must not: be generated from or checked against CaseLightDemo.ts (it is the independent expectation).
+
+/** data/demo_replay_s1-g3nddr.log, SHA-256 8e19a1ee3ee297b421aea372f3a7f2be001b987a18564b2f8cd74a0843757d23: every line's text from "CASELIGHT_LOG v1" to its end, unchanged, in file order. */
+export const RECORDING_LINES: string[] = [
+  "CASELIGHT_LOG v1 seq=1 session=s1-g3nddr route=1 pass=1 mode=practice event=pass-start pieces=8",
+  "CASELIGHT_LOG v1 seq=2 session=s1-g3nddr route=1 pass=1 mode=practice piece=0 address=\"2195 FAIRWAYS CT\" placed=OFF right=9 result=off-case memory=0",
+  "CASELIGHT_LOG v1 seq=3 session=s1-g3nddr route=1 pass=1 mode=practice piece=0 address=\"2195 FAIRWAYS CT\" placed=9 right=9 result=correct memory=0",
+  "CASELIGHT_LOG v1 seq=4 session=s1-g3nddr route=1 pass=1 mode=practice piece=1 address=\"3498 LEE CT\" placed=46 right=46 result=correct memory=0",
+  "CASELIGHT_LOG v1 seq=5 session=s1-g3nddr route=1 pass=1 mode=practice piece=2 address=\"3581 FREY LAKE RD\" placed=56 right=56 result=correct memory=0",
+  "CASELIGHT_LOG v1 seq=6 session=s1-g3nddr route=1 pass=1 mode=practice piece=3 address=\"2355 FAIRWAYS CT\" placed=17 right=17 result=correct memory=0",
+  "CASELIGHT_LOG v1 seq=7 session=s1-g3nddr route=1 pass=1 mode=practice piece=4 address=\"1460 TRIBUTARY CT\" placed=76 right=76 result=correct memory=0",
+  "CASELIGHT_LOG v1 seq=8 session=s1-g3nddr route=1 pass=1 mode=practice piece=5 address=\"3553 FREY LAKE RD\" placed=23 right=HOLD result=refused-hold memory=0",
+  "CASELIGHT_LOG v1 seq=9 session=s1-g3nddr route=1 pass=1 mode=practice piece=5 address=\"3553 FREY LAKE RD\" placed=HOLD right=HOLD result=correct memory=0",
+  "CASELIGHT_LOG v1 seq=10 session=s1-g3nddr route=1 pass=1 mode=practice piece=6 address=\"2200 FAIRWAYS CT\" placed=23 right=23 result=correct memory=0",
+  "CASELIGHT_LOG v1 seq=11 session=s1-g3nddr route=1 pass=1 mode=practice piece=7 address=\"2035 FAIRWAYS CT\" placed=1 right=1 result=correct memory=0",
+  "CASELIGHT_LOG v1 seq=12 session=s1-g3nddr route=1 pass=1 mode=practice event=pass-end placed=8 score=\"\" cameback=\"\"",
+  "CASELIGHT_LOG v1 seq=13 session=s1-g3nddr route=1 pass=2 mode=recall event=pass-start pieces=8",
+  "CASELIGHT_LOG v1 seq=14 session=s1-g3nddr route=1 pass=2 mode=recall piece=4 address=\"1460 TRIBUTARY CT\" placed=75 right=76 result=miss memory=0",
+  "CASELIGHT_LOG v1 seq=15 session=s1-g3nddr route=1 pass=2 mode=recall piece=3 address=\"2355 FAIRWAYS CT\" placed=17 right=17 result=correct memory=1",
+  "CASELIGHT_LOG v1 seq=16 session=s1-g3nddr route=1 pass=2 mode=recall piece=2 address=\"3581 FREY LAKE RD\" placed=56 right=56 result=correct memory=1",
+  "CASELIGHT_LOG v1 seq=17 session=s1-g3nddr route=1 pass=2 mode=recall piece=4 address=\"1460 TRIBUTARY CT\" placed=76 right=76 result=correct memory=0",
+  "CASELIGHT_LOG v1 seq=18 session=s1-g3nddr route=1 pass=2 mode=recall piece=6 address=\"2200 FAIRWAYS CT\" placed=23 right=23 result=correct memory=1",
+  "CASELIGHT_LOG v1 seq=19 session=s1-g3nddr route=1 pass=2 mode=recall piece=1 address=\"3498 LEE CT\" placed=46 right=46 result=correct memory=1",
+  "CASELIGHT_LOG v1 seq=20 session=s1-g3nddr route=1 pass=2 mode=recall piece=7 address=\"2035 FAIRWAYS CT\" placed=1 right=1 result=correct memory=1",
+  "CASELIGHT_LOG v1 seq=21 session=s1-g3nddr route=1 pass=2 mode=recall piece=5 address=\"3553 FREY LAKE RD\" placed=23 right=HOLD result=refused-hold memory=0",
+  "CASELIGHT_LOG v1 seq=22 session=s1-g3nddr route=1 pass=2 mode=recall piece=0 address=\"2195 FAIRWAYS CT\" placed=9 right=9 result=correct memory=1",
+  "CASELIGHT_LOG v1 seq=23 session=s1-g3nddr route=1 pass=2 mode=recall piece=5 address=\"3553 FREY LAKE RD\" placed=HOLD right=HOLD result=correct memory=0",
+  "CASELIGHT_LOG v1 seq=24 session=s1-g3nddr route=1 pass=2 mode=recall event=pass-end placed=8 score=\"From memory: 6 of 8 this session\" cameback=\"Came back: 2\"",
+  "CASELIGHT_LOG v1 seq=25 session=s1-g3nddr route=1 pass=3 mode=recall event=pass-start pieces=8",
+  "CASELIGHT_LOG v1 seq=26 session=s1-g3nddr route=1 pass=3 mode=recall piece=2 address=\"3581 FREY LAKE RD\" placed=57 right=56 result=miss memory=0",
+  "CASELIGHT_LOG v1 seq=27 session=s1-g3nddr route=1 pass=3 mode=recall piece=3 address=\"2355 FAIRWAYS CT\" placed=17 right=17 result=correct memory=1",
+  "CASELIGHT_LOG v1 seq=28 session=s1-g3nddr route=1 pass=3 mode=recall piece=4 address=\"1460 TRIBUTARY CT\" placed=76 right=76 result=correct memory=1",
+  "CASELIGHT_LOG v1 seq=29 session=s1-g3nddr route=1 pass=3 mode=recall piece=2 address=\"3581 FREY LAKE RD\" placed=56 right=56 result=correct memory=0",
+  "CASELIGHT_LOG v1 seq=30 session=s1-g3nddr route=1 pass=3 mode=recall piece=5 address=\"3553 FREY LAKE RD\" placed=HOLD right=HOLD result=correct memory=1",
+  "CASELIGHT_LOG v1 seq=31 session=s1-g3nddr route=1 pass=3 mode=recall piece=6 address=\"2200 FAIRWAYS CT\" placed=23 right=23 result=correct memory=1",
+  "CASELIGHT_LOG v1 seq=32 session=s1-g3nddr route=1 pass=3 mode=recall piece=7 address=\"2035 FAIRWAYS CT\" placed=1 right=1 result=correct memory=1",
+  "CASELIGHT_LOG v1 seq=33 session=s1-g3nddr route=1 pass=3 mode=recall piece=1 address=\"3498 LEE CT\" placed=46 right=46 result=correct memory=1",
+  "CASELIGHT_LOG v1 seq=34 session=s1-g3nddr route=1 pass=3 mode=recall piece=0 address=\"2195 FAIRWAYS CT\" placed=9 right=9 result=correct memory=1",
+  "CASELIGHT_LOG v1 seq=35 session=s1-g3nddr route=1 pass=3 mode=recall event=pass-end placed=8 score=\"From memory: 13 of 16 this session\" cameback=\"Came back: 1\"",
+  "CASELIGHT_LOG v1 seq=36 session=s1-g3nddr route=2 pass=3 mode=idle event=route-switch from=1",
+]

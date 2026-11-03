@@ -86,3 +86,104 @@ Restored build:
 14:03:10 FAILED: extra-layout-fit-and-reach - AssertionError: caption and its small print do not overlap Expected: "false" - Received: "true"
 14:03:27 FAILED: extra-layout-fit-and-reach - AssertionError: caption ink inside the caption backing (yaw -8.31..4.53, pitch 2.70..3.77 deg vs yaw -11.04..7.31, pitch 2.21..3.42 deg) Expected: "true" - Received: "false"
 14:03:49 FAILED: extra-layout-fit-and-reach - AssertionError: caption wording Expected: "Practice mail, real house numbers" - Received: "Preview: sample letters"
+
+## v0.6 feature 1 (tester, 9): wall placement, refusals, CF1 re-place mid-pass
+# breaks (each in CaseLightPlacement.ts unless named): (1) the case x taken from the eye, not the hit; (2) the case turned to face into the wall; (3) the case rotated to face the eye along the raw eye-to-hit direction (tilted); (4) the case height taken from the hit y; (5) Place in front of me sets no pose; (6) BundleTray left at its old world spot on a wall placement; (7) distance band removed (a 5 m wall counts); (8) a no-hit pinch moves the case; (9) CaseLightMain: a re-place resets the score counts. Each restored byte-identical (cmp), 20/20 product SHA-256 fingerprints OK. Rooms: Sunlit Room; camera at (0, 0, -350) for 1-6 and 8, at the origin for 7, origin then walked to (0, 0, -350) mid-run for 9.
+15:27:11.791 FAILED: extra-wall-placement - AssertionError: drawn case face centred on the hit along the wall (-16.112 cm, tolerance 1) Expected: "true" - Received: "false"
+15:27:50.295 FAILED: extra-wall-placement - AssertionError: faces out of the wall toward the user: face normal vs our wall normal (flipped to the eye) 180.000 deg Expected: "true" - Received: "false"
+15:28:35.221 FAILED: extra-wall-placement - AssertionError: drawn case face on the wall plane at the hit (-1.923 cm, tolerance 1) Expected: "true" - Received: "false"
+15:29:07.414 FAILED: extra-wall-placement - AssertionError: lower shelf height to the eye kept, as drawn (-12.514 vs -26.000 cm) Expected: "true" - Received: "false"
+15:30:06.087 FAILED: extra-wall-placement - AssertionError: Place in front of me: CaseRoot back at its opening position (446.5890 cm) Expected: "true" - Received: "false"
+15:30:39.571 FAILED: extra-wall-placement - AssertionError: after the wall placement: CaseRoot children that moved relative to CaseRoot (not rigid) (CaseRoot/5:BundleTray (446.589 cm, 0.000 deg, scale 0.00000)) Expected: "0" - Received: "1"
+15:31:41.779 FAILED: extra-wall-refusals - Error: Timed out after 3000 ms waiting for: the product sees the out-of-band wall (aim state "not-wall", ring shown)
+15:31:06.819 FAILED: extra-wall-placement - AssertionError: no-hit pinch: the case did not move (393.0000 cm) Expected: "true" - Received: "false"
+15:33:19.629 FAILED: extra-replace-mid-pass - AssertionError: after re-placing on the wall: unaided count Expected: "1" - Received: "0"
+
+## v0.6 feature 2 (tester, 6): missed letters come back sooner, retire after two from-memory passes
+# breaks: (1) CaseLightPassLogic.ts comeBackQueue puts a missed letter at the end of the pass, not 2 letters later; (2) CaseLightMain.ts a returning (helped) letter scores as from memory; (3) CaseLightPassLogic.ts RETIRE_AFTER_PASSES 2 -> 1; (4) CaseLightPassLogic.ts the "Came back" count never increments; (5) CaseLightBundle.ts a retired letter still shown in the bundle; (6) CaseLightMain.ts Done does not clear retirement. Each restored byte-identical (cmp), 21/21 product SHA-256 fingerprints OK after the last restore (rechecked by the coordinator at 17:25 after the 17:16 crash). One further attempt of break 5 stalled ("trigger StartRecallButton did not complete") and is not counted; break 5 was re-run and caught. Room: Plane.
+16:48:23.383 FAILED: extra-come-back-and-retire - AssertionError: a. product queue: missed letter at index 2 Expected: "2" - Received: "7"
+16:49:39.645 FAILED: extra-come-back-and-retire - AssertionError: b. the returning letter is not counted from memory Expected: "0" - Received: "1"
+16:50:55.616 FAILED: extra-come-back-and-retire - AssertionError: d. after pass A (nothing retired yet: one pass is not enough): retired letters = our model Expected: "[]" - Received: "[0,1,2,3,6,7]"
+16:53:43.511 FAILED: extra-come-back-and-retire - AssertionError: c/g after pass A: came back line = our count Expected: "Came back: 3" - Received: "Came back: 0"
+16:55:08.227 FAILED: extra-come-back-and-retire - AssertionError: d. pass C start: retired letter 0 hidden (isPieceShown and Piece_0) Expected: "false" - Received: "true"
+16:56:52.337 FAILED: extra-come-back-and-retire - AssertionError: f. after Done (retirement cleared): letter 0 run of from-memory passes = our model Expected: "0" - Received: "2"
+
+## v0.6 feature 3 (tester, 5): sorting reminders (Veteran mode notes)
+# breaks: (1) CaseLightNotes: recall shows every note from the pass start; (2) CaseLightVeteranUI: a chooser press pins the next option's text; (3) CaseLightMain: the top letter stays grabbable in Veteran mode; (4) CaseLightMain: Done removes every note; (5) CaseLightVeteran: the card is placed on the slot's label strip. Each restored byte-identical (cmp), 24/24 product SHA-256 fingerprints OK (mutation-backup-f3). Slot pinches are real LEAF SIK pinches along the eye ray (physics probe hit on SlotPinchTarget).
+18:00:15.439 FAILED: extra-veteran-notes-in-pass - AssertionError: f. recall start: every note hidden Expected: "true" - Received: "false"
+18:00:49.721 FAILED: extra-veteran-notes - AssertionError: c. after pick 1: card text on slot 20 Expected: "Check the street name" - Received: "Odd side up, even side back"
+18:01:37.956 FAILED: extra-veteran-notes-in-pass - AssertionError: d. top letter 2 cannot be grabbed in Veteran mode Expected: "false" - Received: "true"
+18:02:24.409 FAILED: extra-veteran-notes-in-pass - AssertionError: h. Done keeps the note on slot 76 Expected: "Check the street name" - Received: "null"
+18:03:21.800 FAILED: extra-veteran-notes - AssertionError: c. after pick 1: card does not cover slot 20's label Expected: "false" - Received: "true"
+
+## v0.6 feature 3 (coordinator, 1): a stray release after an aborted slot pinch
+# The tester's extra-veteran-stray-after-abort found a real defect: a pinch that started on a slot and ended off it left the slot armed, so the next stray release from the same hand opened the chooser. Red on the unfixed CaseLightVeteran.ts (SHA-256 50cd6479...), green after the coordinator's fix (disarm on hover exit, trigger end outside or cancel from the armed hand; SHA-256 a2c650ac...). The unfixed file is kept in the coordinator's scratchpad.
+18:17:27.347 FAILED: extra-veteran-stray-after-abort - AssertionError: a stray release after an aborted pinch opens no chooser Expected: "false" - Received: "true"
+18:23:09.247 PASSED: extra-veteran-stray-after-abort (after the fix)
+
+## v0.6 feature 4 (tester, 10): today's route picker
+# breaks: (1) CaseLightCaseLabelsUI.setRoute does nothing (no relabel); (2) CaseLightMain.applyRoute skips bundle.relabel; (3) CaseLightRoute: Route 2 hold letter targets cell 23; (4) CaseLightMain.applyRoute keeps the score; (5) CaseLightMain: picker live during a pass; (6) CaseLightVeteran.setRoute keeps one note store for both routes; (7) CaseLightCaseLabelsUI: a one-number cell prints its number twice; (8) CaseLightCaseLabelsUI: credit hidden on Route 2; (9) CaseLightRoute: Route 2 letter 3189 SHIRLEY DR targets slot 10; (10) CaseLightPieceCardUI.relabel scales the address 1.25x. Expectations from data/case_light_route_osm*.json (tester's fixture, SHA-256 in its header) and the printed labels. Each restored byte-identical (cmp), 25/25 product SHA-256 fingerprints OK (mutation-backup-f4).
+18:45:35.096 FAILED: extra-route-labels - AssertionError: Route 2: every cell label matches route 2's data (Label_0 "2005/2015" vs data "2112/2108"; Label_1 "2025/2035" vs data "2106/2104"; Label_2 "2045/2055" vs data "2102/2100") Expected: "true" - Received: "false"
+18:46:08.470 FAILED: extra-route-labels - AssertionError: Route 2: Piece_0 prints route 2's address Expected: "3189 SHIRLEY DR" - Received: "2195 FAIRWAYS CT"
+18:47:07.238 FAILED: extra-route-letters - AssertionError: product answer for "3053 SHIRLEY DR" matches the printed case (independent -2) Expected: "-2" - Received: "23"
+18:47:55.631 FAILED: extra-route-switch-resets - AssertionError: the score resets on a switch Expected: "0" - Received: "32"
+18:48:33.563 FAILED: extra-route-switch-resets - AssertionError: during a pass: the picker is not live Expected: "false" - Received: "true"
+18:49:16.601 FAILED: extra-route-labels - AssertionError: Route 1 does not carry Route 2's note Expected: "null" - Received: "Check the street name"
+18:49:56.528 FAILED: extra-route-labels - AssertionError: Route 1 at open: every cell label matches route 1's data (Label_78 "1452/1452" vs data "1452") Expected: "true" - Received: "false"
+18:51:09.791 FAILED: extra-route-labels - AssertionError: Route 2: caption and credit shown Expected: "true" - Received: "false"
+18:52:01.689 FAILED: extra-route-letters - AssertionError: product answer for "3189 SHIRLEY DR" matches the printed case (independent 9) Expected: "9" - Received: "10"
+18:52:39.294 FAILED: extra-route-letters - AssertionError: Route 2: letter 0 AddressText "3189 SHIRLEY DR" inside the 12 cm print width (x -6.04..6.04) Expected: "true" - Received: "false"
+
+## v0.6 option A (tester, 1): a pick-up clears a miss light, the missed letter's own return included
+# break: CaseLightPassLogic.missLitAfterGrab back to the old rule (the light stays when the grabbed letter is the missed one). Restored byte-identical (cmp), 25/25 OK.
+18:50:38.654 FAILED: extra-last-letter-dark - AssertionError: option A: the missed letter picked up again, answer unlit: litSlotIndex Expected: "-1" - Received: "9"
+
+## v0.6 route picker in view (coordinator, 1)
+# break: CaseLightRouteUI.ts puts the picker back at its old local spot (-17.5, 13.6, 3), past the left display edge. Restored byte-identical (cmp), SHA-256 afa3de7a... OK; the scenario passed again after the restore.
+19:26:48.226 [  0.028s]FAILED: extra-route-picker-in-view - AssertionError: RouteButton_1 inside the display at open with at least 0.5 deg to spare (yaw -19.31..-17.17, pitch 14.27..16.81 deg, spare -7.51) Expected: "t
+
+## v0.6 feature 5 (tester, 4): placement log
+# breaks (all in CaseLightMain.ts): (1) memory=1 on every right recall placement, helped letters included; (2) no line for an off-case release; (3) seq never advances (logHead uses logSeq + 1 without storing it); (4) each placement line names the next letter's address. Each restored byte-identical (cmp), 26/26 product SHA-256 fingerprints OK (mutation-backup-f5). The scenario parses placementLogLines with its own reader (CaseLightLog not imported).
+19:35:23.187 FAILED: extra-placement-log - AssertionError: attempt 14 (recall, letter 4): memory Expected: "0" - Received: "1"
+19:36:33.774 FAILED: extra-placement-log - AssertionError: one placement line per attempt Expected: "29" - Received: "28"
+19:37:33.994 FAILED: extra-placement-log - AssertionError: logLineCount = lines written Expected: "36" - Received: "0"
+19:38:50.486 FAILED: extra-placement-log - AssertionError: attempt 1 (practice, letter 0): address = the letter's printed address Expected: "2195 FAIRWAYS CT" - Received: "3498 LEE CT"
+
+## v0.6 item 8 (tester, 3): recall, no cue drawn on any frame until a miss
+# breaks: (1) CaseLightMain.onGrabbed lights the grabbed letter's answer in recall and clears it on the next frame (a one-frame flash; caught as 10 single-frame violations, one per grab, the earliest at pass frame 15); (2) CaseLightMain.beginPass leaves the opening letter's answer lit at a recall pass start; (3) CaseLightNotes shows every note during recall (the card before a miss). Each restored byte-identical (cmp), 26/26 product SHA-256 fingerprints OK (mutation-backup-f8). The scenario samples drawn state in its own LateUpdateEvent on every frame (469 frames in the green run).
+20:01:54.023 FAILED: extra-recall-no-glow-per-frame - AssertionError: a/c. frames drawn outside a miss window, the earliest: frame 15: drawn with no miss to answer (before the earliest miss): glow true (cell 76), ladder false, labels lit [Label_76], highlight true, arrow true, card true Expected: "0" - Received: "10"
+20:03:44.286 FAILED: extra-recall-no-glow-per-frame - AssertionError: a/c. frames drawn outside a miss window, the earliest: frame 5: drawn with no miss to answer (before the earliest miss): glow true (cell 76), ladder false, labels lit [Label_76], highlight true, arrow true, card true Expected: "0" - Received: "45"
+20:04:24.204 FAILED: extra-recall-no-glow-per-frame - AssertionError: a/c. frames drawn outside a miss window, the earliest: frame 5: drawn with no miss to answer (before the earliest miss): glow false (cell -1), ladder false, labels lit [], highlight false, arrow false, card true Expected: "0" - Received: "469"
+
+## v0.6 item 9 (tester, 5): demo replay
+# Input turned on for the replay runs only: CaseLight script demoReplay set true through the Lens Studio MCP scene tool (setProperty, never saved), set back to false after. Saved Assets/Scene.scene SHA-256 unchanged (a61acded...fdae).
+# breaks: (1) CaseLightMain.updateDemoCarry hides DemoReplayLabel while the carry is 40 to 60 percent along; (2) CaseLightMain replays recorded attempt seq 16 into the next cell (the replay stops, and the scenario sees the stop); (4) CaseLightDemo.replaySessionId writes "s" instead of "r"; (4b) CaseLightMain.logHead writes an "s" session on log line 5 only (the session id itself stays "r"). Each restored byte-identical (cmp), 27/27 product SHA-256 fingerprints OK (mutation-backup-f9).
+# break 3 (CaseLightMain demoReplay code default flipped to true) SURVIVED extra-demo-replay-off-by-default in this session: setting the input through MCP made it a custom in-memory value (false), so the code default is not read until the project is reopened from disk. Editor-side detector instead: ExecuteEditorCode read CaseLightMain scriptInputInfo demoReplay defaultValue "true" with the break planted and "" after the restore.
+20:27:29.453 FAILED: extra-demo-replay - AssertionError: the "Demo replay" label is drawn on every sampled frame (missing from frame 95) Expected: "0" - Received: "112"
+20:29:30.160 FAILED: extra-demo-replay - AssertionError: the replay ran to its end: no stop reason Expected: "" - Received: "seq 16: result miss, recorded correct"
+20:31:27.293 FAILED: extra-demo-replay - AssertionError: the replay session id starts with "r" (s1-uzh93w) Expected: "true" - Received: "false"
+20:33:07.250 FAILED: extra-demo-replay - AssertionError: replay log line 5: session starts with "r" Expected: "r" - Received: "s"
+20:33:46.287 PASSED: extra-demo-replay-off-by-default   (break 3: survived, see above)
+
+## FS1 fail-fast reach (coordinator, 1)
+# break: CaseLightBundle.build moves the bundle tray 25 cm further from the user. Run with __leaf__diagnostic_policy fail-fast. Restored byte-identical (cmp), SHA-256 b128f2e5... OK; green again afterwards.
+21:00:59.134 [  0.206s]FAILED: extra-layout-fit-and-reach - AssertionError: top letter 68.1 cm from the eye, inside 30..55 cm Expected: "true" - Received: "false"
+
+## v0.6 item 10 (tester, 5): Case check
+# Every run with __leaf__diagnostic_policy fail-fast (run parameter). Real input only: recall drops through SIK, the CaseCheckButton / VeteranModeButton / AgainButton / DoneButton pressed through UIKit, cells pinched with the LEAF SIK interactor's pinchAt on the shared SlotPinchTarget. Misplaced letters are read from where Piece_n is drawn against cell positions taken from the printed Label_n objects (own geometry); answers from the printed labels.
+# breaks: (1) CaseLightCaseCheck.CaseCheckRound.pinch adds a wrongly pinched cell to the found set; (2) CaseLightMain.startCaseCheck draws the second misplaced letter in its own cell; (3) CaseLightMain.endCaseCheck puts the old "Came back" line back on the card instead of the Case check line; (3b) the Case check line always says all found (Done after 1 of 2); (4) CaseLightMain.onVeteranMode lets Veteran mode come on during a check. Each restored byte-identical (cmp), 29/29 product SHA-256 fingerprints OK (mutation-backup-f10).
+21:11:35.855 FAILED: extra-case-check - AssertionError: c. a wrong pinch changes nothing (found, score, retirement, notes, card, every letter's drawn position) Expected: "none" - Received: "found: 0 -> 1; foundCells: [] -> [46]"
+21:13:23.218 FAILED: extra-case-check - AssertionError: b. exactly 2 letters drawn away from their own cells Expected: "2" - Received: "1"
+21:15:08.418 FAILED: extra-case-check - AssertionError: f. card second line Expected: "Case check: 2 of 2 found" - Received: "Came back: 1"
+21:17:05.690 FAILED: extra-case-check - AssertionError: h. card second line after Done Expected: "Case check: 1 of 2 found" - Received: "Case check: 2 of 2 found"
+21:19:06.579 FAILED: extra-case-check - AssertionError: e. Veteran mode refused during a check (control: the same press turned it on before) Expected: "false" - Received: "true"
+
+## v0.6 item 11 (tester, 1): the recall miss tone comes from the answer cell
+# Checked inside extra-case-check's recall pass 1 (a real recall miss on the opening non-hold letter, dropped in the neighbour cell): lastSoundName "miss", lastSoundSlot = the answer cell from the printed labels and the cell that lights, MissSource within 1 cm of that cell's centre (and across inside it by the label positions), spatialAudio on, isPlaying() within 10 frames.
+# break: CaseLightMain.onReleased plays the recall miss tone from the dropped cell instead of the answer. Restored byte-identical (cmp), 29/29 OK (mutation-backup-f10).
+21:21:09.024 FAILED: extra-case-check - AssertionError: item 11: lastSoundSlot = the answer cell (76, from the printed labels) Expected: "76" - Received: "75"
+
+## v0.6 item 13b (tester, 1): the case is drawn at real scale
+# Measured from the drawn CaseLines vertices in the case frame (case root position and rotation, world cm, no scale), run with __leaf__diagnostic_policy fail-fast. All 11 hard checks are evaluated, logged, then asserted together.
+# break: CaseLightMain.onStart scales the case root to 0.9 right after the case mesh is built. Restored byte-identical (cmp), 29/29 product SHA-256 fingerprints OK (mutation-backup-f13b). Pitch, every separation, both 40-cell spans, the 6 in spacing and the depth go red; the divider count and the 1974 field range stay ok (13.50 cm is inside 11.91..19.69).
+21:41:53.969 FAILED: extra-case-real-scale - AssertionError: real-scale hard checks out of tolerance (7 of 11) Expected: "none" - Received: "slot pitch 2.29 cm within 2.54 +/- 0.05 (one inch, M-41 221.2, VERIFIED); every separation width (2.29..2.29) within 2.54 +/- 0.05; row 0: 40-cell span 91.44 cm within 101.6 +/- 0.5 (40 one-inch separations); row 1: 40-cell span 91.44 cm within 101.6 +/- 0.5 (40 one-inch separations); shelf spacing (bottoms) 13.50 cm within 15.24 +/- 0.5 (6 in); shelf spacing (tops) 13.50 cm within 15.24 +/- 0.5 (6 in); shelf depth 27.00 cm within 30.48 +/- 1 (12 in, ve

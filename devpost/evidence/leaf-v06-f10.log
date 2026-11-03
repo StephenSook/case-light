@@ -1,0 +1,20 @@
+# CaseLight LEAF, queue items 10 (Case check) and 11 (recall miss tone), tester session 32, one scenario per run_leaf_scenario call.
+# Every run with the run parameter __leaf__diagnostic_policy = fail-fast (LEAF prints the runner config with it at each start).
+# Lens Studio 5.23.2, log LensStudioLog-2026-11-02-17-16-46-871-5ad48.txt, Plane room, demoReplay input false. Each line appended as its verdict landed.
+# Product SHA-256: 29 scripts match mutation-backup-f10 (taken before any break).
+21:23:15.734 PASSED: extra-case-check  [fail-fast (runner config lines: 0); ]
+21:23:34.019 PASSED: extra-veteran-notes  [fail-fast (runner config lines: 1)]
+21:25:38.229 PASSED: extra-veteran-notes-in-pass  [fail-fast (runner config lines: 0)]
+21:26:28.161 PASSED: extra-veteran-stray-after-abort  [fail-fast (runner config lines: 1)]
+21:28:40.751 PASSED: extra-placement-log  [fail-fast (runner config lines: 0)]
+21:29:03.836 PASSED: extra-exit-again-done  [fail-fast (runner config lines: 1)]
+# Correction: the counts in brackets were taken before Lens Studio flushed its log for the three long runs and read 0 there. Recounted after the verdicts between each run's start marks: exactly 1 runner config line with "__leaf__diagnostic_policy":"fail-fast" in each of the six runs.
+# extra-case-check detail (from its LEAFT lines):
+#   own answers [9,46,56,17,76,-2,23,1]; pitch 2.54 cm; label rows y -26.00, -11.00
+#   item 11: miss of letter 4 (answer 76): sound miss at 76, lit 76, MissSource 0.00 cm from the cell centre, across 0.00 cm from its label; playing at frame 0 (f0:on@0.093)
+#   run 1: drawn away from own cells [{"letter":1,"drawn":45},{"letter":3,"drawn":16}]; getter [{"letter":1,"address":"3498 LEE CT","wrongCell":45,"rightCell":46},{"letter":3,"address":"2355 FAIRWAYS CT","wrongCell":16,"rightCell":17}]
+#   run 1: outline vertices in cell 45: 16, in cell 46: 0
+#   run 1 end: card "From memory: 7 of 8 this session" / "Case check: 2 of 2 found"
+#   run 2: drawn away [{"letter":2,"drawn":58},{"letter":6,"drawn":25}]; getter [{"letter":2,"address":"3581 FREY LAKE RD","wrongCell":58,"rightCell":56},{"letter":6,"address":"2200 FAIRWAYS CT","wrongCell":25,"rightCell":23}]
+#   run 2 end (Done): card "From memory: 15 of 16 this session" / "Case check: 1 of 2 found"
+#   done

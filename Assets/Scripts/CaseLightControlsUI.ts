@@ -1,5 +1,5 @@
-// Owns: the Start practice / Start recall buttons, the small Drill pace toggle with its "drill pace N/min" caption (UIKit BackPlate + Buttons), and the one-time "Pinch Start practice" hint.
-// Talks to: CaseLightMain, which subscribes to onStartPractice / onStartRecall / onTogglePace and calls hideHint() / setPaceState().
+// Owns: the Start practice / Start recall buttons, the small Drill pace toggle with its "drill pace N/min" caption (UIKit BackPlate + Buttons), the one-time "Pinch Start practice" hint, and the "Demo replay" label shown in the hint's place during a demo replay.
+// Talks to: CaseLightMain, which subscribes to onStartPractice / onStartRecall / onTogglePace and calls hideHint() / setPaceState() / showDemoLabel().
 // Must not: start a pass or the pace itself, or hold any session state (the pace on/off state lives in CaseLightPace; this only mirrors it).
 
 /**
@@ -59,6 +59,9 @@ const PACE_CAPTION_GAP_CM = 0.85
 const PACE_CAPTION_HALF_H_CM = 0.65
 /** Caption prefix; the text is exactly "drill pace <N>/min". */
 const PACE_CAPTION_PREFIX = "drill pace "
+/** Demo replay label: a warm coral, on a backing the height of one hint line pair (cm). */
+const DEMO_LABEL_COLOR = new vec4(1, 0.62, 0.55, 1)
+const DEMO_BACKING_H_CM = 1.8
 
 @component
 export class CaseLightControlsUI extends BaseScriptComponent {
@@ -108,6 +111,8 @@ export class CaseLightControlsUI extends BaseScriptComponent {
   private hint: SceneObject | null = null
   private hintLine2: SceneObject | null = null
   private hintBacking: RoundedRectangle | null = null
+  private demoLabel: SceneObject | null = null
+  private demoBacking: RoundedRectangle | null = null
   private paceBacking: RoundedRectangle | null = null
   private paceLabelObj: SceneObject | null = null
   /** Name of the button the current pinch started on, or "". */
@@ -136,6 +141,30 @@ export class CaseLightControlsUI extends BaseScriptComponent {
   /** True while the second hint line ("Practice, then the case goes dark.") is on screen. */
   get isHintLine2Visible(): boolean {
     return !!this.hintLine2 && this.hintLine2.enabled
+  }
+
+  /** True while the "Demo replay" label is on screen. */
+  get isDemoLabelShown(): boolean {
+    return !!this.demoLabel && this.demoLabel.enabled
+  }
+
+  /** The label's text ("" before it is shown). */
+  get demoLabelText(): string {
+    const t = this.demoLabel ? (this.demoLabel.getComponent("Component.Text") as Text) : null
+    return t ? t.text : ""
+  }
+
+  /**
+   * Show the demo replay label in the hint's place (the hint goes for good). Shown for the whole
+   * replay, so no frame of a replay can be taken for live input.
+   */
+  showDemoLabel(text: string): void {
+    this.hideHint()
+    if (!this.demoLabel || !this.demoBacking) return
+    const t = this.demoLabel.getComponent("Component.Text") as Text
+    if (t) t.text = text
+    this.demoLabel.enabled = true
+    this.demoBacking.getSceneObject().enabled = true
   }
 
   /** Hide both hint lines (and their backing) for the rest of the session (called on the opening Start press). */
@@ -190,7 +219,7 @@ export class CaseLightControlsUI extends BaseScriptComponent {
   }
 
   onAwake(): void {
-    // Canvas at the root: Hierarchy sorting paints the BackPlate first, then the content.
+    // Canvas at the root: Hierarchy sorting paints the BackPlate before the content.
     this.sceneObject.createComponent("Component.Canvas")
     const plate = this.sceneObject.createComponent(BackPlate.getTypeName()) as BackPlate
 
@@ -220,11 +249,16 @@ export class CaseLightControlsUI extends BaseScriptComponent {
 
     // The hint lines (over the two Start buttons) and the pace caption (over the toggle) are
     // placed from the row's measured size; created after the content so the Canvas draws them on top.
-    // Subtle backing behind both hint lines, created first so it draws behind them.
+    // Subtle backing behind both hint lines, created ahead of them so it draws behind them.
     this.hintBacking = addBacking(this.sceneObject, "StartHintBacking", this.hintWidth(), 2.75, this.backingColor, new vec3(0, 0, CONTENT_Z - 0.05))
     this.hint = this.addHint("StartHint", this.hintText, "HeadlineXL", 0.8, new vec4(1, 0.92, 0.6, 1))
     this.hintLine2 = this.addHint("StartHintLine2", this.hintLine2Text, "Body", 0.55, new vec4(0.92, 0.94, 0.98, 1))
     this.addPaceCaption()
+    // The demo replay label: hidden unless a demo replay runs; it takes the hint's place.
+    this.demoBacking = addBacking(this.sceneObject, "DemoReplayBacking", this.hintWidth(), DEMO_BACKING_H_CM, this.backingColor, new vec3(0, 0, CONTENT_Z - 0.05))
+    this.demoBacking.getSceneObject().enabled = false
+    this.demoLabel = this.addHint("DemoReplayLabel", "", "HeadlineXL", 0.8, DEMO_LABEL_COLOR)
+    this.demoLabel.enabled = false
     this.placeAboveRow(this.rowWidth(), this.buttonHeightCm + 2 * PAD_CM)
     flex.onLayoutComplete.add((r) => {
       plate.size = new vec2(r.containerWidth, r.containerHeight)
@@ -273,7 +307,7 @@ export class CaseLightControlsUI extends BaseScriptComponent {
     const capObj = global.scene.createSceneObject("PaceLabel")
     capObj.setParent(this.sceneObject)
     this.paceLabelObj = capObj
-    // Subtle backing behind the caption (shown with it), created first so it draws behind.
+    // Subtle backing behind the caption (shown with it), created ahead of it so it draws behind.
     this.paceBacking = addBacking(capObj, "PaceLabelBacking", capW, 2 * PACE_CAPTION_HALF_H_CM, this.backingColor, new vec3(0, 0, -0.05))
     const capText = global.scene.createSceneObject("PaceLabelText")
     capText.setParent(capObj)
@@ -336,6 +370,9 @@ export class CaseLightControlsUI extends BaseScriptComponent {
     // The backing spans both lines: from just above the row to just above line 1.
     if (this.hintBacking) this.hintBacking.getSceneObject().getTransform().setLocalPosition(new vec3(hintX, top + (HINT_LINE2_GAP_CM + HINT_GAP_CM) / 2, CONTENT_Z - 0.05))
     if (this.paceLabelObj) this.paceLabelObj.getTransform().setLocalPosition(new vec3(paceX, top + PACE_CAPTION_GAP_CM, CONTENT_Z))
+    const demoY = top + (HINT_LINE2_GAP_CM + HINT_GAP_CM) / 2
+    if (this.demoLabel) this.demoLabel.getTransform().setLocalPosition(new vec3(hintX, demoY, CONTENT_Z))
+    if (this.demoBacking) this.demoBacking.getSceneObject().getTransform().setLocalPosition(new vec3(hintX, demoY, CONTENT_Z - 0.05))
   }
 
   private addHint(name: string, text: string, role: TextRole, halfHeightCm: number, color: vec4): SceneObject {

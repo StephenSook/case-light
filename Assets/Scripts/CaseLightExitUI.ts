@@ -1,15 +1,16 @@
-// Owns: the exit choice shown after the score card: "Again" and "Done" (UIKit BackPlate + Buttons).
-// Talks to: CaseLightMain, which subscribes to onAgain / onDone and calls show() / hide().
-// Must not: start a pass, change counts or hide anything else itself (CaseLightMain does that).
+// Owns: the exit choice shown after the score card: "Again" and "Done" (UIKit BackPlate + Buttons), and the optional "Case check" button just above them.
+// Talks to: CaseLightMain, which subscribes to onAgain / onDone / onCaseCheck and calls show() / hide() / setCaseCheckOffered().
+// Must not: start a pass or a Case check, change counts or hide anything else itself (CaseLightMain does that).
 
 /**
  * One small panel with two buttons side by side, in the start view next to the score card. It
  * starts hidden and stays up until a choice is made (or a Start button is pressed), even after
  * the score text itself times out, so the exit is always there to take.
- * SceneObject names (stable, for tests): ExitControls (this object), AgainButton, DoneButton.
+ * SceneObject names (stable, for tests): ExitControls (this object), AgainButton, DoneButton,
+ * CaseCheckButton (centred just above the panel; shown only while CaseLightMain offers it).
  *
  * Hidden-at-start without breaking UIKit: the BackPlate and Buttons initialize on OnStart, which
- * never fires for a disabled object, so the panel is built enabled and hidden on the first
+ * never fires for a disabled object, so the panel is built enabled and hidden on the opening
  * LateUpdate (after every OnStart has run), unless show() was already called.
  */
 
@@ -42,6 +43,10 @@ function applyTextRole(t: Text, role: TextRole, distanceCm: number = 110): void 
 const CONTENT_Z = 0.6
 const BUTTON_LABEL_Z = 0.08
 const PAD_CM = 0.35
+/** Case check button (cm): small enough to fit between the panel and the Start row above it. */
+const CASE_CHECK_W_CM = 5.6
+const CASE_CHECK_H_CM = 1.6
+const CASE_CHECK_GAP_CM = 0.6
 
 @component
 export class CaseLightExitUI extends BaseScriptComponent {
@@ -56,6 +61,10 @@ export class CaseLightExitUI extends BaseScriptComponent {
   @input
   @hint("Label on the button that ends the session view (nothing glowing, counts kept)")
   doneLabel: string = "Done"
+
+  @input
+  @hint("Label on the button that starts the optional Case check (two letters drawn in wrong cells, pinch both)")
+  caseCheckLabel: string = "Case check"
 
   @input
   @widget(new SliderWidget(3, 8, 0.1))
@@ -75,7 +84,10 @@ export class CaseLightExitUI extends BaseScriptComponent {
 
   private readonly _onAgain = new Event<void>()
   private readonly _onDone = new Event<void>()
+  private readonly _onCaseCheck = new Event<void>()
   private wantVisible = false
+  private caseCheckOffered = false
+  private caseCheckButton: SceneObject | null = null
   /** Name of the button the current pinch started on, or "". */
   private armedButton = ""
   private strayReleases = 0
@@ -91,14 +103,35 @@ export class CaseLightExitUI extends BaseScriptComponent {
     return this._onDone.publicApi()
   }
 
-  /** True while the Again / Done panel is on screen. */
+  /** Fired when "Case check" is pressed. */
+  get onCaseCheck(): PublicApi<void> {
+    return this._onCaseCheck.publicApi()
+  }
+
   /** Releases ignored because the pinch did not start on that button. */
   get ignoredStrayReleaseCount(): number {
     return this.strayReleases
   }
 
+  /** True while the Again / Done panel is on screen. */
   get isVisible(): boolean {
     return this.settled ? this.sceneObject.enabled : this.wantVisible
+  }
+
+  /** True while the Case check button is on screen (offered, and the panel is up). */
+  get isCaseCheckVisible(): boolean {
+    return this.isVisible && this.caseCheckOffered
+  }
+
+  /** The Case check button's object (for layout read-outs), or null before onAwake. */
+  get caseCheckButtonObject(): SceneObject | null {
+    return this.caseCheckButton
+  }
+
+  /** Offer the Case check button with the panel (true) or take it away (false). */
+  setCaseCheckOffered(on: boolean): void {
+    this.caseCheckOffered = on
+    if (this.settled && this.caseCheckButton) this.caseCheckButton.enabled = on
   }
 
   show(): void {
@@ -133,23 +166,39 @@ export class CaseLightExitUI extends BaseScriptComponent {
     const again = this.addButton(content, "AgainButton", this.againLabel, () => this._onAgain.invoke())
     const done = this.addButton(content, "DoneButton", this.doneLabel, () => this._onDone.invoke())
     flex.addItems([again, done])
+    // Case check: its own button, centred just above the panel (outside the row, so Again and
+    // Done stay exactly where they are).
+    const check = this.makeButton(this.sceneObject, "CaseCheckButton", this.caseCheckLabel, CASE_CHECK_W_CM, CASE_CHECK_H_CM, "HeadlineXL", 0.4, () => this._onCaseCheck.invoke())
+    check.getTransform().setLocalPosition(new vec3(0, (this.buttonHeightCm + 2 * PAD_CM) / 2 + CASE_CHECK_GAP_CM + CASE_CHECK_H_CM / 2, CONTENT_Z))
+    this.caseCheckButton = check
     flex.onLayoutComplete.add((r) => {
       plate.size = new vec2(r.containerWidth, r.containerHeight)
+      check.getTransform().setLocalPosition(new vec3(0, r.containerHeight / 2 + CASE_CHECK_GAP_CM + CASE_CHECK_H_CM / 2, CONTENT_Z))
     })
 
     // Settle visibility once every OnStart (UIKit init) has run.
     const late = this.createEvent("LateUpdateEvent")
     late.bind(() => {
       this.settled = true
+      check.enabled = this.caseCheckOffered
       this.sceneObject.enabled = this.wantVisible
       late.enabled = false
     })
   }
 
   private addButton(parent: SceneObject, name: string, label: string, onPress: () => void): FlexItem {
+    const so = this.makeButton(parent, name, label, this.buttonWidthCm, this.buttonHeightCm, "Title2", 0.6, onPress)
+    const item = so.createComponent(FlexItem.getTypeName()) as FlexItem
+    item.overrideWidth = this.buttonWidthCm
+    item.overrideHeight = this.buttonHeightCm
+    return item
+  }
+
+  /** A UIKit Button with a centred label; it acts on a release only if the pinch started on it. */
+  private makeButton(parent: SceneObject, name: string, label: string, widthCm: number, heightCm: number, role: TextRole, labelInsetCm: number, onPress: () => void): SceneObject {
     const so = global.scene.createSceneObject(name)
     so.setParent(parent)
-    const size = new vec3(this.buttonWidthCm, this.buttonHeightCm, 1)
+    const size = new vec3(widthCm, heightCm, 1)
     const btn = so.createComponent(Button.getTypeName()) as Button
     btn.size = size
     btn.onInitialized.add(() => {
@@ -167,21 +216,18 @@ export class CaseLightExitUI extends BaseScriptComponent {
       this.armedButton = ""
       onPress()
     })
-    this.addButtonLabel(so, label, this.buttonWidthCm - 0.5, this.buttonHeightCm - 0.6)
-    const item = so.createComponent(FlexItem.getTypeName()) as FlexItem
-    item.overrideWidth = this.buttonWidthCm
-    item.overrideHeight = this.buttonHeightCm
-    return item
+    this.addButtonLabel(so, label, widthCm - 0.5, heightCm - labelInsetCm, role)
+    return so
   }
 
-  private addButtonLabel(parent: SceneObject, text: string, widthCm: number, heightCm: number): void {
+  private addButtonLabel(parent: SceneObject, text: string, widthCm: number, heightCm: number, role: TextRole): void {
     const so = global.scene.createSceneObject("ButtonLabel")
     so.setParent(parent)
     so.getTransform().setLocalPosition(new vec3(0, 0, BUTTON_LABEL_Z))
     const t = so.createComponent("Component.Text") as Text
     t.text = text
     t.depthTest = true
-    applyTextRole(t, "Title2", this.viewDistanceCm)
+    applyTextRole(t, role, this.viewDistanceCm)
     t.horizontalAlignment = HorizontalAlignment.Center
     t.verticalAlignment = VerticalAlignment.Center
     t.horizontalOverflow = HorizontalOverflow.Shrink

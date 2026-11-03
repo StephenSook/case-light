@@ -17,7 +17,7 @@
  * letter size and print width come from CaseLightMain's getters, checked against the drawn letter
  * (letterDims); the rendered line box must be at least the requested capital height and sit
  * inside the print width. The brief's "about 3 cm" is logged beside the build's value.
- * Also: the version read-out and the VersionLabel text both read "v0.5".
+ * Also: the version read-out and the VersionLabel text both read "v0.6".
  */
 import {Scenario} from "Leaf.lspkg/Scenarios/scenario/Scenario"
 import {expect} from "Leaf.lspkg/Utils/common/Expect"
@@ -66,8 +66,8 @@ export class CaseLightC1PickUpSnapScenario extends Scenario {
     // Version: the read-out and the label on screen agree on the build.
     const versionLabel = mustFind("VersionLabel").getComponent("Component.Text") as Text
     log(`C1 versionText="${main.versionText}" VersionLabel="${versionLabel.text}"`)
-    expect(main.versionText, "versionText").toBe("v0.5")
-    expect(versionLabel.text, "VersionLabel text").toBe("v0.5")
+    expect(main.versionText, "versionText").toBe("v0.6")
+    expect(versionLabel.text, "VersionLabel text").toBe("v0.6")
 
     // Idle: both hint lines show (positive controls), the letters cannot be picked up yet.
     expect(main.mode, "idle at start").toBe("idle")

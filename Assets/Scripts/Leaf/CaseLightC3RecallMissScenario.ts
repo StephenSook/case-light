@@ -37,6 +37,7 @@ import {hideLeafOverlay,
   waitForReady,
   waitForTopGrabbable,
 } from "./CaseLightLeafSupport"
+import {OwnModel, modelComeBack} from "./CaseLightRecallSupport"
 
 interface Counts {
   unaided: number
@@ -52,8 +53,8 @@ function counts(main: CaseLightMain): Counts {
 export class CaseLightC3RecallMissScenario extends Scenario {
   private ix: CaseLightLeafInteractor | null = null
 
-  /** One recall piece: a wrong drop, then the right one. Returns whether the arrow showed. */
-  private async missThenPlace(main: CaseLightMain, ctx: string): Promise<boolean> {
+  /** The top recall letter dropped in a wrong cell, with every dark / outline / lit check. Returns the letter, its answer and whether the arrow showed. */
+  private async missWithChecks(main: CaseLightMain, ctx: string): Promise<{p: number; target: number; outside: boolean}> {
     const ix = this.ix!
     const p = await waitForTopGrabbable(main)
     expect(main.isHoldPiece(p), `${ctx}: test picked a non-hold piece`).toBe(false)
@@ -65,7 +66,6 @@ export class CaseLightC3RecallMissScenario extends Scenario {
     expect(Math.floor(startCell / 40), `${ctx}: all three cells on one shelf`).toBe(Math.floor(target / 40))
     const path = [startCell, target, wrong]
     const outside = targetOutsideDisplay(main, target)
-    const before = counts(main)
 
     // Every frame in hand: no answer glow, no label lit (incl. rendered colours), no arrow.
     // At each waypoint: the outline names and sits on that cell (positive control: it shows and
@@ -139,25 +139,9 @@ export class CaseLightC3RecallMissScenario extends Scenario {
     if (outside) expectArrowPointsAt(main, target, `${ctx}: after the miss`)
     expect(main.isPiecePlaced(p), `${ctx}: missed piece not placed`).toBe(false)
 
-    // The piece comes back to the hand; the right separation stays lit.
-    const back = await waitForTopGrabbable(main)
-    expect(back, `${ctx}: same piece back on top`).toBe(p)
-    expectGlowAt(main, target, `${ctx}: piece back in the bundle, still lit`)
-
-    await ix.dropTopPieceAtSlot(main, target, {
-      onHeld: () => expectGlowAt(main, target, `${ctx}: in hand again, still lit`),
-    })
-    expect(main.lastDropResult, `${ctx}: right drop`).toBe("correct")
-    expect(main.isPiecePlaced(p), `${ctx}: placed`).toBe(true)
-    expectNoGlow(main, `${ctx}: after placing`)
-    expectNoLabelLit(main, `${ctx}: after placing`)
-    expectArrow(main, false, `${ctx}: after placing`)
-    const after = counts(main)
-    expect(after.helped - before.helped, `${ctx}: helped +1`).toBe(1)
-    expect(after.unaided - before.unaided, `${ctx}: unaided +0`).toBe(0)
-    expect(after.total - before.total, `${ctx}: total +1`).toBe(1)
-    log(`${ctx}: piece ${p} target ${target} wrong ${wrong} outside=${outside} counts ${JSON.stringify(after)}`)
-    return outside
+    expect(main.isHelpedThisPass(p), `${ctx}: the missed letter is helped for the rest of the pass`).toBe(true)
+    log(`${ctx}: piece ${p} target ${target} wrong ${wrong} outside=${outside}`)
+    return {p, target, outside}
   }
 
   async run(): Promise<void> {
@@ -192,29 +176,98 @@ export class CaseLightC3RecallMissScenario extends Scenario {
     expectNoLabelLit(main, "recall start")
     expectArrow(main, false, "recall start")
 
-    // 1st piece: miss, then place (helped).
-    const out1 = await this.missThenPlace(main, "C3 piece #1")
+    // v0.6 feature 2 replaces the old "same letter back on top, still lit, placed at once" step:
+    // the missed letter goes back with exactly two letters before it (our own model), the answer
+    // stays lit until a different letter is picked up, and the letter comes back unlit; its right
+    // placement counts as helped. Criterion 3 (the wrong drop lights the right separation, with
+    // the arrow if needed, and counts as helped) is checked in missWithChecks and below.
+    const model = new OwnModel(main.pieceCount)
+    expect(JSON.stringify(order), "recall order = the brief's recallOrder for pass 0 (our model)").toBe(JSON.stringify(model.startPass()))
+    let queue = order.slice()
+    const expectQueue = (c: string) => expect(JSON.stringify(main.currentPassOrder), `${c}: live queue = our model`).toBe(JSON.stringify(queue))
 
-    // 2nd piece: placed right at once, nothing ever glows (unaided).
-    const before = counts(main)
-    const p2 = await waitForTopGrabbable(main)
-    expect(main.isHoldPiece(p2), "2nd piece is a normal piece").toBe(false)
-    await ix.dropTopPieceAtSlot(main, targetOf(main, p2), {
-      onHeld: () => {
-        expectNoGlow(main, "C3 piece #2 in hand")
-        expectArrow(main, false, "C3 piece #2 in hand")
-      },
+    /** Place the top letter right; returns it. `inHand` runs while it is held. */
+    const placeTop = async (c: string, inHand?: () => void): Promise<number> => {
+      const p = await waitForTopGrabbable(main)
+      expect(p, `${c}: top letter = our model`).toBe(queue[0])
+      await ix.dropTopPieceAtSlot(main, targetOf(main, p) === -2 ? 37 : targetOf(main, p), {onHeld: inHand})
+      expect(main.lastDropResult, `${c}: letter ${p} placed`).toBe("correct")
+      queue.shift()
+      return p
+    }
+
+    // Miss #1 on the top letter.
+    const c1 = counts(main)
+    const m1 = await this.missWithChecks(main, "C3 miss #1")
+    expect(counts(main).total - c1.total, "C3 miss #1: a miss places nothing").toBe(0)
+    queue = modelComeBack(queue)
+    expectQueue("C3 after miss #1")
+    expect(main.currentPassOrder.indexOf(m1.p), `C3 miss #1: letter ${m1.p} has exactly 2 letters before it`).toBe(2)
+
+    // The answer stays lit while nothing else is picked up (positive control for "comes back unlit").
+    const q = await waitForTopGrabbable(main)
+    expect(q !== m1.p, `C3: the next top letter (${q}) is another letter`).toBe(true)
+    expectGlowAt(main, m1.target, "C3: answer still lit before a different letter is picked up")
+    expectLabelLit(main, m1.target, "C3: answer label still lit before a different letter is picked up")
+    expect(main.isHelpedThisPass(q), `C3: letter ${q} not helped (control)`).toBe(false)
+
+    // Until the missed letter is back on top: each letter is placed right at once (picking it up
+    // clears the light; it counts unaided), except that one letter whose answer is on the other
+    // side of the display edge is missed too (miss #2), so both arrow branches are covered.
+    const out = (p: number) => targetOutsideDisplay(main, targetOf(main, p))
+    const otherBranch = (p: number) => !main.isHoldPiece(p) && out(p) !== m1.outside
+    let m2: {p: number; target: number; outside: boolean} | null = null
+    let between = 0
+    const missSecond = async (): Promise<void> => {
+      const m = await this.missWithChecks(main, "C3 miss #2")
+      queue = modelComeBack(queue)
+      expectQueue("C3 after miss #2")
+      expect(main.currentPassOrder.indexOf(m.p), `C3 miss #2: letter ${m.p} has min(2, others left) letters before it`).toBe(Math.min(2, queue.length - 1))
+      m2 = m
+    }
+    const placeFresh = async (c: string): Promise<void> => {
+      const b = counts(main)
+      const p = await placeTop(c, () => {
+        expectNoGlow(main, `${c}: a different letter in hand, the answer light cleared`)
+        expectNoLabelLit(main, `${c}: a different letter in hand`)
+        expectArrow(main, false, `${c}: a different letter in hand`)
+      })
+      const a = counts(main)
+      expect(a.unaided - b.unaided === 1 && a.helped === b.helped && a.total - b.total === 1, `${c}: letter ${p} right at once counts unaided +1, helped +0, total +1`).toBe(true)
+    }
+    while (queue[0] !== m1.p) {
+      between++
+      if (!m2 && otherBranch(queue[0])) await missSecond()
+      else await placeFresh("C3 letter before the missed one comes back")
+    }
+    expect(between, `C3: exactly 2 letters were on top before the missed letter came back`).toBe(2)
+
+    // The missed letter is back on top: its own answer is unlit (asked from memory again), nothing
+    // glows once it is in hand, and its right drop is helped.
+    const back = await waitForTopGrabbable(main)
+    expect(back, `C3: missed letter ${m1.p} back on top`).toBe(m1.p)
+    expect(main.litSlotIndex !== m1.target, `C3 missed letter back on top: its own answer is unlit (lit slot ${main.litSlotIndex})`).toBe(true)
+    expect(main.isLabelLit(m1.target), "C3 missed letter back on top: its answer label is unlit").toBe(false)
+    const mid = counts(main)
+    await placeTop("C3 missed letter placed", () => {
+      expectNoGlow(main, "C3 missed letter in hand again: unlit")
+      expectNoLabelLit(main, "C3 missed letter in hand again")
+      expectArrow(main, false, "C3 missed letter in hand again: no arrow")
     })
-    expect(main.lastDropResult, "C3 piece #2 placed").toBe("correct")
-    expectNoGlow(main, "C3 piece #2 placed")
-    const after = counts(main)
-    expect(after.unaided - before.unaided, "C3 piece #2 unaided +1").toBe(1)
-    expect(after.helped - before.helped, "C3 piece #2 helped +0").toBe(0)
-    expect(after.total - before.total, "C3 piece #2 total +1").toBe(1)
+    const after1 = counts(main)
+    expect(after1.helped - mid.helped, "C3 missed letter placed right: helped +1").toBe(1)
+    expect(after1.unaided - mid.unaided, "C3 missed letter placed right: unaided +0").toBe(0)
+    expect(after1.total - mid.total, "C3 missed letter placed right: total +1").toBe(1)
+    expectNoGlow(main, "C3 after placing the missed letter")
 
-    // 3rd piece: miss again, so the other arrow branch is covered too.
-    const out3 = await this.missThenPlace(main, "C3 piece #3")
-    expect(out1 !== out3, `covered a target outside and one inside the rectangle (out1=${out1}, out3=${out3})`).toBe(true)
+    // Miss #2, if no letter for the other arrow branch came up before: place letters until one does.
+    while (!m2 && queue.length > 0) {
+      if (otherBranch(queue[0])) await missSecond()
+      else await placeFresh("C3 letter before miss #2")
+    }
+    const m2v = m2 as {p: number; target: number; outside: boolean} | null
+    if (!m2v) throw new Error(`C3: no letter whose answer is ${m1.outside ? "inside" : "outside"} the display`)
+    expect(m1.outside !== m2v.outside, `covered a target outside and one inside the rectangle (miss #1 ${m1.outside}, miss #2 ${m2v.outside})`).toBe(true)
 
     // 4th piece: miss and leave its answer lit, then start a new recall pass: every label (and
     // the HOLD label) must be back to its normal colour at the start of the pass.

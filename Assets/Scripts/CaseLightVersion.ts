@@ -3,4 +3,4 @@
 // Must not: hold anything else.
 
 /** Bump this one constant for a new build; the label and the startup print both read it. v0.5: real house numbers. */
-export const CASELIGHT_VERSION = "v0.5"
+export const CASELIGHT_VERSION = "v0.6"

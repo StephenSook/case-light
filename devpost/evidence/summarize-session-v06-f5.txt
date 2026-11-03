@@ -1,0 +1,46 @@
+# devpost/tools/summarize_session.py run by the coordinating agent at 19:45 on the Lens Studio log, from the start of the tester's last extra-placement-log run (19:4x) through the 5 re-runs after it. Exit 0.
+session s1-g3nddr: 37 lines (seq 1..36, with gaps), 29 placement attempts, route 1, 2
+  pass 1 (practice) ended: 8 placed, no score card
+  pass 2 (recall) end: on screen "From memory: 6 of 8 this session"; from placements "From memory: 6 of 8 this session" -> MATCH
+  pass 2 (recall) end: on screen "Came back: 2"; misses in the pass 2 -> MATCH
+  pass 3 (recall) end: on screen "From memory: 13 of 16 this session"; from placements "From memory: 13 of 16 this session" -> MATCH
+  pass 3 (recall) end: on screen "Came back: 1"; misses in the pass 1 -> MATCH
+  seq 36: route 1 -> 2, count starts again
+  seq 36: route 1 -> 2, count starts again
+  recomputed from placements: From memory: 0 of 0 this session
+  last score card shown: From memory: 13 of 16 this session
+session s1-iyx0pk: 9 lines (seq 1..9), 6 placement attempts, route 1
+  recomputed from placements: From memory: 1 of 2 this session
+  last score card shown: (no recall pass ended)
+session s1-hrfkoa: 21 lines (seq 1..21), 17 placement attempts, route 1
+  pass 1 (recall) end: on screen "From memory: 7 of 8 this session"; from placements "From memory: 7 of 8 this session" -> MATCH
+  pass 1 (recall) end: on screen "Came back: 1"; misses in the pass 1 -> MATCH
+  pass 2 (recall) end: on screen "From memory: 15 of 16 this session"; from placements "From memory: 15 of 16 this session" -> MATCH
+  pass 2 (recall) end: on screen "Came back: 0"; misses in the pass 0 -> MATCH
+  recomputed from placements: From memory: 15 of 16 this session
+  last score card shown: From memory: 15 of 16 this session
+session s1-qar3bp: 33 lines (seq 1..33), 24 placement attempts, route 1
+  pass 1 (recall) end: on screen "From memory: 6 of 8 this session"; from placements "From memory: 6 of 8 this session" -> MATCH
+  pass 1 (recall) end: on screen "Came back: 3"; misses in the pass 3 -> MATCH
+  pass 2 (recall) end: on screen "From memory: 13 of 16 this session"; from placements "From memory: 13 of 16 this session" -> MATCH
+  pass 2 (recall) end: on screen "Came back: 1"; misses in the pass 1 -> MATCH
+  pass 3 (recall) end: on screen "From memory: 16 of 19 this session"; from placements "From memory: 16 of 19 this session" -> MATCH
+  pass 3 (recall) end: on screen "Came back: 0"; misses in the pass 0 -> MATCH
+  pass 4 (recall) end: on screen "From memory: 17 of 20 this session"; from placements "From memory: 17 of 20 this session" -> MATCH
+  pass 4 (recall) end: on screen "Came back: 0"; misses in the pass 0 -> MATCH
+  recomputed from placements: From memory: 17 of 20 this session
+  last score card shown: From memory: 17 of 20 this session
+session s1-nxnozv: 23 lines (seq 1..23), 17 placement attempts, route 1, 2
+  pass 1 (recall) end: on screen "From memory: 8 of 8 this session"; from placements "From memory: 8 of 8 this session" -> MATCH
+  pass 1 (recall) end: on screen "Came back: 0"; misses in the pass 0 -> MATCH
+  pass 2 (recall) end: on screen "From memory: 15 of 16 this session"; from placements "From memory: 15 of 16 this session" -> MATCH
+  pass 2 (recall) end: on screen "Came back: 1"; misses in the pass 1 -> MATCH
+  seq 22: route 1 -> 2, count starts again
+  recomputed from placements: From memory: 0 of 0 this session
+  last score card shown: From memory: 15 of 16 this session
+session s1-4kcg2o: 11 lines (seq 1..11), 9 placement attempts, route 1
+  pass 1 (recall) end: on screen "From memory: 7 of 8 this session"; from placements "From memory: 7 of 8 this session" -> MATCH
+  pass 1 (recall) end: on screen "Came back: 1"; misses in the pass 1 -> MATCH
+  recomputed from placements: From memory: 7 of 8 this session
+  last score card shown: From memory: 7 of 8 this session
+6 session(s), 22 comparison(s), 0 mismatch(es): MATCH

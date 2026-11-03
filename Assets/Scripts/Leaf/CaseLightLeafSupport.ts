@@ -1,4 +1,4 @@
-// Owns: the LEAF test interactor (real SIK grab, drag, release and UIKit press) and the shared helpers and assertions every CaseLight scenario uses.
+// Owns: the LEAF test interactor (real SIK grab, drag, hold, release, UIKit press, and a ray aimed at the room) and the shared helpers and assertions every CaseLight scenario uses.
 // Talks to: LEAF (DefaultLeafInteractor, expect, Utils), SIK (Interactable, WorldCameraFinderProvider), CaseLightMain (read-only getters and pure helpers only).
 // Must not: call CaseLightMain's test hooks or commands, change product state directly, or edit anything outside the test interactor.
 
@@ -937,6 +937,9 @@ export interface DragReport {
 const REAL_SIK_RAY_CM = 500
 
 export class CaseLightLeafInteractor extends DefaultLeafInteractor {
+  /** True while aimRay() points the ray at the room (no Interactable under it). */
+  private aimingAtRoom = false
+
   constructor() {
     super("CaseLightLeafInteractor")
     // LEAF's interactor reports maxRaycastDistance = 0. With that, SIK's InteractableManipulation
@@ -946,6 +949,35 @@ export class CaseLightLeafInteractor extends DefaultLeafInteractor {
       get: () => REAL_SIK_RAY_CM,
       configurable: true,
     })
+    // LEAF reports targeting only while it aims at an Interactable. A real SIK hand reports
+    // targeting whenever it is in its targeting pose (HandInteractor: isInTargetingPose()), with or
+    // without an Interactable under the ray. While aimRay() is on, report that too; otherwise
+    // LEAF's own rule is unchanged.
+    const leafTargeting = this.sikInteractor.isTargeting
+    this.sikInteractor.isTargeting = () => this.aimingAtRoom || leafTargeting()
+  }
+
+  /**
+   * Point the interactor's ray from `start` to `end` at the room, with no Interactable under it,
+   * as a real hand aiming at a wall. Pinch with startSelecting() / stopSelecting(); endAim() stops.
+   */
+  aimRay(start: vec3, end: vec3): void {
+    this.overrideInteractable = undefined
+    this.startPoint = start
+    this.endPoint = end
+    this.aimingAtRoom = true
+  }
+
+  /** Stop aiming at the room: back to LEAF's own targeting rule and rest ray. */
+  endAim(): void {
+    this.stopSelecting()
+    this.aimingAtRoom = false
+    this.resetStartEndPoint()
+  }
+
+  /** The SIK interactor this LEAF interactor drives (read-only use: identity checks in tests). */
+  get sik(): object {
+    return this.sikInteractor
   }
 
   /** Real UIKit press: hover, select, release on the named button's Interactable. */
@@ -1143,5 +1175,150 @@ export class CaseLightLeafInteractor extends DefaultLeafInteractor {
     const it = pieceInteractable(top)
     if (!it) throw new Error(`Piece_${top} not grabbable`)
     return this.dragTo(it, it.getSceneObject().getTransform().getWorldPosition(), opts)
+  }
+
+  /**
+   * Real SIK grab of the top letter, kept in hand: hover, pinch, drag started, no move and no
+   * release. Finish with dropHeldPieceAtSlot(). Reports whether the drag ended while held.
+   */
+  async grabTopPieceAndHold(main: CaseLightMain): Promise<{piece: number; it: Interactable; dragEnded: () => boolean; off: () => void}> {
+    const top = await waitForTopGrabbable(main)
+    const it = pieceInteractable(top)
+    if (!it) throw new Error(`Piece_${top} not grabbable`)
+    let ended = false
+    const offEnd = it.onDragEnd.add(() => (ended = true))
+    const dragStarted = awaitEventOnce(it.onDragStart)
+    await withTimeout(this.enterHover(it), 3000, `hover on "${it.getSceneObject().name}" never started`)
+    await nextFrame()
+    await nextFrame()
+    this.startSelecting()
+    await nextFrame()
+    this.overrideDragVector = new vec3(0.01, 0, 0)
+    await withTimeout(dragStarted, 3000, `drag on "${it.getSceneObject().name}" never started`)
+    await nextFrame()
+    return {piece: top, it, dragEnded: () => ended, off: offEnd}
+  }
+
+  /**
+   * Move a letter held since grabTopPieceAndHold() so the user sees it over separation `slot`
+   * (same stepping and settling as dragPath), then let go.
+   */
+  async dropHeldPieceAtSlot(main: CaseLightMain, it: Interactable, slot: number, maxStep: number = 2.5): Promise<void> {
+    const t = it.getSceneObject().getTransform()
+    const startPos = t.getWorldPosition()
+    const dest = eyeRayPointAtDepthOf(main.slotWorldPosition(slot), startPos)
+    const seen = main.slotUnderWorldPoint(dest)
+    if (seen !== slot) throw new Error(`Test aim error: drag target for slot ${slot} projects to slot ${seen}`)
+    const dragEnded = awaitEventOnce(it.onDragEnd)
+    try {
+      const total = dest.sub(startPos)
+      let commanded = vec3.zero()
+      let frames = 0
+      while (commanded.distance(total) > 1e-4 && frames < 600) {
+        const remaining = total.sub(commanded)
+        const step = remaining.length > maxStep ? remaining.normalize().uniformScale(maxStep) : remaining
+        commanded = commanded.add(step)
+        this.startPoint = this.startPoint.add(step)
+        this.endPoint = this.endPoint.add(step)
+        this.overrideDragVector = step.length > 1e-6 ? step : new vec3(0.01, 0, 0)
+        await nextFrame()
+        frames++
+      }
+      let settle = 0
+      while (t.getWorldPosition().distance(dest) > 0.15 && settle < 180) {
+        await nextFrame()
+        settle++
+      }
+      for (let i = 0; i < 3; i++) await nextFrame()
+      this.stopSelecting()
+      try {
+        await withTimeout(dragEnded, 2000, "drag end")
+      } catch (e) {
+        // The Lens may disable the letter in the same frame; the caller checks the drop result.
+      }
+    } finally {
+      this.stopSelecting()
+      this.overrideDragVector = undefined
+      this.resetStartEndPoint()
+    }
+    try {
+      await withTimeout(this.exitHover(), 1500, "hover exit")
+    } catch (e) {
+      this.overrideInteractable = undefined
+    }
+    await nextFrame()
+  }
+
+  /**
+   * A real pinch aimed along the eye ray toward `aimWorld`. A physics probe from the eye finds what
+   * the ray hits (as SIK's own ray cast does); if that is `target`'s collider, the interactor hovers
+   * `target` with THAT hit (so targetHitInfo reports where the ray met it), pinches and lets go.
+   * endOff: the aim leaves the target while still pinched, and the release happens off it.
+   * startOff: the pinch starts aiming at nothing and moves onto the target before the release.
+   * Reports the hit and which of the target's trigger events fired. Nothing is pinched when the
+   * probe hits something else (hitOnTarget false).
+   */
+  async pinchAt(target: Interactable, aimWorld: vec3, opts: {endOff?: boolean; startOff?: boolean} = {}): Promise<{hitOnTarget: boolean; hit: vec3 | null; hitName: string; startFired: boolean; endFired: boolean}> {
+    const eye = WorldCameraFinderProvider.getInstance().getWorldPosition()
+    const dir = aimWorld.sub(eye).normalize()
+    const far = eye.add(dir.uniformScale(aimWorld.distance(eye) + 30))
+    const hit = await new Promise<RayCastHit | null>((resolve) => Physics.createGlobalProbe().rayCast(eye, far, (h) => resolve(h)))
+    const hitName = hit && !isNull(hit.collider) ? hit.collider.getSceneObject().name : "(nothing)"
+    let onTarget = false
+    for (let so: SceneObject | null = hit && !isNull(hit.collider) ? hit.collider.getSceneObject() : null; so; so = so.getParent()) {
+      if (so.isSame(target.getSceneObject())) {
+        onTarget = true
+        break
+      }
+    }
+    if (!hit || !onTarget) return {hitOnTarget: false, hit: hit ? hit.position : null, hitName, startFired: false, endFired: false}
+    let startFired = false
+    let endFired = false
+    const offS = target.onTriggerStart.add(() => (startFired = true))
+    const offE = target.onTriggerEnd.add(() => (endFired = true))
+    // LEAF keeps the probe hit it reports as targetHitInfo in a private field; set it to OUR probe's hit.
+    const leaf = this as unknown as {raycastHit: RayCastHit | null}
+    const aim = (): void => {
+      leaf.raycastHit = hit
+      this.startPoint = eye
+      this.endPoint = hit.position
+      this.overrideInteractable = target
+    }
+    const away = (): void => {
+      leaf.raycastHit = null
+      this.overrideInteractable = undefined
+    }
+    try {
+      if (opts.startOff) {
+        away()
+        await nextFrame()
+        this.startSelecting()
+        for (let i = 0; i < 2; i++) await nextFrame()
+        aim()
+        for (let i = 0; i < 4; i++) await nextFrame()
+      } else {
+        const hoverEntered = awaitEventOnce(target.onHoverEnter)
+        aim()
+        await withTimeout(hoverEntered, 2000, `hover on "${target.getSceneObject().name}" never started`)
+        await nextFrame()
+        await nextFrame()
+        this.startSelecting()
+        for (let i = 0; i < 4; i++) await nextFrame()
+        if (opts.endOff) {
+          away()
+          for (let i = 0; i < 4; i++) await nextFrame()
+        }
+      }
+      this.stopSelecting()
+      for (let i = 0; i < 4; i++) await nextFrame()
+    } finally {
+      this.stopSelecting()
+      away()
+      this.resetStartEndPoint()
+      offS()
+      offE()
+    }
+    await nextFrame()
+    return {hitOnTarget: true, hit: hit.position, hitName, startFired, endFired}
   }
 }

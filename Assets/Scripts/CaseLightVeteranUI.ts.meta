@@ -1,0 +1,72 @@
+- !<AssetImportMetadata/0953baff-0f1f-4b89-8288-4924fc51eb15>
+  ImportedAssetIds:
+    TypeScriptAsset: !<reference> 6c71e257-00d4-40f3-abac-405e101909ef
+  ImporterName: TypeScriptAssetImporter
+  PrimaryAsset: !<reference> 6c71e257-00d4-40f3-abac-405e101909ef
+  PackageType: NotAPackage
+  LegacyPackagePolicy: ~
+  ExtraData:
+    {}
+  AssetDataMap:
+    TypeScriptAsset: !<own> 89d9958a-4e26-40a4-8ee2-b0a0b2f7417c
+  DependentFiles:
+    []
+  ImporterSettings: !<AssetImporterSettings>
+    {}
+  CompressionSettings: !<own> 00000000-0000-0000-0000-000000000000
+- !<TypeScriptAssetData/89d9958a-4e26-40a4-8ee2-b0a0b2f7417c>
+  SvgIcon: ""
+  SetupScript:
+    code: ""
+  Description: ""
+  VersionMajor: 0
+  VersionMinor: 0
+  VersionPatch: 0
+  VersionPrerelease: ""
+  UpdateOrder: 0
+  ComponentUid: 34c14777-01a0-4cbf-a609-67fee7bf9340
+  ExportUid: 00000000-0000-0000-0000-000000000000
+  PackagePolicy: CanBeUnpacked
+  ScriptInputsHidden:
+    buttonHeightCm: false
+    chooserButtonWidthCm: false
+    notePlateColor: false
+    noteTextColor: false
+    noteWidthCm: false
+    toggleWidthCm: false
+    veteranLabel: false
+    viewDistanceCm: false
+  ScriptTypesHidden:
+    {}
+  ReadMe: !<reference> 00000000-0000-0000-0000-000000000000
+  DeclarationFile: !<reference> 00000000-0000-0000-0000-000000000000
+  Tags:
+    []
+  Attachments:
+    []
+  DefaultScriptInputs:
+    - veteranLabel: Veteran mode
+      toggleWidthCm: 9.500000
+      chooserButtonWidthCm: !<float> 11.000000
+      buttonHeightCm: 2.400000
+      viewDistanceCm: !<float> 60.000000
+      noteWidthCm: 9.600000
+      noteTextColor: !<Vec4> {x: 1.000000, y: 0.860000, z: 0.550000, w: 1.000000}
+      notePlateColor: !<Vec4> {x: 0.300000, y: 0.220000, z: 0.100000, w: 0.750000}
+  ScriptTypes:
+    -
+      {}
+  InputLines:
+    - '// @ui {"widget":"label", "label":"<span style=\"color: #60A5FA;\">CaseLightVeteranUI - Veteran mode, reminder chooser, pinned reminders</span>"}'
+    - '// @ui {"widget":"separator"}'
+    - '// @ui {"widget":"label", "label":"<span style=\"color: #60A5FA;\">Settings</span>"}'
+    - '// @ui {"widget":"group_start", "label":"Settings"}'
+    - '// @input string veteranLabel = "Veteran mode" {"hint":"Label on the toggle that lets a veteran pin sorting reminders on slots (pinch a slot)"}'
+    - '// @input float toggleWidthCm = 9.5 {"hint":"Width of the toggle, in cm", "widget":"slider", "min":6, "max":14, "step":0.1}'
+    - '// @input float chooserButtonWidthCm = 11 {"hint":"Width of each chooser button, in cm (the longest reminder must fit)", "widget":"slider", "min":8, "max":16, "step":0.1}'
+    - '// @input float buttonHeightCm = 2.4 {"hint":"Height of the toggle and chooser buttons, in cm", "widget":"slider", "min":2, "max":5, "step":0.1}'
+    - '// @input float viewDistanceCm = 60 {"hint":"Typical distance from the eye to these buttons, in cm (scales the label size)", "widget":"slider", "min":30, "max":110, "step":1}'
+    - '// @input float noteWidthCm = 9.6 {"hint":"Width of a pinned reminder card, in cm (the text wraps to two lines inside it)", "widget":"slider", "min":6, "max":14, "step":0.1}'
+    - "// @input vec4 noteTextColor = \"{1,0.86,0.55,1}\" {\"hint\":\"Colour of a pinned reminder's text (warm, distinct from the cyan target and the pink mix-up marks)\", \"widget\":\"color\"}"
+    - '// @input vec4 notePlateColor = "{0.3,0.22,0.1,0.75}" {"hint":"Plate behind a pinned reminder (dim, so a letter edge behind it does not shine through the words)", "widget":"color"}'
+    - '// @ui {"widget":"group_end"}'

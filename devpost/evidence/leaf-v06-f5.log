@@ -1,0 +1,10 @@
+# CaseLight LEAF, v0.6 feature 5 (placement log), tester session 27: extra-placement-log and the scenarios touched by the onReleased change, one per run_leaf_scenario call.
+# Lens Studio 5.23.2, log LensStudioLog-2026-11-02-17-16-46-871-5ad48.txt, Plane room. Each line appended as its verdict landed.
+# Product SHA-256: 26 scripts match mutation-backup-f5 (taken before any break).
+19:40:14.657 PASSED: extra-placement-log
+19:40:40.938 PASSED: c3-recall-miss-lights-answer
+19:41:21.173 PASSED: c5-recall-unaided-score
+19:42:02.844 PASSED: extra-come-back-and-retire
+19:42:33.443 PASSED: extra-route-switch-resets
+19:43:31.495 PASSED: extra-last-letter-dark
+# Result: 6 of 6 PASSED, 0 FAILED. Product SHA-256 26/26 unchanged. Preview Plane, camera at the origin.

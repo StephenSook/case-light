@@ -1,0 +1,33 @@
+# CaseLight LEAF full suite, v0.6 with features 1-3 (tester session 22), one scenario per run_leaf_scenario call.
+# Lens Studio 5.23.2, log LensStudioLog-2026-11-02-17-16-46-871-5ad48.txt. Plane room unless noted. Each line appended as its verdict landed.
+# Product SHA-256: 24 scripts match mutation-backup-f3 (taken before any break).
+18:04:30.200 PASSED: c1-pickup-and-snap
+18:04:48.222 PASSED: c2-practice-glow-and-arrow
+18:05:08.116 PASSED: c3-recall-miss-lights-answer
+18:05:26.316 PASSED: c4-hold-note-and-hold-block
+18:05:48.062 PASSED: c5-recall-unaided-score
+18:06:16.251 PASSED: extra-result-hides-and-session-total
+18:06:32.797 PASSED: extra-sound-cues
+18:07:35.353 PASSED: extra-drill-pace
+18:08:05.204 PASSED: extra-exit-again-done
+18:08:36.602 PASSED: extra-ladder-default-off
+18:09:29.107 PASSED: extra-ladder-on
+18:10:29.253 PASSED: extra-mixup-lines
+18:11:18.899 PASSED: extra-hold-cells
+18:11:36.549 PASSED: extra-print-fit
+18:11:57.044 PASSED: extra-layout-fit-and-reach
+18:12:08.287 PASSED: extra-leaf-overlay-hidden
+18:12:37.873 PASSED: extra-one-pinch-one-press
+18:13:20.009 PASSED: extra-come-back-and-retire
+18:13:42 NO VERDICT: extra-veteran-notes - Lens reset 2 s into the run by the OAuth token refresh (18:13:41 OAuthController); re-run below
+18:16:04.511 PASSED: extra-veteran-notes
+18:17:10.245 PASSED: extra-veteran-notes-in-pass
+18:17:27.347 FAILED: extra-veteran-stray-after-abort - AssertionError: a stray release after an aborted pinch opens no chooser Expected: "false" - Received: "true"  [product defect, see report: CaseLightVeteran keeps armedSlot after a pinch that ends off the target]
+18:18:14.275 PASSED: extra-wall-refusals  [Sunlit Room, camera at the origin]
+18:19:09.856 PASSED: extra-wall-placement  [Sunlit Room, camera at (0, 0, -350)]
+18:20:56.480 PASSED: extra-replace-mid-pass  [Sunlit Room, camera at the origin, walked to (0, 0, -350) mid-run]
+# Result: 23 of 24 scenarios PASSED, 1 FAILED (extra-veteran-stray-after-abort: product defect, reported). One token-refresh reset (no verdict) re-run once. Product SHA-256 24/24 unchanged after the run: 24 OK. Preview set back to Plane, camera reset.
+18:23:09.247 [  3.604s]PASSED: extra-veteran-stray-after-abort  (coordinator, after the fix in CaseLightVeteran.ts: disarm on hover exit, end outside or cancel from the armed hand)
+18:23:32.577 [  6.047s]PASSED: extra-veteran-notes  (coordinator, after the fix)
+18:23:57.838 [ 16.671s]PASSED: extra-veteran-notes-in-pass  (coordinator, after the fix)
+# Coordinator fix 18:22: CaseLightVeteran.ts clears the armed slot when the armed hand leaves the target, ends its pinch off it or cancels it. The 18:17:27 FAILED line above is the same scenario on the unfixed file (red), the 18:23 PASSED lines are after the fix (green). All 3 Veteran scenarios re-run after the fix: 3 of 3 PASSED. Suite now 24 of 24 (the other 21 are unaffected by this file and passed above).
