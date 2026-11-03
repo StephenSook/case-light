@@ -24,3 +24,5 @@ leaf_plugin_settings.json
 *.pem
 *.key
 *.p12
+__pycache__/
+*.pyc
