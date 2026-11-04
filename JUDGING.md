@@ -13,17 +13,17 @@ Demo video: link added when it is published. Devpost: link added when it is publ
 
 ## Try it (about 2 minutes, in the preview)
 
-1. Pinch **Route 1**, then **Start practice**. Pick up a letter with a pinch and drag it to the slot that glows. If the slot is off to the side, an arrow at the edge of the view points to it.
+1. Pinch **Route 1**, then **Start practice** (the next step is the Start button drawn in yellow). Pick up a letter with a pinch and drag it to the slot that glows. If the slot is off to the side, an arrow at the edge of the view points to it.
 2. Pinch **Start recall**. The case goes dark. Place the same letters from memory. A miss lights the right slot and doesn't count.
-3. Read the score: "From memory: X of Y this session." A missed letter comes back later.
-4. Pinch **Show my case**. Each row says Learned, Review N or Not tried N, with a shape for each, so it doesn't rely on color.
+3. Read the score: "From memory: X of Y this session." and "Tried again: N" (the letters that came back after a miss).
+4. Pinch **Show my case**. Each row says From memory, Review N or Not tried N, with a shape for each, so it doesn't rely on color.
 5. Restart the preview. The panel says "Welcome back" with your last score, and a small curve near the route label shows the from-memory score of each completed recall pass on that route (up to 5). **Reset progress** clears only Case Light's own saved keys.
 6. With nothing saved, an animated hand shows the pinch at the top letter. In **Options**, "Hide stand-in case" leaves only what the glasses would draw over a real case.
 7. Optional: **Veteran mode** pins one of three sorting reminders to a cell. Share notes starts a Connected Lenses session; a note reaching a second person was not shown (see below).
 
 ## The five done criteria, as measured in the last full run
 
-From `devpost/evidence/leaf-measurements-46-run-v07.log` (lines starting C1 to C5). The criteria are in `devpost/design-brief.md`.
+From `devpost/evidence/leaf-measurements-47-run-v07.log` (lines starting C1 to C5). The criteria are in `devpost/design-brief.md`.
 
 | Done criterion | Scenario | Measured |
 |---|---|---|
@@ -35,7 +35,7 @@ From `devpost/evidence/leaf-measurements-46-run-v07.log` (lines starting C1 to C
 
 ## Check the tests yourself
 
-- 46 LEAF scenarios live in `Assets/Scripts/Leaf/`. Run them from the LEAF panel, or through the Lens Studio MCP `run_leaf_scenario`, one at a time, under the fail-fast policy (`__leaf__diagnostic_policy: fail-fast`). The wall scenarios run in the "Sunlit Room" preview scene; the run log says where the camera stands for each.
+- 47 LEAF scenarios live in `Assets/Scripts/Leaf/`. Run them from the LEAF panel, or through the Lens Studio MCP `run_leaf_scenario`, one at a time, under the fail-fast policy (`__leaf__diagnostic_policy: fail-fast`). The wall scenarios run in the "Sunlit Room" preview scene; the run log says where the camera stands for each.
 - Unit tests for the pure logic: `node --experimental-strip-types --test tests/*.test.mjs` (they run in CI on every push).
 - `python3 tools/check_repo.py` checks:
   - that no secret, private key or local-only file is tracked, and no token is saved in the scene
@@ -52,9 +52,10 @@ From `devpost/evidence/leaf-measurements-46-run-v07.log` (lines starting C1 to C
 | The plan-lens brief (five done criteria) | `devpost/design-brief.md` |
 | Every prompt that started a build round | `devpost/PROMPTS.md` |
 | Every CLAD session, with tool-call counts | `devpost/BUILD_LOG.md` |
-| Last full LEAF run (46 scenarios, all passed) | `devpost/evidence/leaf-full-46-run-v07.log` |
-| Numbers the tests measured in that run | `devpost/evidence/leaf-measurements-46-run-v07.log` |
-| Deliberate breaks and the failure each one caused (145 in all) | `devpost/evidence/break-proofs.log` |
+| Last full LEAF run (47 scenarios, all passed) | `devpost/evidence/leaf-full-47-run-v07.log` |
+| Numbers the tests measured in that run | `devpost/evidence/leaf-measurements-47-run-v07.log` |
+| Deliberate breaks and the failure each one caused (157 planted, every one caught: 156 by LEAF, 1 by `tools/check_repo.py`) | `devpost/evidence/break-proofs.log` |
+| Button pass: one type size, the next step in yellow, before and after stills | `devpost/evidence/u2-before-open.jpg`, `devpost/evidence/u2-after-open.jpg` (and the other `u2-*` stills) |
 | Mastery map: run, plus before and after stills | `devpost/evidence/leaf-a1-mastery.log`, `devpost/evidence/a1-mastery-map-before-recall.png`, `devpost/evidence/a1-mastery-map-after-recall.png` |
 | Saved progress: save, welcome, reset chain | `devpost/evidence/leaf-a2-progress.log` |
 | Button spacing, wall-scaled controls, IK arms | `devpost/evidence/leaf-a5-spacing.log`, `devpost/evidence/leaf-a6-ik-wall.log` |

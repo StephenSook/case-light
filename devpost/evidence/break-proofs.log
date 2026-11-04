@@ -247,3 +247,32 @@ Restored build:
 # Learning-curve break (session 48): CaseLightHistory.curvePoints with slot * (HISTORY_MAX - 0.5 - i) (the points drawn newest left):
 18:16:27.995 FAILED: extra-learning-curve - AssertionError: after pass 2: label 1 right of label 0 (oldest left) Expected: "true" - Received: "false"
 # restored byte-identical (cmp + SHA-256 against mutation-backup-a4h)
+
+## U2 + U2b (coordinator, 10): one button type size, the next step drawn as primary, plainer card and map words
+# Every run with __leaf__diagnostic_policy fail-fast. Code breaks restored byte-identical (cmp + SHA-256 against scratch backups); the two card strings were broken in the scene in memory only and set back (the scene file was not saved; SHA-256 d07093de... before and after).
+# Break 1: CaseLightVeteranUI button labels at 1.2 times the one size:
+01:29:49.172 [1.290s] FAILED: extra-control-labels - AssertionError: NoteOption_0 label "" at the one button size (27.084 vs 22.570) Expected: "true" - Received: "false"
+# Break 2: CaseLightRouteUI label box at 0.85 of its width (Route 1 wraps to two lines):
+01:31:35.455 [0.381s] FAILED: extra-control-labels - AssertionError: RouteButton_1 label on one line (1.155 vs one line 0.577 cm) Expected: "true" - Received: "false"
+# Break 3: CaseLightButtonText capitals 0.30 cm (below Snap's Button size at the controls' distance):
+01:33:17.808 [1.693s] FAILED: extra-control-labels - AssertionError: OptionsButton capitals at least Snap's Button size (0.308 >= 0.324 deg) Expected: "true" - Received: "false"
+# Break 4: CaseLightMain advance() does not mark a finished practice pass:
+01:34:40.953 [12.122s] FAILED: extra-control-labels - AssertionError: after the practice pass: next step Expected: "recall" - Received: "practice"
+# Break 5: CaseLightMain applyRoute keeps the practiced flag on a route switch:
+01:35:19.542 [11.844s] FAILED: extra-control-labels - AssertionError: after a route switch: next step Expected: "practice" - Received: "recall"
+# Break 6: CaseLightMain beginPass does not refresh the Start buttons:
+01:35:55.194 [2.371s] FAILED: extra-control-labels - AssertionError: during the practice pass: Start practice drawn secondary Expected: "true" - Received: "false"
+# Break 7: the score card's second line set back to "Came back: {n}" (scene, in memory); one break, five checks red:
+01:38:34.656 [10.670s] FAILED: c5-recall-unaided-score - AssertionError: pass 1 card line 2 "Came back: 1" = "Came back: 1" (our count) Expected: "true" - Received: "false"
+01:39:33.783 [15.465s] FAILED: extra-come-back-and-retire - AssertionError: c/g after pass A: came back line = our count Expected: "Tried again: 3" - Received: "Came back: 3"
+01:41:09.569 [11.766s] FAILED: extra-last-letter-dark - AssertionError: card: came back line Expected: "Tried again: 1" - Received: "Came back: 1"
+01:42:14.056 [34.704s] FAILED: extra-placement-log - AssertionError: recall 1 come-backs from the lines = the drawn card Expected: "Came back: 2" - Received: "Tried again: 2"
+01:43:53.994 [68.184s] FAILED: extra-demo-replay - AssertionError: recall pass 1: tried-again line = the recording's count Expected: "Tried again: 2" - Received: "Came back: 2"
+# Break 8: CaseLightMastery LEARNED_TEMPLATE back to "Learned":
+01:53:21.362 [14.325s] FAILED: extra-mastery-map - AssertionError: c. after the pass: row 0 word drawn on the case Expected: "From memory" - Received: "Learned"
+# Break 9: CaseLightProgress welcome line 2 back to "rows learned" (extra-progress-save run first to leave saved progress, it passed):
+01:53:50.974 [10.130s] PASSED: extra-progress-save
+01:54:06.328 [0.053s] FAILED: extra-progress-welcome - AssertionError: welcome line 2 = route 1's saved rows Expected: "Route 1: 1 of 2 rows from memory" - Received: "Route 1: 1 of 2 rows learned"
+# Break 10: the all-retired card set back to "All letters learned" (scene, in memory):
+01:54:54.337 [26.719s] FAILED: extra-come-back-and-retire - AssertionError: e. card text Expected: "Every letter from memory twice" - Received: "All letters learned"
+# All restored; 10 breaks, 10 caught, 14 red lines.

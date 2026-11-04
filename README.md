@@ -12,14 +12,14 @@ house number that does not exist on its street.
 1. Watch the demo video (link added when it is published, before Nov 9).
 2. Read `devpost/design-brief.md` (the plan-lens brief), `devpost/PROMPTS.md` (every prompt that started a build
    round) and `devpost/BUILD_LOG.md` (every CLAD session, tool-call counts, the raw LEAF runs).
-3. Check the tests: 46 LEAF scenarios, one per done criterion plus 41 extras, all passing in the last full run
-   (18:19 to 19:18 ET on 2026-11-03, `devpost/evidence/leaf-full-46-run-v07.log`), every run under LEAF's
+3. Check the tests: 47 LEAF scenarios, one per done criterion plus 42 extras, all passing in the last full run
+   (01:55 to 03:09 ET on 2026-11-04, `devpost/evidence/leaf-full-47-run-v07.log`), every run under LEAF's
    fail-fast policy so no input could be simulated (earlier evidence logs used LEAF's default, "fallback"). The numbers
-   the tests measured in that run are in `devpost/evidence/leaf-measurements-46-run-v07.log`. The Lens was broken on purpose
-   145 times; each break turned a test red with the message shown in `devpost/evidence/break-proofs.log` (one break,
-   Options pressed at the score card, turned two tests red), and every file was restored byte for byte. One more
-   planted break (the demo replay switched on by default in code) slipped past LEAF and is caught by
-   `tools/check_repo.py` instead.
+   the tests measured in that run are in `devpost/evidence/leaf-measurements-47-run-v07.log`. The Lens was broken on
+   purpose 157 times and every break was caught: 156 turned a LEAF test red, with the message shown in
+   `devpost/evidence/break-proofs.log` (161 red lines, because one break turned two tests red and one turned five), and
+   the one LEAF missed (the demo replay switched on by default in code) is caught by `tools/check_repo.py`. Every file
+   was restored byte for byte.
 
 ## What it does
 
@@ -33,24 +33,31 @@ house number that does not exist on its street.
   as helped, and it comes back 2 letters later, dark, for a fresh try. A letter placed from memory in 2 recall passes
   in a row is retired for the session.
 - A hold letter is accepted only in the HOLD block.
-- At the end: "From memory: X of Y this session" and "Came back: N". A helped letter does not count in that pass.
+- At the end: "From memory: X of Y this session" and "Tried again: N" (letters that came back after a miss). A helped
+  letter does not count in that pass.
 - Today's route: pick Route 1 or Route 2 before practice; the case and the letters relabel.
 - Optional: put the case on a real wall; a Veteran mode that pins one of three sorting reminders to a cell (shown in
   recall only after a miss there); a Case check after recall (two letters sit in wrong cells, find both).
-- Show my case: a map on the case from this session's recall, per row "Learned", "Review N" or "Not tried N"
+- Show my case: a map on the case from this session's recall, per row "From memory", "Review N" or "Not tried N"
   (hidden during a pass, so it never gives answers away).
 - Progress is saved on the device between sessions: the next start says, for example, "Welcome back. Last time: 7 of 8
-  from memory" and "Route 1: 1 of 2 rows learned", with a Reset progress button.
+  from memory" and "Route 1: 1 of 2 rows from memory", with a Reset progress button.
 - A small learning curve per route, near the route label in the opening view: the from-memory score of each of the
   last up to 5 completed recall passes on that route, oldest left, captioned "Recall passes". It is saved with the
   progress, cleared by Reset progress, and not drawn for a route with no completed recall pass.
 - Optional Share notes, beside Veteran mode: Share notes starts a Connected Lenses session. Only a slot number and one
-  of the three fixed reminders can cross it, and nothing is stored in the cloud. A note arriving on a second pair of
-  glasses is not shown (see the table below).
+  of the three fixed reminders can cross it, sent as a message through Snap's session while it is open; Case Light
+  stores no note there. A note arriving on a second pair of glasses is not shown (see the table below).
 - Solo play creates no session (`devpost/evidence/a4-share-notes.log`); the optional Share notes uses Snap's
   Connected Lenses service, and for it the Lens declares the "Colocated Connected Lenses" permission that Snap's
   Connected Lens Module brings.
 - With nothing saved, an animated hand shows the pinch at the top letter until the letter is grabbed.
+- Every button label uses one type size (0.36 cm capitals), and the Start button that is the next step is drawn in
+  yellow: Start practice until a practice pass ends on today's route, then Start recall.
+- A faded practice cue, off by default: switch on `practiceLadder` on the CaseLight object's CaseLightMain script in the
+  Inspector. Each right practice placement fades that letter's cue a step (its slot, then its whole row, then a band
+  over both playable rows) and a miss brings it back a step; recall never uses it (`extra-ladder-on`,
+  `extra-ladder-default-off`).
 - Options holds Drill pace and Hide stand-in case (hides the drawn case lines and printed labels, for use at a real
   case). Every button is at least 1 degree from the next and at least 2 degrees each way in every view the tests reach.
 - On a wall the controls grow with their distance from the eye (2.70 times at 154 cm), so they keep the same
@@ -80,7 +87,7 @@ of new city carrier assistants were still on the job after one year (USPS OIG 24
 |---|---|
 | Sample mail | The letters are practice mail with labelled sample addresses: real house numbers from OpenStreetMap, no names, no resident information, not a USPS route. |
 | Head turn with a real head | LEAF cannot turn the head; checked separately with the preview camera. |
-| Reach with a real arm | LEAF's IK body (two IK-solved arms, no fallback to simulated input) carries letters into the real slots in `extra-ik-loop`: let-go points 48.5 to 55.8 cm from the shoulder, letters landing 0.14 to 0.50 cm from the aim. Start buttons sit 75.0 and 75.8 cm from the shoulder of the IK hand that presses them, past LEAF's 67.5 cm direct reach; on device they are ray targets; LEAF's ray strategy did not converge at that distance, so the IK hand presses them directly (PRESS_HOW switch reproduces the failure). A real arm is untested. |
+| Reach with a real arm | LEAF's IK body (two IK-solved arms, no fallback to simulated input) carries letters into the real slots in `extra-ik-loop`: let-go points 48.5 to 55.8 cm from the shoulder, letters landing 0.20 to 0.51 cm from the aim. Start buttons sit 75.0 and 75.8 cm from the shoulder of the IK hand that presses them, past LEAF's 67.5 cm direct reach; on device they are ray targets; LEAF's ray strategy did not converge at that distance, so the IK hand presses them directly (PRESS_HOW switch reproduces the failure). A real arm is untested. |
 | A real wall | Wall placement is tested against Lens Studio's "Sunlit Room" preview scene, not a real wall. |
 | Demo replay | A playback of one recorded LEAF test run (real SIK input in the preview), labelled "Demo replay" on every frame; not a person wearing SPECS. |
 | Share notes between two people | Two-pane sync not shown. In the preview one press of Share notes started a Connected Lenses session (users 2); a note picked in one preview pane arriving in a second pane was not shown, and no second pair of glasses was used. The payload rule (slot number plus one of three fixed reminders, anything else refused) is checked by `tests/note-share.test.mjs`. `devpost/evidence/a4-share-notes.log` |
@@ -118,12 +125,13 @@ when a test tool or the preview agent calls them).
 | "Add an onboarding" | start hint: "Pinch Start practice" / "Practice, then the case goes dark."; with nothing saved, an animated hand shows the pinch at the top letter until that letter is grabbed | `extra-pinch-hint` |
 | "a beginning, middle and end, and a way to repeat" | practice, recall, score, Again / Done | LEAF check |
 | "Guide Users for Out-of-View Elements" | edge arrow, hides once the whole cell is in view | head-turn captures |
-| Targets "at least 2 degrees in angular size" | one-inch cells, measured pitch 2.54 cm, at 55 cm (2.0 cm minimum) + a snap outline while dragging; buttons: smallest 2.19 x 2.07 deg (Route 1) at the opening view | `extra-case-real-scale`, `extra-button-spacing`; `devpost/evidence/leaf-measurements-46-run-v07.log` |
-| "Targetable elements should be spaced at least 1 degree apart" | Buttons: smallest target 2.19 x 2.07 deg, smallest gap 1.06 deg (Options to Start practice) at the opening view (LEAF check fails under 1.0 deg); the smallest gap is also 1.06 deg with Options open (smallest target there 2.36 x 2.05 deg), at the score card and with the welcome up; Veteran reminder options 1.27 deg apart. On a wall: smallest gap 1.02 deg and smallest target 2.12 x 2.11 deg, measured at the scenario's one aim, with the case about 6 deg off axis. Cells touch on purpose, like a real case. | `extra-button-spacing`, `extra-button-spacing-exit`, `extra-button-spacing-veteran`, `extra-wall-placement`; `devpost/evidence/leaf-measurements-46-run-v07.log` |
-| "about 0.5 to 3 m, never head-locked" (Devpost FAQ) | The case and its controls at 57.13 cm; the top letter at 43.3 cm, inside arm's reach on purpose (closer than 0.5 m). On a wall the case sits on the wall (154 cm in the test room) and its controls scale with it. Only the edge arrow is head-locked, on purpose: it points to cells outside the display. | `extra-layout-fit-and-reach`, `extra-wall-placement`; `devpost/evidence/leaf-measurements-46-run-v07.log` |
-| "Consider User Breaks ... content that allows for pausing or saving progress" | Rows learned per route and the last score are saved in the Lens's local storage; the next start shows "Welcome back. Last time: 7 of 8 from memory" / "Route 1: 1 of 2 rows learned" and a Reset progress button (5.60 x 2.12 deg). Tested across Lens restarts. A learning curve per route shows the last up to 5 recall scores. | `extra-progress-save`, `extra-progress-welcome`, `extra-progress-reset`, `extra-learning-curve` |
+| Targets "at least 2 degrees in angular size" | one-inch cells, measured pitch 2.54 cm, at 55 cm (2.0 cm minimum) + a snap outline while dragging; buttons: smallest 2.19 x 2.07 deg (Route 1) at the opening view | `extra-case-real-scale`, `extra-button-spacing`; `devpost/evidence/leaf-measurements-47-run-v07.log` |
+| "Targetable elements should be spaced at least 1 degree apart" | Buttons: smallest target 2.19 x 2.07 deg, smallest gap 1.06 deg (Options to Start practice) at the opening view (LEAF check fails under 1.0 deg); the smallest gap is also 1.06 deg with Options open (smallest target there 2.36 x 2.05 deg), at the score card and with the welcome up; Veteran reminder options 1.27 deg apart. On a wall: smallest gap 1.02 deg and smallest target 2.12 x 2.11 deg, measured at the scenario's one aim, with the case about 6 deg off axis. Cells touch on purpose, like a real case. | `extra-button-spacing`, `extra-button-spacing-exit`, `extra-button-spacing-veteran`, `extra-wall-placement`; `devpost/evidence/leaf-measurements-47-run-v07.log` |
+| "about 0.5 to 3 m, never head-locked" (Devpost FAQ) | The case and its controls at 57.13 cm; the top letter at 43.3 cm, inside arm's reach on purpose (closer than 0.5 m). On a wall the case sits on the wall (154 cm in the test room) and its controls scale with it. Only the edge arrow is head-locked, on purpose: it points to cells outside the display. | `extra-layout-fit-and-reach`, `extra-wall-placement`; `devpost/evidence/leaf-measurements-47-run-v07.log` |
+| "Consider User Breaks ... content that allows for pausing or saving progress" | Rows placed from memory per route and the last score are saved in the Lens's local storage; the next start shows "Welcome back. Last time: 7 of 8 from memory" / "Route 1: 1 of 2 rows from memory" and a Reset progress button (5.60 x 2.12 deg). Tested across Lens restarts. A learning curve per route shows the last up to 5 recall scores. | `extra-progress-save`, `extra-progress-welcome`, `extra-progress-reset`, `extra-learning-curve` |
 | "Recognition Over Recall" | Recall is the point, on purpose: a carrier has to "Recall the correct separation" (M-41 224.24). The practice pass, where the slot glows, is the recognition step before it. | design brief |
-| "Leverage sounds as well as visuals" | A chime from the cell on a right drop (0.36 s) and a low tone from the answer cell on a miss (0.30 s), spatial, volume 0.5; LEAF checks playback, track, volume and the spatial settings (hearing them is manual) | `extra-sound-cues`; `devpost/evidence/leaf-measurements-46-run-v07.log` |
+| Legible text (Snap's Specs type scale) | One type size for every button label: 0.36 cm capitals, 0.353 to 0.375 deg as seen at the opening view, above Snap's Specs "Button" text size (about 0.32 deg of capital height); no label shrinks to fit, Route 1 and Route 2 fit on one line | `extra-control-labels`; `devpost/evidence/leaf-measurements-47-run-v07.log` |
+| "Leverage sounds as well as visuals" | A chime from the cell on a right drop (0.36 s) and a low tone from the answer cell on a miss (0.30 s), spatial, volume 0.5; LEAF checks playback, track, volume and the spatial settings (hearing them is manual) | `extra-sound-cues`; `devpost/evidence/leaf-measurements-47-run-v07.log` |
 | "Align on if there should be a demo mode for events" | A demo replay (off by default, an Inspector setting) plays one recorded test run, labelled "Demo replay" on every frame; `tools/check_repo.py` fails if it is on by default | `extra-demo-replay`, `tools/check_repo.py` |
 | "Final published Lens must be <= 25 MB" | Not measured: the Lens was not published (no publishing account) | stated |
 | Preview image, custom icon, release notes | `devpost/media/lens-icon.png`, film still `devpost/media/film/02-practice-letter-in-hand-slot-glowing.png`; release notes in BUILD_LOG | files |
@@ -134,7 +142,7 @@ when a test tool or the preview agent calls them).
 
 The biggest thing I learned is that "done" has to be something you can check. The plan-lens interview set
 five done criteria before any code existed, and those five became the earliest tests. Then we broke
-the Lens on purpose 145 times to make sure each test actually catches the bug it's meant to.
+the Lens on purpose 157 times to make sure each test actually catches the bug it's meant to.
 
 I also learned the glasses can't show a whole mail case at arm's length. The display is about 23 by 38 cm at 55 cm,
 and a full-size letter is 29.2 cm wide. So we added an edge arrow, and the agents shrank the print until the whole address fits in view. LEAF can press buttons and drag letters, but it can't turn your head, so we checked the arrow by

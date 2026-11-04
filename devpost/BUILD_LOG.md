@@ -2,15 +2,15 @@
 
 How the Lens was built from `devpost/design-brief.md` (approved by Stephen after the plan-lens interview), using CLAD in Lens Studio 5.23.2. All runs happened in Lens Studio's preview on a laptop; no SPECS device was used. Times are local, on 2026-11-02.
 
-## At a glance (v0.6)
+## At a glance (v0.7)
 
-- v0.6 uses real house numbers from OpenStreetMap on two routes near Kennesaw State University, 4 and 8 streets (practice mail, not a USPS route, no resident information). Data, license and changes: `data/case_light_route_osm.json`, `data/case_light_route_osm_b.json`, `data/ATTRIBUTION.md`; everything third-party in `THIRD_PARTY_NOTICES.md`.
-- 35 LEAF scenarios. Closing run: all 35 passed, 0 failed, 0 without a verdict (21:50 to 22:10, on the project reopened from disk), every run under LEAF's fail-fast policy (`devpost/evidence/leaf-full-35-run-v06-final.log`). Earlier runs used LEAF's default, "fallback".
-- 118 deliberate breaks of the Lens code or scene, each caught by a failing scenario, each file restored byte-identical afterwards (67 up to v0.5, 51 for v0.6; `devpost/evidence/break-proofs.log`). One more planted break (the demo replay's code default) slipped past LEAF and is caught by `tools/check_repo.py`. One red in that file is a real defect a test found, fixed the same evening (row 22).
-- 29 product scripts and 43 test files (35 scenarios, support files, fixtures and the scenario index), plus plain-Node unit tests in `tests/` (written; they will run in CI, Node being blocked on the build machine).
-- 33 CLAD agent sessions (16 specs-experience-builder, 17 live-lens-tester; 3,562 tool calls, about 834 minutes) plus the coordinating agent's v0.5 round (row 16) and its smaller (coord.) rows.
-- 14 film stills of v0.6 in the preview, each with steps to reproduce it (`devpost/media/film/REPRODUCE.md`): the 9 v0.5 views retaken, plus Came back, a Veteran reminder, Route 2, a Case check and the labelled demo replay. Still 01 is the Lens as it opens; the others were reached by a temporary probe calling the Lens's own handlers, removed afterwards. A still of the case on a wall was not taken (see REPRODUCE.md); wall placement is shown by its tests.
-- Lens Studio MCP calls across the build: 1,908 (counted once per tool call; `research/figures/count_clad_usage.py` reports 2,224 because transcripts can repeat a call record).
+- v0.7 uses real house numbers from OpenStreetMap on two routes near Kennesaw State University, 4 and 8 streets (practice mail, not a USPS route, no resident information). Data, license and changes: `data/case_light_route_osm.json`, `data/case_light_route_osm_b.json`, `data/ATTRIBUTION.md`; everything third-party in `THIRD_PARTY_NOTICES.md`.
+- 47 LEAF scenarios. Last full run: all 47 passed, 01:55 to 03:09 ET on 2026-11-04, every run under LEAF's fail-fast policy (`devpost/evidence/leaf-full-47-run-v07.log`; the numbers it measured are in `devpost/evidence/leaf-measurements-47-run-v07.log`). Three lines in it are annotated in place (one LEAF press that did not complete, a token-refresh reset, a 10-minute Lens Studio stall); each scenario was rerun alone and passed with no change. Runs before v0.6's closing run used LEAF's default, "fallback".
+- 157 deliberate breaks of the Lens code or scene, every one caught: 156 by a failing LEAF scenario (161 red lines in `devpost/evidence/break-proofs.log`, because one break turned two tests red and one turned five) and 1 by `tools/check_repo.py` (the demo replay's code default, which LEAF missed). Each file was restored byte-identical afterwards. One red in that file is a real defect a test found, fixed the same evening (row 22).
+- 43 product scripts and 57 LEAF files (47 scenarios, support files, fixtures and the scenario index), plus 124 plain-Node unit tests in 13 files under `tests/`, run in CI on every push (Node is blocked on the build machine).
+- 47 CLAD agent sessions (30 specs-experience-builder, 17 live-lens-tester; 4,776 tool calls and about 1,303 minutes, summed from the rows below, 8 of which give estimates) plus the coordinating agent's v0.5 round (row 16) and its (coord.) rows.
+- 14 film stills of v0.6 in the preview, each with steps to reproduce it (`devpost/media/film/REPRODUCE.md`): the 9 v0.5 views retaken, plus Came back, a Veteran reminder, Route 2, a Case check and the labelled demo replay. Still 01 is the Lens as it opens; the others were reached by a temporary probe calling the Lens's own handlers, removed afterwards. A still of the case on a wall was not taken (see REPRODUCE.md); wall placement is shown by its tests. Before and after stills of the v0.7 button pass: `devpost/evidence/u2-*.jpg`.
+- Lens Studio MCP calls across the build: 2,860 (counted once per tool-use id across the project's Claude Code transcripts on 2026-11-04; `research/figures/count_clad_usage.py` counts every transcript record, so it reports more).
 
 ## CLAD sessions
 
@@ -88,6 +88,7 @@ How the Lens was built from `devpost/design-brief.md` (approved by Stephen after
 | (coord.) | coordinating agent | Run and break sessions 43 to 45 in the real setups (wall controls, IK loop), tighten three wall checks on the orchestrating session's review, then the full run. | Session 43's scaling failed in the real wall setup (Sunlit Room, camera at (0, 0, -350) at Lens start, so the case opens 293 cm behind the eye): it took its design distance from the eye at start; session 44 fixed it (design distance 57.13 cm from the layout, scale held while behind the eye). With nothing saved, the pinch hint's animated hand counted as drift in the rigid check; the coordinator left the hand's joints (not its anchor) out of the snapshots, with a control that the hint plays exactly when nothing is saved and its joints move. On review: the "far from the in-front pose" control now equals the distance predicted from the test's own hit within 10 percent (97.64 vs 97.64 cm), and the off-axis no-hit check waits for 3 new product hit tests and "none", fails naming the condition, then holds "none" 0.5 s (an intermittent red at 15:24:57 under the old fixed 20-frame wait). Breaks, each restored byte-identical: scale forced to 1 (0.38 deg on the wall), the IK miss lighting nothing (litSlotIndex -1), the product's hit-test count frozen ("count did not advance"). Lens Studio degraded during the afternoon (170 to 280 percent CPU with the preview paused, LEAF starting runs minutes late); a stack sample showed busy AudioQueue threads; it was restarted, and a test showed the preview keeps the audio converters spinning after the Lens plays its tones (about 300 percent CPU) until the next Lens reset (0 queues, 7.4 percent paused). Full run on the fresh session: 45 of 45 passed under fail-fast, 16:07 to 16:47 (`devpost/evidence/leaf-full-45-run-v07.log`, measurements in `devpost/evidence/leaf-measurements-v07.log`); two runs of `extra-mixup-lines` were lost to infrastructure (the coordinator's own batched request; a Lens Studio token refresh) and it passed alone. README and THIRD_PARTY_NOTICES updated; `tools/check_repo.py` passes. Scene 6fc32e6f..., never saved by the coordinator. | about 150 | about 150 |
 | 48 | specs-experience-builder | L1: a learning curve per route, the from-memory score of each of the last up to 5 completed recall passes, drawn small with its score labels near the route label in the opening view, with one short caption. L2: version v0.7. | `CaseLightHistory.ts` (pure: a pass's point is its change in the session score, letters placed from memory of letters placed; kept per route under `caselight.v1.history.<route>` as a JSON list, newest last, at most 5; bad data reads as no history and is logged as `progress-bad-data`, never thrown; label "x/y"; caption "Recall passes"; point i in slot i of 5, oldest left, height by score share) with 8 node tests in `tests/history.test.mjs`. `CaseLightProgress.ourKeys` now lists the history keys, so Reset progress removes them (`tests/progress.test.mjs` expects the five keys). `formatHistorySaved` (`event=history-saved x= y= passes=`, a node test in `tests/log.test.mjs`) is written just before `progress-saved`, which stays the last line of a pass. `CaseLightHistoryView.ts` draws it as a child of RoutePicker (so it moves and scales with the route picker in CaseControls on a wall) at local (-3.47, 1.66, 0.6) cm: caption and labels in 0.28 cm capitals, a 0.06 cm line through 0.17 cm dots in a 4.0 x 0.85 cm plot; no Interactable, no collider; nothing drawn (caption included) when the route in use has no history, and hidden while the drill pace caption is up, since it stands in that caption's place. Caption "Recall passes" rather than "Last 5 recall passes": it fits over the plot without crowding Route 1 and stays true with fewer than five points. Measured at the opening pose with a temporary probe (removed): one point yaw 4.31..7.79, pitch 15.96..18.23 deg; five points yaw 4.28..8.49 deg; 0.83 deg inside the display, inside a preview still; clear of all 18 neighbours (every button and panel plate, the start hint, the version tag, the case caption), nearest the RoutePicker plate at 0.14 deg (five points) and LedgeControls at 0.18 deg; nearest cell 61 at 14.15 deg; the welcome plate (pitch -3.82..1.26 deg) far below; with 7/8 then 8/8 the right dot stands 0.11 deg higher. A Text's bounds read as the whole sphere in the frame it is shown, so the scenario waits 2 frames before measuring. `extra-learning-curve` (`CaseLightLearningCurveScenario.ts`) is registered between `extra-progress-welcome` and `extra-progress-reset`: at open it draws the one point `extra-progress-save` left (the test's own JSON reading), checks placement from drawn bounds (inside the display and still, clear of every pinchable object, the welcome panel, the hint, the tag, the caption, and every cell and row label as `controlsClearOfCase` reads them), that nothing under it takes a pinch and that its parents are RoutePicker then CaseControls; a real Reset progress press leaves no key of ours and nothing drawn; two recall passes by real input (one letter missed once, then none) give exactly 2 points, matching the test's own tallies, in the store, in the getters, in the labels left to right and in the dots' heights, with two `history-saved` lines. It leaves saved progress and the curve for `extra-progress-reset`, whose "removes our keys and only ours" now covers the curve's key; no existing assertion was changed. Break to plant: `CaseLightHistory.ts` line 120, `slot * (i + 0.5)` to `slot * (HISTORY_MAX - 0.5 - i)` (expected red at "after pass 2: label 1 right of label 0 (oldest left)"; the node test "points: oldest left" fails too). L2: `CASELIGHT_VERSION` is v0.7, so the version tag reads v0.7 and the log reads "Lens Opened: v0.7". Clean compile, a refresh with no errors, 46 scenarios registered, the opening still looked at (nothing saved, no curve). LEAF and the node tests were not run here (no LEAF tool; node is blocked). Scene not saved (81e58e29...); demoReplay false. | about 90 | about 70 |
 | (coord.) | coordinating agent | A4 gates for Share notes, the L1 break, then Gate 3: the full suite on v0.7, README.md and a new JUDGING.md (L3), `tools/check_repo.py` green. | Gate 0: Snap's Connected Lenses restriction list checked against the code, none of the restricted calls used. Gate 2 (two-pane delivery) ended as "two-pane sync not shown": a second Preview pane was added through the Editor API and one press of Share notes started a Connected Lenses session (users 2), but the preview interaction tool then could not press Share notes on the far-right panel, so delivery between panes was never shown; the real log lines and that label are in `devpost/evidence/a4-share-notes.log`. Lens Studio restarted at 17:40; with the AI Assistant panel open the paused preview sat at 35 to 44 percent CPU, and closing that panel brought it to about 1 percent. Session 48's break planted (`slot * (HISTORY_MAX - 0.5 - i)`), red at 18:16:27 on "label 1 right of label 0 (oldest left)", restored byte-identical. Gate 3, 46 scenarios under fail-fast, one per call: c1 went red on its own literal (it still expected "v0.6" after the L2 bump; the Lens showed "v0.7"), so the test literal was updated and the run restarted from c1. 46 of 46 passed, 18:19 to 19:18 (`devpost/evidence/leaf-full-46-run-v07.log`, measurements in `devpost/evidence/leaf-measurements-46-run-v07.log`). Two stalls, marked as infrastructure in the log, no code changed: Lens Studio wrote nothing from 18:22:19 to 18:31:19, then the same run passed; `extra-route-letters` never opened (a token refresh, then a Lens Studio "Loading Icon Atlas" filesystem dialog, answered Block) and passed when rerun. A quit asked for during that stall was cancelled at Lens Studio's save prompt; the unsaved marker was checked against the saved scene (270 objects, 90 script components, the same 9 roots) and nothing was saved. Demo replay was true in memory only for `extra-demo-replay`. README.md now states v0.7, 46 scenarios, 145 breaks, the learning curve, Share notes ("Share notes starts a Connected Lenses session"), the solo no-session line and the declared permission, and the IK landing range of this run (0.14 to 0.50 cm); JUDGING.md fills the draft's fields from the run (the five done criteria with their measured values, every path checked). Three planted `check_repo` breaks, each red then restored byte-identical (cmp + SHA-256): README naming v0.6, JUDGING claiming 45 scenarios, an em dash in JUDGING. Paused preview after the run: 5.2 percent CPU, no audio queues. Scene 81e58e29..., unchanged. | about 200 | about 160 |
+| (coord.) | coordinating agent | U2 button pass and U2b wording pass (Stephen approved UI upgrades on Nov 4): one type size for every button, one primary action per state, plainer card and map words; break recount; docs. | Before stills of v0.7 confirmed each issue: Start recall drawn larger than Start practice (both shrink-to-fit), Options and Show my case at 0.40 cm capitals, Route labels at 0.48 cm wrapping to "Route / 1", the placement and Veteran buttons a fourth size, and no button marked as the next step. New `CaseLightButtonText.ts`: every Case Light button label (20) at one size, 0.36 cm capitals, wrapping at spaces and never shrunk; measured 0.353 to 0.375 deg as seen, above Snap's Specs "Button" text size (0.324 deg). The Start button that is the next step is drawn in label-yellow and bold (`CaseLightNextStep.ts`, 3 node tests): Start practice until a practice pass ends on today's route, then Start recall, neither during a pass, Start practice again after Done or a route switch. Words: the score card's "Came back: N" is now "Tried again: N", the map's "Learned" is "From memory", the welcome's "rows learned" is "rows from memory", and "All letters learned" is "Every letter from memory twice" (a letter counts as learned after one placement from memory in the product's logic, which the research says not to call learned; the logic is unchanged). The two card strings are stored in the scene, so the scene was saved once (the diff also holds the LEAF plugin re-creating its own bridge object with new ids, the same object, which is what marked the project modified last night). The demo replay's own fidelity check now compares the recorded come-back count rather than the old wording; the LEAF demo scenario still checks the exact new string. New scenario `extra-control-labels` (47 in all). 10 breaks planted and caught (14 red lines): a label size, a Route label box that wraps, capitals below Snap's size, a practice pass not counted, a route switch keeping it, no refresh at a pass start, and each of the four reworded strings set back. Full run 47 of 47 under fail-fast, 01:55 to 03:09 (`devpost/evidence/leaf-full-47-run-v07.log`, measurements `devpost/evidence/leaf-measurements-47-run-v07.log`); three lines annotated (one press that did not complete, a token refresh, a 10-minute Lens Studio stall while other heavy work ran on the Mac), each rerun alone and passed. Break recount by break from `devpost/evidence/break-proofs.log`: 157 planted, 156 caught by LEAF, 1 caught by `tools/check_repo.py`, none survived (the earlier "145" left out two v0.6 breaks). Before and after stills: `devpost/evidence/u2-*.jpg`. README, JUDGING.md, THIRD_PARTY_NOTICES.md (Share notes: messages through Snap's session, no note stored), this log's "At a glance" and raw run updated; README gained the faded practice cue. Paused preview after the run: 0.3 percent CPU. | about 330 | about 190 |
 
 Between sessions the coordinating agent recompiled, checked the run logs for errors, captured the preview, checked every product file against its fingerprint, matched every claimed failure line against the Lens Studio log output, and re-ran the full LEAF suite itself.
 
@@ -136,31 +137,64 @@ How the tests stay honest:
 
 ## Latest full LEAF run (raw)
 
-Run one scenario at a time in the preview by the coordinating agent, on v0.5, after a recompile and a refresh, with all 37 script files matching their v0.5 fingerprint. Also in `devpost/evidence/leaf-full-17-run-v05-1404.log`.
+Run one scenario at a time in the preview by the coordinating agent, on v0.7 after the button and wording pass, under LEAF's fail-fast policy, 01:55 to 03:09 ET on 2026-11-04. Full lines, rooms and notes: `devpost/evidence/leaf-full-47-run-v07.log`.
 
 ```
-14:04:22.137 PASSED: c1-pickup-and-snap
-14:04:26.948 PASSED: c2-practice-glow-and-arrow
-14:04:38.406 PASSED: c3-recall-miss-lights-answer
-14:04:47.176 PASSED: c4-hold-note-and-hold-block
-14:05:01.936 PASSED: c5-recall-unaided-score
-14:05:21.500 PASSED: extra-result-hides-and-session-total
-14:05:32.127 PASSED: extra-sound-cues
-14:06:23.751 PASSED: extra-drill-pace
-14:06:43.459 PASSED: extra-exit-again-done
-14:07:02.542 PASSED: extra-ladder-default-off
-14:07:44.068 PASSED: extra-ladder-on
-14:09:25.703 PASSED: extra-hold-cells
-14:09:34.168 PASSED: extra-print-fit
-14:09:42.228 PASSED: extra-layout-fit-and-reach
-14:09:43.646 PASSED: extra-leaf-overlay-hidden
-14:09:59.752 PASSED: extra-one-pinch-one-press
-14:11:21.454 PASSED: extra-mixup-lines
+01:55:47.190 PASSED: c1-pickup-and-snap
+01:56:12.288 PASSED: c2-practice-glow-and-arrow
+01:56:35.081 PASSED: c3-recall-miss-lights-answer
+01:57:00.888 PASSED: c4-hold-note-and-hold-block
+01:57:33.302 PASSED: c5-recall-unaided-score
+01:58:19.640 PASSED: extra-result-hides-and-session-total
+01:58:45.317 PASSED: extra-sound-cues
+01:59:52.175 PASSED: extra-drill-pace
+02:00:26.805 PASSED: extra-exit-again-done
+02:01:27.913 PASSED: extra-ladder-default-off
+02:02:47.346 PASSED: extra-ladder-on
+02:04:07.385 PASSED: extra-mixup-lines
+02:05:21.390 PASSED: extra-hold-cells
+02:06:27.428 PASSED: extra-print-fit
+02:07:10.504 PASSED: extra-layout-fit-and-reach
+02:07:45.516 PASSED: extra-leaf-overlay-hidden
+02:10:51.167 PASSED: extra-one-pinch-one-press
+02:13:00.123 FAILED: extra-come-back-and-retire
+02:17:37.164 PASSED: extra-come-back-and-retire
+02:18:33.180 PASSED: extra-veteran-notes
+02:21:30.977 PASSED: extra-veteran-notes-in-pass
+02:22:31.704 PASSED: extra-veteran-stray-after-abort
+02:25:04.651 PASSED: extra-route-labels
+02:28:53.580 PASSED: extra-route-letters
+02:30:27.425 PASSED: extra-route-switch-resets
+02:31:28.156 PASSED: extra-last-letter-dark
+02:32:11.804 PASSED: extra-route-picker-in-view
+NO VERDICT: extra-placement-log
+02:42:22.662 PASSED: extra-recall-no-glow-per-frame
+02:44:17.865 PASSED: extra-placement-log
+02:45:13.777 PASSED: extra-demo-replay-off-by-default
+02:49:04.704 PASSED: extra-demo-replay
+02:50:20.988 PASSED: extra-case-check
+NO VERDICT: extra-case-real-scale
+03:00:32.130 PASSED: extra-mastery-map
+03:00:54.979 PASSED: extra-case-real-scale
+03:01:27.870 PASSED: extra-progress-save
+03:01:46.081 PASSED: extra-progress-welcome
+03:02:18.775 PASSED: extra-learning-curve
+03:02:40.252 PASSED: extra-progress-reset
+03:03:08.880 PASSED: extra-pinch-hint
+03:03:31.400 PASSED: extra-stand-in-hidden
+03:04:06.825 PASSED: extra-ik-loop
+03:04:31.335 PASSED: extra-button-spacing
+03:05:11.397 PASSED: extra-button-spacing-exit
+03:05:38.503 PASSED: extra-button-spacing-veteran
+03:06:08.474 PASSED: extra-control-labels
+03:06:43.969 PASSED: extra-wall-refusals
+03:07:12.183 PASSED: extra-wall-placement
+03:08:39.353 PASSED: extra-replace-mid-pass
 ```
 
-17 of 17 passed, 0 failed. `extra-mixup-lines` started once at 14:07:47 and was cut off at 14:08:46 with no verdict: the tool call that started it timed out (the scenario runs about a minute and a half), and the next scenario was started while it was still running, which reset the Lens after its third recall pass. It was rerun once on its own and passed.
+47 of 47 passed. Three lines are not passes and are annotated in the run log: `extra-come-back-and-retire` stopped at its first press (LEAF's trigger did not complete; cause not identified, the same signature as two earlier runs), `extra-placement-log` was reset by a sign-in token refresh, and `extra-case-real-scale` never started during a 10-minute Lens Studio stall. Each was rerun alone and passed, with no code or scene change.
 
-The v0.4 run (09:48 to 10:08, 17 of 17, `devpost/evidence/leaf-full-17-run-0948.log`) had one run cut off when Lens Studio refreshed its sign-in token; it passed when rerun.
+Earlier full runs: v0.5 17 of 17 (`devpost/evidence/leaf-full-17-run-v05-1404.log`), v0.6 35 of 35 (`devpost/evidence/leaf-full-35-run-v06-final.log`), v0.7 before this pass 46 of 46 (`devpost/evidence/leaf-full-46-run-v07.log`).
 
 Earlier full runs, kept for history: 6 of 6 passed at 02:44 (session 4), 9 of 9 at 04:46, 04:53 and 05:02 (sessions 9 and 10), 13 of 13 at 06:09 (`devpost/evidence/leaf-full-13-run-0609.log`), 16 of 16 at 07:58 on v0.3 (`devpost/evidence/leaf-full-16-run-0758.log`; `c5` failed once there on the test helper's button press timing out and passed on its rerun).
 
