@@ -7,9 +7,9 @@
     - !<own> de9b9b93-38d0-40e0-9e94-7e5719dbba0c
     - !<own> 5677e55c-d2e0-4b93-9c39-4e2b98edbd67
     - !<own> 04f60cc5-0257-4ad6-8327-784060854770
-    - !<own> 8255b2ae-486f-40b1-bd0b-e3d1725530d8
     - !<own> 1f4dba1a-fdf9-4894-ae2b-cb5c94dc01e9
     - !<own> 98c344fd-03ad-4ef9-ab12-174917bd4485
+    - !<own> fed53ef7-0297-4d6a-af0d-0f885a5d49ea
   layers: !<Layers/267ee9a7-aff2-4f9d-9a49-f71214747d03>
     userLayers:
       - id: 1
@@ -1031,8 +1031,6 @@
   ScriptAsset: !<reference> cb96f5dd-c2da-4bf1-b422-831f75b2aef6
   ScriptInputsDefault:
     resultTemplate: true
-    cameBackTemplate: true
-    allRetiredText: true
     allRetiredLine2Text: true
     street0Color: true
     street1Color: true
@@ -1049,8 +1047,8 @@
       captionAnchor: !<reference.SceneObject> 725b5a4e-3ad0-478e-9891-713331d60b5f
       captionText: "Practice mail, real house numbers"
       resultTemplate: "From memory: {x} of {y} this session"
-      cameBackTemplate: "Came back: {n}"
-      allRetiredText: All letters learned
+      cameBackTemplate: "Tried again: {n}"
+      allRetiredText: Every letter from memory twice
       allRetiredLine2Text: Done starts over
       street0Color: !<Vec4> {x: 0.600000, y: 0.820000, z: 1.000000, w: 1.000000}
       street1Color: !<Vec4> {x: 0.600000, y: 0.960000, z: 0.640000, w: 1.000000}
@@ -1738,22 +1736,6 @@
     - !<own> 2af9f049-7531-4fe5-bbd9-1922e1661015
   Components:
     - !<own> 216364ed-10e1-4621-8b04-e7a67e0116c8
-- !<ScriptComponent/22246f6a-63ad-4465-a676-e70cfb4a09f7>
-  PrefabRemaps:
-    []
-  Name: MessagingBridge
-  Enabled: true
-  ScriptAsset: !<reference> 9aa407db-2872-4afc-a162-cf7faf2a0f29
-  ScriptInputsDefault:
-    {}
-  ScriptTypesDefault:
-    {}
-  ScriptInputs:
-    "":
-      {}
-  ScriptTypes:
-    "":
-      {}
 - !<SceneObject/23018601-1041-4785-a20e-9ad5ab722f95>
   PrefabRemaps:
     []
@@ -5313,21 +5295,6 @@
   BlendNormals: false
   BlendShapes:
     {}
-- !<SceneObject/8255b2ae-486f-40b1-bd0b-e3d1725530d8>
-  PrefabRemaps:
-    []
-  Name: LEAF Plugin Bridge
-  Enabled: true
-  Layers: 1
-  LocalTransform: !<TransformEntity>
-    Position: {x: 0.000000, y: 0.000000, z: 0.000000}
-    Rotation: {x: 0.000000, y: 0.000000, z: 0.000000}
-    Scale: {x: 1.000000, y: 1.000000, z: 1.000000}
-    HasSegmentScaleCompensation: false
-  Children:
-    []
-  Components:
-    - !<own> 22246f6a-63ad-4465-a676-e70cfb4a09f7
 - !<SceneObject/82a4b4e8-283b-441c-8b94-9fdc50c958f2>
   PrefabRemaps:
     []
@@ -7681,6 +7648,22 @@
   ScriptTypes:
     "":
       {}
+- !<ScriptComponent/c5702f4b-cad2-4bdc-8338-04c31bc39409>
+  PrefabRemaps:
+    []
+  Name: MessagingBridge
+  Enabled: true
+  ScriptAsset: !<reference> 9aa407db-2872-4afc-a162-cf7faf2a0f29
+  ScriptInputsDefault:
+    {}
+  ScriptTypesDefault:
+    {}
+  ScriptInputs:
+    "":
+      {}
+  ScriptTypes:
+    "":
+      {}
 - !<SceneObject/c6148ef9-2894-42f3-9e79-562205a6b7d2>
   PrefabRemaps:
     []
@@ -9599,3 +9582,18 @@
     - !<own> 24cd68da-bc29-4c65-b503-7b3359027618
   Components:
     []
+- !<SceneObject/fed53ef7-0297-4d6a-af0d-0f885a5d49ea>
+  PrefabRemaps:
+    []
+  Name: LEAF Plugin Bridge
+  Enabled: true
+  Layers: 1
+  LocalTransform: !<TransformEntity>
+    Position: {x: 0.000000, y: 0.000000, z: 0.000000}
+    Rotation: {x: 0.000000, y: 0.000000, z: 0.000000}
+    Scale: {x: 1.000000, y: 1.000000, z: 1.000000}
+    HasSegmentScaleCompensation: false
+  Children:
+    []
+  Components:
+    - !<own> c5702f4b-cad2-4bdc-8338-04c31bc39409

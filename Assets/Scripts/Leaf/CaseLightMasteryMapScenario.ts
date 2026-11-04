@@ -60,7 +60,7 @@ function expectMap(main: CaseLightMain, rows: number[], expectRow: string[], exp
   for (let r = 0; r < 2; r++) {
     expect(main.masteryRowState(r), `${ctx}: row ${r} state`).toBe(expectRow[r])
     expect(countsKey(main.masteryRowCounts(r)), `${ctx}: row ${r} counts`).toBe(countsKey(expectCounts[r]))
-    const word = expectRow[r] === "learned" ? "Learned" : expectRow[r] === "weak" ? `Review ${expectCounts[r].weak}` : `Not tried ${expectCounts[r].unseen}`
+    const word = expectRow[r] === "learned" ? "From memory" : expectRow[r] === "weak" ? `Review ${expectCounts[r].weak}` : `Not tried ${expectCounts[r].unseen}`
     expect(words[r], `${ctx}: row ${r} word drawn on the case`).toBe(word)
     expect(main.masteryRowLabels[r], `${ctx}: row ${r} word read-out`).toBe(word)
   }

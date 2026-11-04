@@ -79,11 +79,11 @@ test("a placement line, field by field, in order", () => {
 
 test("pass start, pass end and route switch lines", () => {
   assert.equal(formatPassStart(HEAD, 8), "CASELIGHT_LOG v1 seq=7 session=s1-k3x9q2 route=2 pass=3 mode=recall event=pass-start pieces=8")
-  const end = parse(formatPassEnd(HEAD, 8, "From memory: 7 of 8 this session", "Came back: 1"))
+  const end = parse(formatPassEnd(HEAD, 8, "From memory: 7 of 8 this session", "Tried again: 1"))
   assert.equal(end.event, "pass-end")
   assert.equal(end.placed, "8")
   assert.equal(end.score, "From memory: 7 of 8 this session")
-  assert.equal(end.cameback, "Came back: 1")
+  assert.equal(end.cameback, "Tried again: 1")
   const practiceEnd = parse(formatPassEnd({ ...HEAD, mode: "practice" }, 8, "", ""))
   assert.equal(practiceEnd.score, "")
   assert.equal(practiceEnd.cameback, "")

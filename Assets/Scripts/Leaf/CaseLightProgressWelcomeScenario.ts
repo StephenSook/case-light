@@ -6,7 +6,7 @@
  * Runs right after extra-progress-save (the Lens restarts in between; the store keeps its keys).
  * Without them it fails at once with "run extra-progress-save immediately before this scenario".
  * Expected wording, written here from the rule: "Welcome back. Last time: {x} of {y} from memory"
- * and "Route 1: {n} of 2 rows learned", with x, y and n from the test's own parse of the store.
+ * and "Route 1: {n} of 2 rows from memory", with x, y and n from the test's own parse of the store.
  * Controls: the welcome is shown at open and still shown after the route switch (and hidden after
  * the opening Start); the overlap test reports a box overlapping itself.
  */
@@ -41,7 +41,7 @@ export class CaseLightProgressWelcomeScenario extends Scenario {
 
     // ── The welcome reads what was saved ─────────────────────────────────────────────────
     const line1 = `Welcome back. Last time: ${last.x} of ${last.y} from memory`
-    const line2 = `Route 1: ${route1.rows.length} of 2 rows learned`
+    const line2 = `Route 1: ${route1.rows.length} of 2 rows from memory`
     log(`PROGRESS expected "${line1}" / "${line2}"; drawn "${shownText("WelcomeLine1")}" / "${shownText("WelcomeLine2")}"`)
     expect(main.progressWelcomeShown && shown("WelcomeProgress"), "control: the welcome is shown at open").toBe(true)
     expect(shownText("WelcomeLine1"), "welcome line 1 = the saved score").toBe(line1)
@@ -109,7 +109,7 @@ export class CaseLightProgressWelcomeScenario extends Scenario {
     const route2Rows = route2 && route2 !== "bad" && Array.isArray(route2.rows) ? route2.rows.length : 0
     await ix.pressButton("RouteButton_2")
     await waitUntil(() => main.routeId === 2, 2000, "route 2 after the Route 2 press")
-    const line2r2 = `Route 2: ${route2Rows} of 2 rows learned`
+    const line2r2 = `Route 2: ${route2Rows} of 2 rows from memory`
     log(`PROGRESS after Route 2: "${shownText("WelcomeLine1")}" / "${shownText("WelcomeLine2")}" (expected line 2 "${line2r2}")`)
     expect(main.progressWelcomeShown && shown("WelcomeProgress"), "the welcome stays up after a route switch at open").toBe(true)
     expect(shownText("WelcomeLine1"), "line 1 unchanged by the route switch").toBe(line1)

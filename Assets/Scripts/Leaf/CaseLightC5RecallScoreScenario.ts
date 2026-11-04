@@ -15,7 +15,7 @@
  * helped delta == 1, and the helped piece's own placement adds to helped, not to unaided.
  * v0.6 feature 2: the missed letter comes back with exactly two letters before it (the live queue
  * is checked against the test's own model before every drop, CaseLightRecallSupport), the card's
- * second line is "Came back: <our count>", and after pass 2 the retired count equals our model.
+ * second line is "Tried again: <our count>", and after pass 2 the retired count equals our model.
  * Pass 1's shown result is also the positive control for the result detector.
  * Pass 2: all right at once; the result is hidden from the Start press until the last piece
  * (negative checks, after the positive control), then shows the session totals.
@@ -104,7 +104,7 @@ export class CaseLightC5RecallScoreScenario extends Scenario {
     expect(text1, "pass 1 exact text (approved wording)").toBe(expectedResult(u0 + n - 1, t0 + n))
     expect(main.resultText, "resultText getter").toBe(text1)
     expect(main.comeBackCount, "pass 1: comeBackCount").toBe(t1.comeBacks)
-    expect(main.isCameBackVisible && main.cameBackText === `Came back: ${t1.comeBacks}`, `pass 1 card line 2 "${main.cameBackText}" = "Came back: ${t1.comeBacks}" (our count)`).toBe(true)
+    expect(main.isCameBackVisible && main.cameBackText === `Tried again: ${t1.comeBacks}`, `pass 1 card line 2 "${main.cameBackText}" = "Tried again: ${t1.comeBacks}" (our count)`).toBe(true)
 
     // ---------------- Pass 2: result hidden during the pass (after the positive control). ----------------
     await ix.pressButton("StartRecallButton")
@@ -118,7 +118,7 @@ export class CaseLightC5RecallScoreScenario extends Scenario {
     })
     expect(checkedHidden, "result hidden checked before every pass 2 drop").toBe(n)
     expectResult(main, true, "after the last piece of pass 2")
-    expect(main.cameBackText, "pass 2 card line 2 (no miss)").toBe(`Came back: ${t2.comeBacks}`)
+    expect(main.cameBackText, "pass 2 card line 2 (no miss)").toBe(`Tried again: ${t2.comeBacks}`)
     expect(main.retiredCount, `after pass 2: retired letters = our model (${model.retiredCount}: all but the missed one)`).toBe(model.retiredCount)
     const xy2 = parseResult(shownText())
     log(`C5 pass 2: text="${shownText()}"`)

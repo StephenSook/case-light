@@ -233,9 +233,9 @@ export class CaseLightPlacementLogScenario extends Scenario {
     const r2 = recount(end2)
     log(`PLACELOG recount: after recall 1 ${r1.x} of ${r1.y}, came back ${r1.comeBack} (card "${card1.main}" / "${card1.line2}"); after recall 2 ${r2.x} of ${r2.y}, came back ${r2.comeBack} (card "${card2.main}" / "${card2.line2}")`)
     expect(expectedResult(r1.x, r1.y), "recount after recall 1 = the drawn card").toBe(card1.main)
-    expect(`Came back: ${r1.comeBack}`, "recall 1 come-backs from the lines = the drawn card").toBe(card1.line2)
+    expect(`Tried again: ${r1.comeBack}`, "recall 1 come-backs from the lines = the drawn card").toBe(card1.line2)
     expect(expectedResult(r2.x, r2.y), "recount after recall 2 = the drawn card").toBe(card2.main)
-    expect(`Came back: ${r2.comeBack}`, "recall 2 come-backs from the lines = the drawn card").toBe(card2.line2)
+    expect(`Tried again: ${r2.comeBack}`, "recall 2 come-backs from the lines = the drawn card").toBe(card2.line2)
 
     // Route switch: one line, from Route 1 to Route 2, and the count starts again.
     const sw = parsed[parsed.length - 1]

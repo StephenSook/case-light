@@ -117,8 +117,14 @@ export class CaseLightDemoReplayScenario extends Scenario {
     expect(repEnds.length, "two recall pass ends").toBe(2)
     for (let k = 0; k < 2; k++) {
       expect(repEnds[k].get("score"), `recall pass ${k + 1}: card = the recording`).toBe(recEnds[k].get("score"))
-      expect(repEnds[k].get("cameback"), `recall pass ${k + 1}: came-back line = the recording`).toBe(recEnds[k].get("cameback"))
-      const drawn = `${recEnds[k].get("score")} / ${recEnds[k].get("cameback")}`
+      // The recording was made when the line read "Came back: N"; the card now reads "Tried again: N".
+      // Same count, exact string: the recorded N in today's wording.
+      const recBack = recEnds[k].get("cameback") as string
+      const m = /^Came back: (\d+)$/.exec(recBack)
+      expect(!!m, `recall pass ${k + 1}: the recording's line "${recBack}" gives its count`).toBe(true)
+      const wantBack = `Tried again: ${m ? m[1] : "?"}`
+      expect(repEnds[k].get("cameback"), `recall pass ${k + 1}: tried-again line = the recording's count`).toBe(wantBack)
+      const drawn = `${recEnds[k].get("score")} / ${wantBack}`
       expect(cardsSeen.indexOf(drawn) >= 0, `recall pass ${k + 1}: the recorded card "${drawn}" was drawn`).toBe(true)
     }
     await hideLeafOverlay()

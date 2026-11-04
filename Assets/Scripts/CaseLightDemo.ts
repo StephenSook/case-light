@@ -171,12 +171,22 @@ export function attemptMismatch(step: ReplayStep, topPiece: number, actualResult
   return null
 }
 
-/** Null when a replayed pass end shows the recorded score text, else the reason. */
+/** The count at the end of a card's second line ("Tried again: 2" -> "2"), or the whole line when it has none. */
+function cardCount(line: string): string {
+  const m = /(\d+)\s*$/.exec(line)
+  return m ? m[1] : line
+}
+
+/**
+ * Null when a replayed pass end shows the recorded score text, else the reason. The card's second
+ * line is compared by its count: the recording was made when it read "Came back: N", and the card
+ * now reads "Tried again: N" (same count, new words).
+ */
 export function passEndMismatch(step: ReplayStep, actualPlaced: number, actualScore: string, actualCameBack: string): string | null {
   if (step.kind !== "pass-end") return null
   if (actualPlaced !== step.placedCount) return `seq ${step.seq}: ${actualPlaced} placed, recorded ${step.placedCount}`
   if (actualScore !== step.score) return `seq ${step.seq}: score "${actualScore}", recorded "${step.score}"`
-  if (actualCameBack !== step.cameBack) return `seq ${step.seq}: "${actualCameBack}", recorded "${step.cameBack}"`
+  if (cardCount(actualCameBack) !== cardCount(step.cameBack)) return `seq ${step.seq}: "${actualCameBack}", recorded "${step.cameBack}"`
   return null
 }
 

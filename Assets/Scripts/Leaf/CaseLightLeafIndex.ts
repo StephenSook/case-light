@@ -50,6 +50,7 @@ import {CaseLightButtonSpacingScenario} from "./CaseLightButtonSpacingScenario"
 import {CaseLightButtonSpacingExitScenario} from "./CaseLightButtonSpacingExitScenario"
 import {CaseLightButtonSpacingVeteranScenario} from "./CaseLightButtonSpacingVeteranScenario"
 import {CaseLightIkLoopScenario} from "./CaseLightIkLoopScenario"
+import {CaseLightControlLabelsScenario} from "./CaseLightControlLabelsScenario"
 
 /**
  * LEAF's diagnostic report panel hides at once after each run (0 ms), so a film captured after a
@@ -118,5 +119,7 @@ export class CaseLightLeafIndex extends BaseScriptComponent {
     // Needs nothing saved at Lens start (the opening pinch hint is up), like extra-button-spacing; extra-button-spacing-exit
     // leaves saved progress, so run it after a Reset progress. It ends no recall pass, so it saves nothing.
     {id: "extra-ik-loop", typename: CaseLightIkLoopScenario.getTypeName()},
+    // Any store: the next step at open is Start practice either way; its practice pass and route switches save nothing.
+    {id: "extra-control-labels", typename: CaseLightControlLabelsScenario.getTypeName()},
   ].map((m) => ({...m, parameters: NO_REPORT_PANEL}))
 }

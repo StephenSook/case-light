@@ -13,12 +13,12 @@
  *     letter is picked up or the missed one is placed; when the letter comes back it is unlit
  *     (it is asked again from memory). A letter placed from memory in two completed recall
  *     passes in a row is retired until Done and left out of later recall passes; when every
- *     letter is retired, Start recall (or Again) shows "All letters learned / Done starts over"
+ *     letter is retired, Start recall (or Again) shows "Every letter from memory twice / Done starts over"
  *     with the exit instead of a pass. Practice passes are unchanged.
  *   Hold piece: note "Hold: set this piece aside" only while in hand; accepted only in the HOLD
  *     block; dropped in any other cell it is refused like a miss and the HOLD block glows.
  *   End of recall: the score card ("From memory: X of Y this session" by default; helped
- *     letters never count; a second line "Came back: N", the pass's come-backs), hidden after
+ *     letters never count; a second line "Tried again: N", the pass's come-backs), hidden after
  *     resultSeconds or when a Start button is pressed. With
  *     it, an exit: "Again" (a new recall pass, as if Start recall were pressed) or "Done" (idle,
  *     nothing glowing, counts kept). The exit stays until one is chosen or a Start is pressed.
@@ -105,6 +105,7 @@ import { MasteryMap, MasteryState, RowCounts, rowLabel, rowStateOf } from "./Cas
 import { CaseLightMasteryView } from "./CaseLightMasteryView"
 import { emptyProgress, encodeLast, encodeRoute, hasProgress, historyKey, loadProgress, mergeRows, nextLast, ourKeys, Progress, routeKey, LAST_KEY, welcomeLines, welcomeVisible } from "./CaseLightProgress"
 import { appendHistory, curveVisible, encodeHistory, HistoryScore, loadHistory, passScore } from "./CaseLightHistory"
+import { primaryActionFor } from "./CaseLightNextStep"
 import { CaseLightHistoryView } from "./CaseLightHistoryView"
 import { ProgressStore } from "./CaseLightProgressStore"
 import { nextPinchHint, openingPinchHint, PinchHintEnd, PinchHintEvent, PinchHintState } from "./CaseLightPinchHintRule"
@@ -288,6 +289,8 @@ export class CaseLightMain extends BaseScriptComponent {
   /** Today's route (Route 1 by default; the picker switches it between passes). */
   private _route: RouteId = DEFAULT_ROUTE
   private _routeSwitches = 0
+  /** True once a practice pass has finished on today's route (cleared by Done and a route switch). */
+  private practicedOnRoute = false
   /** Placement log (CaseLightLog): one id per Lens start, a line counter, a pass counter. */
   private readonly logToken = randomToken(Math.random)
   /** "s<n>-<token>" for live play, "r<n>-<token>" for a demo replay (set at start). */
@@ -487,12 +490,12 @@ export class CaseLightMain extends BaseScriptComponent {
     return this.retirement ? this.retirement.allRetired : false
   }
 
-  /** True while the "All letters learned" card is the one shown. */
+  /** True while the "Every letter from memory twice" card is the one shown. */
   get isAllRetiredCardShown(): boolean {
     return this._allRetiredShown && this.isResultVisible
   }
 
-  /** The score card's second line as set (e.g. "Came back: 2"). */
+  /** The score card's second line as set (e.g. "Tried again: 2"). */
   get cameBackText(): string {
     return this.caseLabels ? this.caseLabels.cameBackString : ""
   }
@@ -870,6 +873,11 @@ export class CaseLightMain extends BaseScriptComponent {
   /** Route switches taken since the Lens opened. */
   get routeSwitchCount(): number {
     return this._routeSwitches
+  }
+
+  /** The Start button drawn as the next step: "practice", "recall", or "none" during a pass (primaryActionFor). */
+  get primaryAction(): "practice" | "recall" | "none" {
+    return primaryActionFor(this._mode, this.practicedOnRoute)
   }
 
   // ── Placement log read-outs (CaseLightLog) ──────────────────────────────────────────────
@@ -1352,6 +1360,9 @@ export class CaseLightMain extends BaseScriptComponent {
     // Done ends the session's retirement: every letter is back in later recall passes.
     if (this.retirement) this.retirement.reset()
     this._mode = "idle"
+    // Done starts over: practice is the next step again.
+    this.practicedOnRoute = false
+    this.refreshPrimary()
     this._heldPiece = -1
     this.missLitPiece = -1
     this.bundle.setActivePiece(-1)
@@ -1478,6 +1489,7 @@ export class CaseLightMain extends BaseScriptComponent {
     })
     this.controls.onStartPractice.add(() => this.onStartButton("practice"))
     this.controls.onStartRecall.add(() => this.onStartButton("recall"))
+    this.refreshPrimary()
     this.controls.onToggleOptions.add(() => this.toggleOptions())
     this.controls.onTogglePace.add(() => this.togglePace())
     this.controls.onToggleShowMyCase.add(() => this.toggleMasteryMap())
@@ -1543,6 +1555,8 @@ export class CaseLightMain extends BaseScriptComponent {
     if (this.exitControls) this.exitControls.hide()
     this.controls.hideHint()
     this._mode = mode
+    // During a pass neither Start button is the next step.
+    this.refreshPrimary()
     this.order = order
     this.pass = new PassQueue(order)
     this.missLitPiece = -1
@@ -1677,6 +1691,9 @@ export class CaseLightMain extends BaseScriptComponent {
     }
     const finished = this._mode
     this._mode = "idle"
+    // A finished practice pass makes Start recall the next step on this route.
+    if (finished === "practice") this.practicedOnRoute = true
+    this.refreshPrimary()
     this.bundle.setActivePiece(-1)
     this.setLit(NO_SLOT)
     let newlyRetired: number[] = []
@@ -1932,6 +1949,9 @@ export class CaseLightMain extends BaseScriptComponent {
     this.order = practiceOrder(this.pieces.length)
     this.bundle.layout(this.order)
     if (this.routePicker) this.routePicker.setRoute(route)
+    // A new route starts with practice.
+    this.practicedOnRoute = false
+    this.refreshPrimary()
     this.refreshHistory()
     // The on-screen score starts again on the new route: a log reader resets its count here.
     this.writeLog(formatRouteSwitch(this.logHead(), fromRoute))
@@ -2071,6 +2091,11 @@ export class CaseLightMain extends BaseScriptComponent {
     if (this.progressStore) this.progressStore.write(historyKey(this._route), encodeHistory(list))
     this.writeLog(formatHistorySaved(this.logHead(), point.x, point.y, list.length))
     this.refreshHistory()
+  }
+
+  /** Mirror the next step on the Start buttons (one primary, the other secondary; none during a pass). */
+  private refreshPrimary(): void {
+    if (this.controls) this.controls.setPrimary(this.primaryAction)
   }
 
   /** Draw today's route's learning curve by its rule (CaseLightHistory.curveVisible). */

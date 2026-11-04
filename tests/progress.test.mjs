@@ -101,8 +101,8 @@ test("per-route keys are kept apart", () => {
   const r = loadProgress(reader({ "caselight.v1.route.2": '{"rows":[1]}' }), [1, 2])
   assert.equal(r.progress.routes.has(1), false)
   assert.deepEqual(r.progress.routes.get(2), [1])
-  assert.deepEqual(welcomeLines(r.progress, 1), ["Welcome back.", "Route 1: 0 of 2 rows learned"])
-  assert.deepEqual(welcomeLines(r.progress, 2), ["Welcome back.", "Route 2: 1 of 2 rows learned"])
+  assert.deepEqual(welcomeLines(r.progress, 1), ["Welcome back.", "Route 1: 0 of 2 rows from memory"])
+  assert.deepEqual(welcomeLines(r.progress, 2), ["Welcome back.", "Route 2: 1 of 2 rows from memory"])
 })
 
 test("merge: a learned row is saved learned", () => {
@@ -134,19 +134,19 @@ test("welcome: no progress, no welcome", () => {
   assert.deepEqual(welcomeLines(emptyProgress(), 1), [])
 })
 
-test("welcome wording: the last score and today's route's rows learned", () => {
+test("welcome wording: the last score and today's route's rows from memory", () => {
   const p = emptyProgress()
   p.last = { x: 7, y: 8 }
   p.routes.set(1, [0])
-  assert.deepEqual(welcomeLines(p, 1), ["Welcome back. Last time: 7 of 8 from memory", "Route 1: 1 of 2 rows learned"])
-  assert.deepEqual(welcomeLines(p, 2), ["Welcome back. Last time: 7 of 8 from memory", "Route 2: 0 of 2 rows learned"])
+  assert.deepEqual(welcomeLines(p, 1), ["Welcome back. Last time: 7 of 8 from memory", "Route 1: 1 of 2 rows from memory"])
+  assert.deepEqual(welcomeLines(p, 2), ["Welcome back. Last time: 7 of 8 from memory", "Route 2: 0 of 2 rows from memory"])
   p.routes.set(1, [0, 1])
-  assert.deepEqual(welcomeLines(p, 1)[1], "Route 1: 2 of 2 rows learned")
+  assert.deepEqual(welcomeLines(p, 1)[1], "Route 1: 2 of 2 rows from memory")
 })
 
 test("welcome wording comes from templates", () => {
   assert.equal(DEFAULT_WELCOME.line1, "Welcome back. Last time: {x} of {y} from memory")
-  assert.equal(DEFAULT_WELCOME.line2, "Route {r}: {n} of 2 rows learned")
+  assert.equal(DEFAULT_WELCOME.line2, "Route {r}: {n} of 2 rows from memory")
   const p = emptyProgress()
   p.last = { x: 2, y: 5 }
   p.routes.set(2, [1])

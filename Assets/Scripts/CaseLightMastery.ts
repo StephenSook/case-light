@@ -15,7 +15,7 @@
  *   -2, the HOLD block, cells 36 to 39 of row 0) is row 0. A row's state takes the worst of its
  *   letters in this order: any weak letter makes it "weak"; otherwise any unseen letter makes it
  *   "unseen"; otherwise (every letter learned) it is "learned". A row with no letters is "unseen".
- *   Label: "Learned"; "Review {n}" with n = weak letters; "Not tried {n}" with n = unseen letters.
+ *   Label: "From memory" (the state keeps its internal name "learned"; the word avoids claiming a letter is learned after one placement); "Review {n}" with n = weak letters; "Not tried {n}" with n = unseen letters.
  */
 
 export type MasteryState = "unseen" | "weak" | "learned"
@@ -26,7 +26,7 @@ export const SEPS_PER_ROW = 40
 /** The hold letter's target (the HOLD block). */
 export const HOLD_TARGET = -2
 
-export const LEARNED_TEMPLATE = "Learned"
+export const LEARNED_TEMPLATE = "From memory"
 export const REVIEW_TEMPLATE = "Review {n}"
 export const NOT_TRIED_TEMPLATE = "Not tried {n}"
 
@@ -57,7 +57,7 @@ export function rowStateOf(counts: RowCounts): MasteryState {
   return "unseen"
 }
 
-/** The row label for a state and its counts: "Learned", "Review {n}" (n weak) or "Not tried {n}" (n unseen). */
+/** The row label for a state and its counts: "From memory", "Review {n}" (n weak) or "Not tried {n}" (n unseen). */
 export function rowLabel(state: MasteryState, counts: RowCounts, templates: LabelTemplates = DEFAULT_TEMPLATES): string {
   if (state === "learned") return templates.learned
   if (state === "weak") return templates.review.split("{n}").join(`${counts.weak}`)

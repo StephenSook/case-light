@@ -8,7 +8,7 @@
  * colour, the street name in larger type at the start of each street's run of cells on a shelf, and
  * "HOLD" under the HOLD block. The caption "Practice mail, real house numbers" with its small print
  * ("Not a USPS route. Address data (c) OpenStreetMap contributors"), and the end-of-recall score card ("From memory: X of Y this session" by default, with a second
- * line "Came back: N"; the templates are Inspector settings) sit on authored anchors (CaptionAnchor, ResultAnchor), placed inside
+ * line "Tried again: N"; the templates are Inspector settings) sit on authored anchors (CaptionAnchor, ResultAnchor), placed inside
  * the glasses' view at the start position. After a recall pass, the mix-up end labels ("<address>
  * was put here", "goes here") are printed at the spots CaseLightMixUp lays out, on a light tint.
  *
@@ -36,7 +36,7 @@ const LABEL_Z = 0.14
 const VERSION_OFFSET_X_CM = 8.9
 const RESULT_WIDTH_CM = 9.2
 const RESULT_HEIGHT_CM = 2.4
-/** The card's second line ("Came back: N"), under the main text (cm). */
+/** The card's second line ("Tried again: N"), under the main text (cm). */
 const CAME_BACK_HEIGHT_CM = 1.0
 const CAME_BACK_CAP_CM = 0.56
 /**
@@ -107,11 +107,11 @@ export class CaseLightCaseLabelsUI extends BaseScriptComponent {
 
   @input
   @hint("Second line of the end-of-recall card; {n} = times a missed letter came back in that pass")
-  cameBackTemplate: string = "Came back: {n}"
+  cameBackTemplate: string = "Tried again: {n}"
 
   @input
   @hint("Card text when every letter is retired (placed from memory in two recall passes in a row), so recall has nothing left")
-  allRetiredText: string = "All letters learned"
+  allRetiredText: string = "Every letter from memory twice"
 
   @input
   @hint("Second line of that card (Done clears the retired letters)")
@@ -179,7 +179,7 @@ export class CaseLightCaseLabelsUI extends BaseScriptComponent {
     return !!this.resultText && this.resultText.getSceneObject().enabled
   }
 
-  /** The card's second line as set (e.g. "Came back: 2"), empty until a card shows. */
+  /** The card's second line as set (e.g. "Tried again: 2"), empty until a card shows. */
   get cameBackString(): string {
     return this.cameBackText ? this.cameBackText.text : ""
   }

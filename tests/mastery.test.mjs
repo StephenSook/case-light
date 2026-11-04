@@ -21,7 +21,7 @@ const ROUTE_1 = 1
 const ROUTE_2 = 2
 
 test("defaults: the three row label wordings and the HOLD target", () => {
-  assert.equal(LEARNED_TEMPLATE, "Learned")
+  assert.equal(LEARNED_TEMPLATE, "From memory")
   assert.equal(REVIEW_TEMPLATE, "Review {n}")
   assert.equal(NOT_TRIED_TEMPLATE, "Not tried {n}")
   assert.equal(HOLD_TARGET, -2)
@@ -144,8 +144,8 @@ test("per-route isolation: each route keeps its own letters", () => {
   assert.deepEqual(m.routesRecorded, [1, 2])
 })
 
-test("label wording: Learned, Review {n} with the weak count, Not tried {n} with the unseen count", () => {
-  assert.equal(rowLabel("learned", { learned: 4, weak: 0, unseen: 0 }), "Learned")
+test("label wording: From memory, Review {n} with the weak count, Not tried {n} with the unseen count", () => {
+  assert.equal(rowLabel("learned", { learned: 4, weak: 0, unseen: 0 }), "From memory")
   assert.equal(rowLabel("weak", { learned: 3, weak: 1, unseen: 0 }), "Review 1")
   assert.equal(rowLabel("weak", { learned: 0, weak: 2, unseen: 2 }), "Review 2")
   assert.equal(rowLabel("unseen", { learned: 1, weak: 0, unseen: 3 }), "Not tried 3")

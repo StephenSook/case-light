@@ -9,14 +9,14 @@
  * Passes (all REAL input):
  *   A (Start recall): miss the top letter o0 (it must be 3rd in line: exactly 2 before it); when 2
  *     letters are left, miss the top one x (it goes to the end, 1 before it), and miss x again
- *     when it is the only one left (the end is the top). Card: our tally and "Came back: 3".
+ *     when it is the only one left (the end is the top). Card: our tally and "Tried again: 3".
  *   B (Again): miss one letter z that was from memory in A. Retired after B = the letters from
  *     memory in A and B (our model).
  *   C (Again): only o0, x and z are presented; every retired letter is hidden and not in the
  *     bundle. After C, o0 and x retire (from memory in B and C) but z does not (its run was broken
  *     by the miss in B): the "not retired" check and its positive control in the same pass.
  *   D (Again): only z; it retires; every letter is retired.
- *   Again and Start recall then show "All letters learned / Done starts over" and start no pass.
+ *   Again and Start recall then show "Every letter from memory twice / Done starts over" and start no pass.
  *   Done clears retirement (counts kept); Start recall then presents every letter again.
  */
 import {Scenario} from "Leaf.lspkg/Scenarios/scenario/Scenario"
@@ -37,7 +37,7 @@ function expectCard(main: CaseLightMain, model: OwnModel, tally: PassTally, ctx:
   log(`RETIRE ${ctx}: card "${c.main}" / "${c.line2}"; product unaided ${main.unaidedCount} helped ${main.helpedCount} total ${main.totalCount}; ours ${model.fromMemory} / ${model.helped} / ${model.total}; came back ours ${tally.comeBacks}, product ${main.comeBackCount}`)
   expect(c.shown, `${ctx}: score card and its second line shown`).toBe(true)
   expect(c.main, `${ctx}: score = our tally (only letters placed from memory)`).toBe(expectedResult(model.fromMemory, model.total))
-  expect(c.line2, `${ctx}: came back line = our count`).toBe(`Came back: ${tally.comeBacks}`)
+  expect(c.line2, `${ctx}: came back line = our count`).toBe(`Tried again: ${tally.comeBacks}`)
   expect(main.comeBackCount, `${ctx}: comeBackCount`).toBe(tally.comeBacks)
   expect(main.cameBackText, `${ctx}: cameBackText getter`).toBe(c.line2)
   expect(main.unaidedCount, `${ctx}: unaided = our tally`).toBe(model.fromMemory)
@@ -197,7 +197,7 @@ export class CaseLightComeBackRetireScenario extends Scenario {
     const card = cardLines()
     log(`RETIRE all retired, Again: card "${card.main}" / "${card.line2}", mode ${main.mode}, passes ${main.recallPassCount}, queue ${JSON.stringify(main.currentPassOrder)}`)
     expect(main.isAllRetiredCardShown, "e. Again: the all-retired card shows").toBe(true)
-    expect(card.main, "e. card text").toBe("All letters learned")
+    expect(card.main, "e. card text").toBe("Every letter from memory twice")
     expect(card.line2, "e. card second line").toBe("Done starts over")
     expect(main.mode, "e. Again starts no pass").toBe("idle")
     expect(main.recallPassCount, "e. no recall pass counted").toBe(passes)

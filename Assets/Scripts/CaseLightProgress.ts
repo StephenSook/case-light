@@ -14,7 +14,7 @@
  * shape, another version ("v" other than 1), or rows out of range are no progress for that key and
  * are reported as bad, so the caller can log them. Keys of another version are never read.
  * Welcome (only when there is progress): line 1 "Welcome back. Last time: {x} of {y} from memory"
- * ("Welcome back." when no score was saved); line 2 "Route {r}: {n} of 2 rows learned" for today's route.
+ * ("Welcome back." when no score was saved); line 2 "Route {r}: {n} of 2 rows from memory" for today's route.
  * When it shows (welcomeVisible): progress was saved at Lens start, the opening Start press has not
  * happened, Reset progress has not been pressed, the mastery map has not been shown (it takes the
  * case face), and Veteran mode is off. Veteran mode on hides it, because its panel stands on the
@@ -60,7 +60,7 @@ export interface WelcomeTemplates {
 export const DEFAULT_WELCOME: WelcomeTemplates = {
   line1: "Welcome back. Last time: {x} of {y} from memory",
   line1NoScore: "Welcome back.",
-  line2: "Route {r}: {n} of 2 rows learned",
+  line2: "Route {r}: {n} of 2 rows from memory",
 }
 
 export function routeKey(route: number): string {

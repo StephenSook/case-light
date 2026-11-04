@@ -131,5 +131,5 @@ test("SessionScore and the card: only placements without help count from memory"
   assert.deepEqual([s.unaided, s.helped, s.total], [2, 1, 3])
   assert.equal(formatScore("From memory: {x} of {y} this session", s.unaided, s.total), "From memory: 2 of 3 this session")
   assert.equal(formatScore("Unaided: {x}/{y} this session", 7, 8), "Unaided: 7/8 this session")
-  assert.equal(formatCameBack("Came back: {n}", 1), "Came back: 1")
+  assert.equal(formatCameBack("Tried again: {n}", 1), "Tried again: 1")
 })

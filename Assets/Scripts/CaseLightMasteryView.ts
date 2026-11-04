@@ -4,7 +4,7 @@
 
 /**
  * Never colour alone: every state has its own shape and the word carries it too.
- *   learned: a near-transparent strip over the row, a check icon, the word "Learned"; per cell a check.
+ *   learned: a near-transparent strip over the row, a check icon, the words "From memory"; per cell a check.
  *   weak:    an amber edge round the row, a ring icon, "Review N"; per cell an amber ring.
  *   unseen:  a thin white outline round the row, a hollow square icon, "Not tried N"; per cell a
  *            small hollow square.

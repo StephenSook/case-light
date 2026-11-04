@@ -64,7 +64,7 @@ export class CaseLightLastLetterDarkScenario extends Scenario {
     const card = (mustFind("ResultText").getComponent("Component.Text") as Text).text
     log(`LASTDARK letter ${last} (slot ${target}): card "${card}" / "${main.cameBackText}"`)
     expect(card, "card: every letter but the last from memory").toBe(expectedResult(n - 1, n))
-    expect(main.cameBackText, "card: came back line").toBe("Came back: 1")
+    expect(main.cameBackText, "card: came back line").toBe("Tried again: 1")
     await hideLeafOverlay()
   }
 }

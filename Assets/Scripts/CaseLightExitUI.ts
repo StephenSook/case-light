@@ -21,27 +21,10 @@ import { FlexItem } from "SpectaclesUIKit.lspkg/Scripts/Components/Layout2D/Flex
 import { FlexLayout } from "SpectaclesUIKit.lspkg/Scripts/Components/Layout2D/Flex/FlexLayout"
 import { FlexAlign, FlexDirection, FlexJustify } from "SpectaclesUIKit.lspkg/Scripts/Components/Layout2D/Flex/FlexTypes"
 
-// ── Typography: same type scale as CaseLightControlsUI ──────────────────────────────────
-const FONT_SIZE_SCALE = 1.0
-type TextRole = "Title1" | "Title2" | "HeadlineXL" | "Headline1" | "Headline2" | "Button"
-const TYPE_SCALE: Record<TextRole, { size: number; weight: number }> = {
-  Title1: { size: 105, weight: 700 },
-  Title2: { size: 93, weight: 700 },
-  HeadlineXL: { size: 62, weight: 700 },
-  Headline1: { size: 54, weight: 700 },
-  Headline2: { size: 48, weight: 700 },
-  Button: { size: 39, weight: 500 }
-}
-function roleSize(role: TextRole, distanceCm: number = 110): number {
-  return TYPE_SCALE[role].size * FONT_SIZE_SCALE * (distanceCm / 110)
-}
-function applyTextRole(t: Text, role: TextRole, distanceCm: number = 110): void {
-  t.size = roleSize(role, distanceCm)
-  ;(t as Text & { weight?: number }).weight = TYPE_SCALE[role].weight
-}
+// Labels: the one button type size and look in CaseLightButtonText.
+import { buttonLabel } from "./CaseLightButtonText"
 
 const CONTENT_Z = 0.6
-const BUTTON_LABEL_Z = 0.08
 const PAD_CM = 0.35
 /** Between Again and Done (cm): about 1.15 deg at the start position (Snap: targets at least 1 deg apart). */
 const BUTTON_GAP_CM = 1.1
@@ -84,7 +67,7 @@ export class CaseLightExitUI extends BaseScriptComponent {
 
   @input
   @widget(new SliderWidget(30, 110, 1))
-  @hint("Typical distance from the eye to these buttons, in cm (scales the label size)")
+  @hint("Typical distance from the eye to these buttons, in cm (kept for the scene; labels use the one button size in CaseLightButtonText)")
   viewDistanceCm: number = 60
   @ui.group_end
 
@@ -174,7 +157,7 @@ export class CaseLightExitUI extends BaseScriptComponent {
     flex.addItems([again, done])
     // Case check: its own button, centred just above the panel (outside the row, so Again and
     // Done stay exactly where they are).
-    const check = this.makeButton(this.sceneObject, "CaseCheckButton", this.caseCheckLabel, CASE_CHECK_W_CM, CASE_CHECK_H_CM, "HeadlineXL", 0.4, () => this._onCaseCheck.invoke())
+    const check = this.makeButton(this.sceneObject, "CaseCheckButton", this.caseCheckLabel, CASE_CHECK_W_CM, CASE_CHECK_H_CM, 0.4, () => this._onCaseCheck.invoke())
     check.getTransform().setLocalPosition(new vec3(0, (this.buttonHeightCm + 2 * PAD_CM) / 2 + CASE_CHECK_GAP_CM + CASE_CHECK_H_CM / 2, CONTENT_Z))
     this.caseCheckButton = check
     flex.onLayoutComplete.add((r) => {
@@ -193,7 +176,7 @@ export class CaseLightExitUI extends BaseScriptComponent {
   }
 
   private addButton(parent: SceneObject, name: string, label: string, onPress: () => void): FlexItem {
-    const so = this.makeButton(parent, name, label, this.buttonWidthCm, this.buttonHeightCm, "Title2", 0.6, onPress)
+    const so = this.makeButton(parent, name, label, this.buttonWidthCm, this.buttonHeightCm, 0.6, onPress)
     const item = so.createComponent(FlexItem.getTypeName()) as FlexItem
     item.overrideWidth = this.buttonWidthCm
     item.overrideHeight = this.buttonHeightCm
@@ -201,7 +184,7 @@ export class CaseLightExitUI extends BaseScriptComponent {
   }
 
   /** A UIKit Button with a centred label; it acts on a release only if the pinch started on it. */
-  private makeButton(parent: SceneObject, name: string, label: string, widthCm: number, heightCm: number, role: TextRole, labelInsetCm: number, onPress: () => void): SceneObject {
+  private makeButton(parent: SceneObject, name: string, label: string, widthCm: number, heightCm: number, labelInsetCm: number, onPress: () => void): SceneObject {
     const so = global.scene.createSceneObject(name)
     so.setParent(parent)
     const size = new vec3(widthCm, heightCm, 1)
@@ -222,22 +205,7 @@ export class CaseLightExitUI extends BaseScriptComponent {
       this.armedButton = ""
       onPress()
     })
-    this.addButtonLabel(so, label, widthCm - 0.5, heightCm - labelInsetCm, role)
+    buttonLabel(so, label, widthCm - 0.5, heightCm - labelInsetCm)
     return so
-  }
-
-  private addButtonLabel(parent: SceneObject, text: string, widthCm: number, heightCm: number, role: TextRole): void {
-    const so = global.scene.createSceneObject("ButtonLabel")
-    so.setParent(parent)
-    so.getTransform().setLocalPosition(new vec3(0, 0, BUTTON_LABEL_Z))
-    const t = so.createComponent("Component.Text") as Text
-    t.text = text
-    t.depthTest = true
-    applyTextRole(t, role, this.viewDistanceCm)
-    t.horizontalAlignment = HorizontalAlignment.Center
-    t.verticalAlignment = VerticalAlignment.Center
-    t.horizontalOverflow = HorizontalOverflow.Shrink
-    t.verticalOverflow = VerticalOverflow.Overflow
-    t.layoutRect = Rect.create(-widthCm / 2, widthCm / 2, -heightCm / 2, heightCm / 2)
   }
 }

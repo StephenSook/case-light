@@ -20,13 +20,9 @@ import { FlexLayout } from "SpectaclesUIKit.lspkg/Scripts/Components/Layout2D/Fl
 import { FlexAlign, FlexDirection, FlexJustify } from "SpectaclesUIKit.lspkg/Scripts/Components/Layout2D/Flex/FlexTypes"
 import { DEFAULT_ROUTE, RouteId, routeLabel, ROUTE_IDS } from "./CaseLightRoute"
 
-// Text.size is the em-square height: em cm = size / 43.886; capitals are about 0.7 em.
-const EM_PER_CM = 43.886
-const CAP_PER_EM = 0.7
-const LABEL_WEIGHT = 700
+import { buttonLabel } from "./CaseLightButtonText"
 
 const CONTENT_Z = 0.6
-const BUTTON_LABEL_Z = 0.08
 /** Between the two route buttons: about 1.06 deg at the start position (Snap: targets at least 1 deg apart). */
 const GAP_CM = 1.05
 const PAD_CM = 0.15
@@ -49,7 +45,7 @@ export class CaseLightRouteUI extends BaseScriptComponent {
 
   @input
   @widget(new SliderWidget(0.4, 0.9, 0.01))
-  @hint("Capital height of the labels, in cm (each label wraps to two lines: Route / number)")
+  @hint("Kept for the scene; the labels use the one button size in CaseLightButtonText and fit on one line")
   labelCapCm: number = 0.48
   @ui.group_end
 
@@ -163,20 +159,8 @@ export class CaseLightRouteUI extends BaseScriptComponent {
   }
 
   private addButtonLabel(parent: SceneObject, text: string, widthCm: number, heightCm: number): void {
-    const so = global.scene.createSceneObject("ButtonLabel")
-    so.setParent(parent)
-    so.getTransform().setLocalPosition(new vec3(0, 0, BUTTON_LABEL_Z))
-    const t = so.createComponent("Component.Text") as Text
-    t.text = text
-    t.depthTest = true
-    t.size = (this.labelCapCm / CAP_PER_EM) * EM_PER_CM
-    ;(t as Text & { weight?: number }).weight = LABEL_WEIGHT
-    t.horizontalAlignment = HorizontalAlignment.Center
-    t.verticalAlignment = VerticalAlignment.Center
-    // "Route 1" wraps at the space: "Route" over "1", so the narrow button keeps large type.
-    t.horizontalOverflow = HorizontalOverflow.Wrap
-    t.verticalOverflow = VerticalOverflow.Shrink
-    t.layoutRect = Rect.create(-widthCm / 2, widthCm / 2, -heightCm / 2, heightCm / 2)
+    // The one button size: "Route 1" fits the narrow button on one line (extra-control-labels measures it).
+    buttonLabel(parent, text, widthCm, heightCm)
   }
 
   /** Exactly one button shows as on: the selected route's (safe before the buttons initialize). */

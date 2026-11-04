@@ -15,7 +15,8 @@
  * Start button is pressed or a pass ends; CaseLightMain decides every open and close (it ignores an
  * Options press while the score card or Again and Done are up, since the panel opens where the score
  * card stands), and hidden means its SceneObject is off, colliders included. It is far from the opening pinch hint, which plays over the bundle's
- * right half. Narrow toggles wrap their labels (0.4 cm capitals).
+ * right half. Every button label uses the one size in CaseLightButtonText (narrow toggles wrap at
+ * spaces); the Start button that is the next step is drawn as the primary action (setPrimary).
  * The welcome panel (only when saved progress exists) stands on the case face just under the
  * caption, over the empty upper row at open (no letter is in the case yet), in the case's frame:
  * two lines and a "Reset progress" button. CaseLightMain decides when it shows (it goes with the
@@ -32,6 +33,7 @@
 import Event, { PublicApi } from "SpectaclesInteractionKit.lspkg/Utils/Event"
 import { RoundedRectangle } from "SpectaclesUIKit.lspkg/Scripts/Visuals/RoundedRectangle/RoundedRectangle"
 import { addBacking, DEFAULT_BACKING_COLOR } from "./CaseLightBackingUI"
+import { buttonLabel, setLabelPrimary } from "./CaseLightButtonText"
 import { BackPlate } from "SpectaclesUIKit.lspkg/Scripts/BackPlate"
 import { Button } from "SpectaclesUIKit.lspkg/Scripts/Components/Button/Button"
 import { FlexItem } from "SpectaclesUIKit.lspkg/Scripts/Components/Layout2D/Flex/FlexItem"
@@ -77,13 +79,10 @@ const HINT_GAP_CM = 1.85
 const PACE_CAPTION_W_CM = 3.6
 const PACE_CAPTION_GAP_CM = 0.85
 const PACE_CAPTION_HALF_H_CM = 0.65
-/** Labels of the narrow toggles: 0.4 cm capitals (the Route labels are 0.48), wrapped, 0.9 line spacing. */
-const TOGGLE_CAP_CM = 0.4
-const TOGGLE_LINE_SPACING = 0.9
 /**
  * The Options panel, in this row's frame (cm): two toggles in a column under the Options toggle,
  * each 2.25 x 2.0 cm (about 2.4 x 2.1 deg at the start position, tall enough for three lines of
- * 0.4 cm capitals). The column is shifted a little left of the Options toggle so it stays between
+ * button labels). The column is shifted a little left of the Options toggle so it stays between
  * the display's left edge and the top letter (about 0.14 deg and 0.25 deg spare, where the stand-in
  * toggle used to be); with so little room it has no plate of its own. The row's frame leans back, so
  * the lower toggle is moved a little further left to keep the column's right edge at one angle.
@@ -225,6 +224,28 @@ export class CaseLightControlsUI extends BaseScriptComponent {
   private paceColor = new vec4(1, 0.78, 0.35, 1)
   /** True while setPaceState writes the toggle, so that write is not reported back as a press. */
   private syncingPace = false
+  private practiceText: Text | null = null
+  private recallText: Text | null = null
+  private primary: "practice" | "recall" | "none" = "practice"
+
+  /**
+   * Which Start button is drawn as the primary action: "practice", "recall" or "none" (during a
+   * pass). CaseLightMain decides; this only mirrors it. Both buttons always take a press.
+   */
+  get primaryAction(): "practice" | "recall" | "none" {
+    return this.primary
+  }
+
+  /** Draw one Start button as the primary action (label-yellow, bold), the other secondary; "none": both secondary. */
+  setPrimary(which: "practice" | "recall" | "none"): void {
+    this.primary = which
+    this.applyPrimary()
+  }
+
+  private applyPrimary(): void {
+    if (this.practiceText) setLabelPrimary(this.practiceText, this.primary === "practice")
+    if (this.recallText) setLabelPrimary(this.recallText, this.primary === "recall")
+  }
 
   /** True while the one-time "Pinch Start practice" hint is on screen. */
   /** Releases ignored because the pinch did not start on that button. */
@@ -455,6 +476,9 @@ export class CaseLightControlsUI extends BaseScriptComponent {
     this.optionsButton = options.button
     const practice = this.addButton(content, "StartPracticeButton", this.practiceLabel, () => this._onStartPractice.invoke())
     const recall = this.addButton(content, "StartRecallButton", this.recallLabel, () => this._onStartRecall.invoke())
+    this.practiceText = practice.label
+    this.recallText = recall.label
+    this.applyPrimary()
     const showMyCase = this.addRowToggle(content, "ShowMyCaseButton", this.showMyCaseLabel, () => this.applyShowMyCaseState(), () => {
       if (!this.syncingShowMyCase) this._onToggleShowMyCase.invoke()
     })
@@ -527,7 +551,7 @@ export class CaseLightControlsUI extends BaseScriptComponent {
       this.armedButton = ""
       this._onResetProgress.invoke()
     })
-    this.addButtonLabel(btnObj, this.resetProgressLabel, RESET_W_CM - 0.4, RESET_H_CM - 0.4, "Headline2")
+    buttonLabel(btnObj, this.resetProgressLabel, RESET_W_CM - 0.4, RESET_H_CM - 0.4)
     this.resetButtonObj = btnObj
     this.welcomeRoot = root
     this.noticeHide = this.createEvent("DelayedCallbackEvent")
@@ -665,22 +689,7 @@ export class CaseLightControlsUI extends BaseScriptComponent {
       onReady()
     })
     btn.onValueChange.add(onPress)
-    const labelObj = global.scene.createSceneObject("ButtonLabel")
-    labelObj.setParent(so)
-    labelObj.getTransform().setLocalPosition(new vec3(0, 0, BUTTON_LABEL_Z))
-    const t = labelObj.createComponent("Component.Text") as Text
-    t.text = label
-    t.depthTest = true
-    t.size = (TOGGLE_CAP_CM / CAP_PER_EM) * EM_PER_CM
-    ;(t as Text & { weight?: number }).weight = 700
-    t.horizontalAlignment = HorizontalAlignment.Center
-    t.verticalAlignment = VerticalAlignment.Center
-    t.horizontalOverflow = HorizontalOverflow.Wrap
-    t.verticalOverflow = VerticalOverflow.Shrink
-    t.lineSpacing = TOGGLE_LINE_SPACING
-    const w = widthCm - 0.04
-    const h = heightCm - 0.1
-    t.layoutRect = Rect.create(-w / 2, w / 2, -h / 2, h / 2)
+    buttonLabel(so, label, widthCm - 0.04, heightCm - 0.1)
     return btn
   }
 
@@ -770,7 +779,7 @@ export class CaseLightControlsUI extends BaseScriptComponent {
     return so
   }
 
-  private addButton(parent: SceneObject, name: string, label: string, onPress: () => void): { button: Button; item: FlexItem } {
+  private addButton(parent: SceneObject, name: string, label: string, onPress: () => void): { button: Button; item: FlexItem; label: Text } {
     const so = global.scene.createSceneObject(name)
     so.setParent(parent)
     const size = new vec3(this.buttonWidthCm, this.buttonHeightCm, 1)
@@ -791,25 +800,10 @@ export class CaseLightControlsUI extends BaseScriptComponent {
       this.armedButton = ""
       onPress()
     })
-    this.addButtonLabel(so, label, this.buttonWidthCm - 0.5, this.buttonHeightCm - 0.6)
+    const t = buttonLabel(so, label, this.buttonWidthCm - 0.5, this.buttonHeightCm - 0.6)
     const item = so.createComponent(FlexItem.getTypeName()) as FlexItem
     item.overrideWidth = this.buttonWidthCm
     item.overrideHeight = this.buttonHeightCm
-    return { button: btn, item }
-  }
-
-  private addButtonLabel(parent: SceneObject, text: string, widthCm: number, heightCm: number, role: TextRole = "Title1"): void {
-    const so = global.scene.createSceneObject("ButtonLabel")
-    so.setParent(parent)
-    so.getTransform().setLocalPosition(new vec3(0, 0, BUTTON_LABEL_Z))
-    const t = so.createComponent("Component.Text") as Text
-    t.text = text
-    t.depthTest = true
-    applyTextRole(t, role, this.viewDistanceCm)
-    t.horizontalAlignment = HorizontalAlignment.Center
-    t.verticalAlignment = VerticalAlignment.Center
-    t.horizontalOverflow = HorizontalOverflow.Shrink
-    t.verticalOverflow = VerticalOverflow.Overflow
-    t.layoutRect = Rect.create(-widthCm / 2, widthCm / 2, -heightCm / 2, heightCm / 2)
+    return { button: btn, item, label: t }
   }
 }

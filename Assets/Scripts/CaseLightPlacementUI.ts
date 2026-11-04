@@ -19,7 +19,10 @@ import { FlexItem } from "SpectaclesUIKit.lspkg/Scripts/Components/Layout2D/Flex
 import { FlexLayout } from "SpectaclesUIKit.lspkg/Scripts/Components/Layout2D/Flex/FlexLayout"
 import { FlexAlign, FlexDirection, FlexJustify } from "SpectaclesUIKit.lspkg/Scripts/Components/Layout2D/Flex/FlexTypes"
 
-// ── Typography: same type scale as CaseLightControlsUI ──────────────────────────────────
+// Button labels: the one button type size and look in CaseLightButtonText.
+import { buttonLabel } from "./CaseLightButtonText"
+
+// ── Typography (the placement cue only): same type scale as CaseLightControlsUI ──────────
 const FONT_SIZE_SCALE = 1.0
 type TextRole = "Headline1" | "Headline2"
 const TYPE_SCALE: Record<TextRole, { size: number; weight: number }> = {
@@ -35,7 +38,6 @@ function applyTextRole(t: Text, role: TextRole, distanceCm: number = 110): void 
 }
 
 const CONTENT_Z = 0.6
-const BUTTON_LABEL_Z = 0.08
 /** Between Place on wall and Place in front of me: their angle boxes (seen obliquely, off to the right) at least 1 deg apart. */
 const GAP_CM = 2.0
 const PAD_CM = 0.35
@@ -240,18 +242,7 @@ export class CaseLightPlacementUI extends BaseScriptComponent {
   }
 
   private addButtonLabel(parent: SceneObject, text: string, widthCm: number, heightCm: number): void {
-    const so = global.scene.createSceneObject("ButtonLabel")
-    so.setParent(parent)
-    so.getTransform().setLocalPosition(new vec3(0, 0, BUTTON_LABEL_Z))
-    const t = so.createComponent("Component.Text") as Text
-    t.text = text
-    t.depthTest = true
-    applyTextRole(t, "Headline2", this.viewDistanceCm)
-    t.horizontalAlignment = HorizontalAlignment.Center
-    t.verticalAlignment = VerticalAlignment.Center
-    t.horizontalOverflow = HorizontalOverflow.Shrink
-    t.verticalOverflow = VerticalOverflow.Overflow
-    t.layoutRect = Rect.create(-widthCm / 2, widthCm / 2, -heightCm / 2, heightCm / 2)
+    buttonLabel(parent, text, widthCm, heightCm)
   }
 
   /** Push the mirrored state into the toggle (safe before the button initializes). */

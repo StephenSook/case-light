@@ -27,23 +27,10 @@ import { FlexLayout } from "SpectaclesUIKit.lspkg/Scripts/Components/Layout2D/Fl
 import { FlexAlign, FlexDirection, FlexJustify } from "SpectaclesUIKit.lspkg/Scripts/Components/Layout2D/Flex/FlexTypes"
 import { addBacking } from "./CaseLightBackingUI"
 
-// ── Typography: same type scale as CaseLightControlsUI ──────────────────────────────────
-const FONT_SIZE_SCALE = 1.0
-type TextRole = "Headline1" | "Headline2"
-const TYPE_SCALE: Record<TextRole, { size: number; weight: number }> = {
-  Headline1: { size: 54, weight: 700 },
-  Headline2: { size: 48, weight: 700 }
-}
-function roleSize(role: TextRole, distanceCm: number = 110): number {
-  return TYPE_SCALE[role].size * FONT_SIZE_SCALE * (distanceCm / 110)
-}
-function applyTextRole(t: Text, role: TextRole, distanceCm: number = 110): void {
-  t.size = roleSize(role, distanceCm)
-  ;(t as Text & { weight?: number }).weight = TYPE_SCALE[role].weight
-}
+// Button labels: the one button type size and look in CaseLightButtonText.
+import { buttonLabel } from "./CaseLightButtonText"
 
 const CONTENT_Z = 0.6
-const BUTTON_LABEL_Z = 0.08
 const GAP_CM = 0.4
 /** Between chooser buttons (cm at scale 1): about 1.26 deg at CaseLightVeteran's chooser design distance (50 cm). */
 const CHOOSER_GAP_CM = 1.1
@@ -457,20 +444,7 @@ export class CaseLightVeteranUI extends BaseScriptComponent {
   }
 
   private addButtonLabel(parent: SceneObject, text: string, widthCm: number, heightCm: number): Text {
-    const so = global.scene.createSceneObject("ButtonLabel")
-    so.setParent(parent)
-    so.getTransform().setLocalPosition(new vec3(0, 0, BUTTON_LABEL_Z))
-    const t = so.createComponent("Component.Text") as Text
-    t.text = text
-    t.depthTest = true
-    applyTextRole(t, "Headline2", this.viewDistanceCm)
-    t.horizontalAlignment = HorizontalAlignment.Center
-    t.verticalAlignment = VerticalAlignment.Center
-    t.horizontalOverflow = HorizontalOverflow.Shrink
-    t.verticalOverflow = VerticalOverflow.Overflow
-    t.layoutRect = Rect.create(-widthCm / 2, widthCm / 2, -heightCm / 2, heightCm / 2)
-    t.textFill.color = new vec4(1, 1, 1, 1)
-    return t
+    return buttonLabel(parent, text, widthCm, heightCm)
   }
 
   /** A card: a dim plate and two lines of warm text, at most noteWidthCm wide. */
