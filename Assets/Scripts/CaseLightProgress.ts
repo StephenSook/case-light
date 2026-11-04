@@ -1,4 +1,4 @@
-// Owns: the saved progress's scene-free rules: the storage keys and their small JSON values (per route: the rows learned; the last session score), defensive parsing, the merge of this session's row states into what was saved, when the last score is replaced, when the welcome panel shows, and the welcome wording from templates.
+// Owns: the saved progress's scene-free rules: the storage keys and their small JSON values (per route: the rows learned; the last session score; the learning curve's key, whose value CaseLightHistory owns), defensive parsing, the merge of this session's row states into what was saved, when the last score is replaced, when the welcome panel shows, and the welcome wording from templates.
 // Talks to: nothing (pure TypeScript: no imports, no scene objects, no Lens globals), so plain node can run it; CaseLightMain reads and writes the store through CaseLightProgressStore and calls these rules.
 // Must not: touch any store itself, read the clock, or know where anything is drawn.
 
@@ -6,6 +6,7 @@
  * Keys and values (version 1; the version is in the key):
  *   caselight.v1.route.<id>  {"rows":[r, ...]}   playable rows learned on that route (0, 1), ascending
  *   caselight.v1.last        {"x":X,"y":Y}       the last session score: from memory X of Y placed
+ *   caselight.v1.history.<id> [{"x":X,"y":Y}, ...] the learning curve on that route (CaseLightHistory)
  * Merge at save, per row of the current route, from this session's mastery row state:
  *   "learned" saves the row as learned; "weak" saves it as not learned; "unseen" keeps what was saved.
  * The last score is replaced only when this session has a recall placement (total > 0).
@@ -66,9 +67,14 @@ export function routeKey(route: number): string {
   return `${KEY_PREFIX}route.${route}`
 }
 
-/** Our own keys for these routes (every route key and the last-score key). */
+/** The learning curve's key for a route (its value: CaseLightHistory). */
+export function historyKey(route: number): string {
+  return `${KEY_PREFIX}history.${route}`
+}
+
+/** Our own keys for these routes (every route key, the last-score key, every learning-curve key): what Reset progress removes. */
 export function ourKeys(routes: readonly number[]): string[] {
-  return routes.map((r) => routeKey(r)).concat([LAST_KEY])
+  return routes.map((r) => routeKey(r)).concat([LAST_KEY], routes.map((r) => historyKey(r)))
 }
 
 export function emptyProgress(): Progress {

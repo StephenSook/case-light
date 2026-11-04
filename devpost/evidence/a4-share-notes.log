@@ -1,0 +1,23 @@
+# A4 shared Veteran notes (Spectacles Sync Kit v2.0.3, start mode Off). Label: two-pane sync not shown.
+# What these lines show: solo play creates no session; one press of Share notes starts a Connected Lenses session (users 2 in the Lens Studio preview); the payload rule. What they do not show: a note authored in one preview pane arriving in a second pane (the preview input tool could not press buttons on the far-right panel; see the notes at the end).
+# Solo, both panes at Lens start, 2026-11-03 17:18 (log LensStudioLog-2026-11-03-16-04-56-671-bc4d6.txt):
+17:18:55.843 [Preview 2] NOTESYNC start: startMode=OFF launchStartMultiplayer=false state=NotInitialized isSingleplayer=false session=none ready=false users=0 connectedLensModule=set; sharing=false active=false session=no session sent=0 received=0 rejected=0 i
+17:18:55.843 [Preview 1] NOTESYNC start: startMode=OFF launchStartMultiplayer=false state=NotInitialized isSingleplayer=false session=none ready=false users=0 connectedLensModule=set; sharing=false active=false session=no session sent=0 received=0 rejected=0 i
+17:18:56.132 [Preview 1] StartModeController: Start Mode Controller initialized with mode: OFF
+17:18:56.132 [Preview 2] StartModeController: Start Mode Controller initialized with mode: OFF
+17:18:56.133 [Preview 1] StartModeController: Auto-start disabled.
+17:18:56.133 [Preview 2] StartModeController: Auto-start disabled.
+# One press of Share notes in one pane (real SIK input from Lens Studio's preview interaction tool), 17:19:58 to 17:20:00:
+17:19:58.730 [Preview 1] SessionController: Creating session
+17:19:58.754 [Preview 1] NOTESYNC share notes on: startMode=OFF launchStartMultiplayer=false state=Initialized isSingleplayer=false session=none ready=false users=0 connectedLensModule=set; sharing=true active=false session=starting sent=0 received=0 rejected=
+17:19:59.039 [Preview 1] SessionController: Session Created: 0
+17:19:59.264 [Preview 1] SessionController: Connected to session
+17:19:59.834 [Preview 1] NOTESYNC session ready, multiplayer: startMode=OFF launchStartMultiplayer=false state=Ready isSingleplayer=false session=exists ready=true users=2 connectedLensModule=set; sharing=false active=false session=multiplayer sent=0 received=
+17:20:00.105 [Preview 1] NOTESYNC shared-notes entity ready: startMode=OFF launchStartMultiplayer=false state=Ready isSingleplayer=false session=exists ready=true users=2 connectedLensModule=set; sharing=false active=false session=multiplayer sent=0 received=0
+#   That press, a poke from the tool, also fired a second trigger 0.6 s later (share notes off); the session stayed up. A second poke did the same. Moved in session 47 (Share notes now beside Veteran mode, its own plate, one-pinch-one-button rule); there LEAF's SIK interactor gave exactly one on and one off per press (BUILD_LOG row 47).
+# After a Lens Studio restart at 17:40, the tool pressed Start practice (17:43:38) but could not press Share notes or Veteran mode on the far-right panel, from the default pose or with the head turned toward it (two tries each step, then stopped).
+# The payload rule, one pane, builder's probe (session 46, removed after): a note picked in Veteran mode is sent; a payload handed to the receive path (not a second user) for slot 40 is shown on its slot; a free-text payload is refused (rejected=1):
+17:11:30.528 [Preview 1] CASELIGHT_LOG v1 seq=3 session=s1-6x8sw9 route=1 pass=0 mode=idle event=note-sent slot=12 note="Check the street name"
+17:11:30.576 [Preview 1] CASELIGHT_LOG v1 seq=4 session=s1-6x8sw9 route=1 pass=0 mode=idle event=note-received slot=40 note="Read the whole number"
+17:11:30.615 [Preview 1] LEAFT SYNCPROBE after receive: note40=Read the whole number shown40=true note41=null received=1 rejected=1 last=40=Read the whole number; sharing=true active=true session=multiplayer sent=1 received=1 rejected=1 ign
+# The same rule is covered by tests/note-share.test.mjs (7 tests, run in CI).

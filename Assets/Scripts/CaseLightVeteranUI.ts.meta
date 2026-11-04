@@ -33,6 +33,8 @@
     notePlateColor: false
     noteTextColor: false
     noteWidthCm: false
+    shareNotesLabel: false
+    shareWidthCm: false
     toggleWidthCm: false
     veteranLabel: false
     viewDistanceCm: false
@@ -47,6 +49,8 @@
   DefaultScriptInputs:
     - veteranLabel: Veteran mode
       toggleWidthCm: 9.500000
+      shareNotesLabel: Share notes
+      shareWidthCm: !<float> 8.000000
       chooserButtonWidthCm: !<float> 11.000000
       buttonHeightCm: 2.400000
       viewDistanceCm: !<float> 60.000000
@@ -63,6 +67,8 @@
     - '// @ui {"widget":"group_start", "label":"Settings"}'
     - '// @input string veteranLabel = "Veteran mode" {"hint":"Label on the toggle that lets a veteran pin sorting reminders on slots (pinch a slot)"}'
     - '// @input float toggleWidthCm = 9.5 {"hint":"Width of the toggle, in cm", "widget":"slider", "min":6, "max":14, "step":0.1}'
+    - '// @input string shareNotesLabel = "Share notes" {"hint":"Label on the toggle that shares the reminders with others in a Connected Lenses session (off by default; nothing is shared without a session)"}'
+    - '// @input float shareWidthCm = 8 {"hint":"Width of the Share notes toggle, in cm", "widget":"slider", "min":5, "max":12, "step":0.1}'
     - '// @input float chooserButtonWidthCm = 11 {"hint":"Width of each chooser button, in cm (the longest reminder must fit)", "widget":"slider", "min":8, "max":16, "step":0.1}'
     - '// @input float buttonHeightCm = 2.4 {"hint":"Height of the toggle and chooser buttons, in cm", "widget":"slider", "min":2, "max":5, "step":0.1}'
     - '// @input float viewDistanceCm = 60 {"hint":"Typical distance from the eye to these buttons, in cm (scales the label size)", "widget":"slider", "min":30, "max":110, "step":1}'

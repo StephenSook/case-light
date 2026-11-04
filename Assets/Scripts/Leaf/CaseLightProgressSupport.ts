@@ -1,4 +1,4 @@
-// Owns: the progress scenarios' own reading of the Lens's persistent store: our keys present, and each value parsed with the test's own JSON reading (not the product module).
+// Owns: the progress scenarios' own reading of the Lens's persistent store: our keys present (the learning curve's keys too), and each value parsed with the test's own JSON reading (not the product module).
 // Talks to: the Lens persistent storage system (read only here), CaseLightLeafSupport (log, mustFind).
 // Must not: import CaseLightProgress or CaseLightProgressStore, write to the store, or clear it.
 
@@ -7,6 +7,9 @@ import {log, mustFind} from "./CaseLightLeafSupport"
 export const ROUTE1_KEY = "caselight.v1.route.1"
 export const ROUTE2_KEY = "caselight.v1.route.2"
 export const LAST_KEY = "caselight.v1.last"
+/** The learning curve per route (session 48): a JSON list of {x, y}, oldest at the start. */
+export const HISTORY1_KEY = "caselight.v1.history.1"
+export const HISTORY2_KEY = "caselight.v1.history.2"
 const PREFIX = "caselight.v1."
 
 function store(): GeneralDataStore {
@@ -38,7 +41,7 @@ export function storeJson(key: string): any {
 }
 
 export function logStore(ctx: string): void {
-  log(`PROGRESS ${ctx}: keys ${JSON.stringify(ourStoreKeys())}; ${ROUTE1_KEY} ${storeRaw(ROUTE1_KEY) || "(none)"}; ${ROUTE2_KEY} ${storeRaw(ROUTE2_KEY) || "(none)"}; ${LAST_KEY} ${storeRaw(LAST_KEY) || "(none)"}`)
+  log(`PROGRESS ${ctx}: keys ${JSON.stringify(ourStoreKeys())}; ${ROUTE1_KEY} ${storeRaw(ROUTE1_KEY) || "(none)"}; ${ROUTE2_KEY} ${storeRaw(ROUTE2_KEY) || "(none)"}; ${LAST_KEY} ${storeRaw(LAST_KEY) || "(none)"}; ${HISTORY1_KEY} ${storeRaw(HISTORY1_KEY) || "(none)"}; ${HISTORY2_KEY} ${storeRaw(HISTORY2_KEY) || "(none)"}`)
 }
 
 /** True while a named object is on screen (enabled in the hierarchy). */

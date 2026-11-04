@@ -42,6 +42,7 @@ import {CaseLightRealScaleScenario} from "./CaseLightRealScaleScenario"
 import {CaseLightMasteryMapScenario} from "./CaseLightMasteryMapScenario"
 import {CaseLightProgressSaveScenario} from "./CaseLightProgressSaveScenario"
 import {CaseLightProgressWelcomeScenario} from "./CaseLightProgressWelcomeScenario"
+import {CaseLightLearningCurveScenario} from "./CaseLightLearningCurveScenario"
 import {CaseLightProgressResetScenario} from "./CaseLightProgressResetScenario"
 import {CaseLightPinchHintScenario} from "./CaseLightPinchHintScenario"
 import {CaseLightStandInScenario} from "./CaseLightStandInScenario"
@@ -97,10 +98,13 @@ export class CaseLightLeafIndex extends BaseScriptComponent {
     {id: "extra-case-check", typename: CaseLightCaseCheckScenario.getTypeName()},
     {id: "extra-case-real-scale", typename: CaseLightRealScaleScenario.getTypeName()},
     {id: "extra-mastery-map", typename: CaseLightMasteryMapScenario.getTypeName()},
-    // A chain, in this order: save leaves progress in the store; welcome reads it at the next Lens start
-    // (route redraw, Start hides it) and leaves the keys; reset removes them at the start after that.
+    // A chain, in this order: save leaves progress (and a one-point learning curve) in the store; welcome
+    // reads it at the next Lens start (route redraw, Start hides it) and leaves the keys; learning-curve
+    // draws the saved curve at the start after that, presses Reset progress and saves two recall passes;
+    // reset removes our keys (the curve's among them) at the start after that.
     {id: "extra-progress-save", typename: CaseLightProgressSaveScenario.getTypeName()},
     {id: "extra-progress-welcome", typename: CaseLightProgressWelcomeScenario.getTypeName()},
+    {id: "extra-learning-curve", typename: CaseLightLearningCurveScenario.getTypeName()},
     {id: "extra-progress-reset", typename: CaseLightProgressResetScenario.getTypeName()},
     // Needs the empty store extra-progress-reset leaves: the opening pinch hint shows only with no saved progress.
     // Its recall pass (to reach Again) saves progress; extra-stand-in-hidden presses Reset progress to empty the store.

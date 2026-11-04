@@ -1,4 +1,4 @@
-// Owns: unit tests for Assets/Scripts/CaseLightProgress.ts: the storage keys and their JSON round trip, every branch of the row merge, the last score kept unless this session placed a letter, bad and other-version data read as no progress, per-route keys kept apart, when the welcome shows (Veteran mode hides it and brings it back), and the welcome wording.
+// Owns: unit tests for Assets/Scripts/CaseLightProgress.ts: the storage keys (the learning curve's key included, so Reset progress removes it) and their JSON round trip, every branch of the row merge, the last score kept unless this session placed a letter, bad and other-version data read as no progress, per-route keys kept apart, when the welcome shows (Veteran mode hides it and brings it back), and the welcome wording.
 // Talks to: Assets/Scripts/CaseLightProgress.ts (pure, no imports), node:test, node:assert.
 // Must not: load any scene code; every expected value is written out here from the rules in research/packets/CASELIGHT-QUEUE.md item A2, not computed by the module under test.
 
@@ -9,6 +9,7 @@ import {
   LAST_KEY,
   DEFAULT_WELCOME,
   routeKey,
+  historyKey,
   ourKeys,
   emptyProgress,
   hasProgress,
@@ -28,12 +29,15 @@ function reader(store) {
   return (key) => (key in store ? store[key] : "")
 }
 
-test("keys: one per route and one for the last score, all under caselight.v1.", () => {
+test("keys: one per route, one for the last score and one learning curve per route, all under caselight.v1.", () => {
   assert.equal(KEY_PREFIX, "caselight.v1.")
   assert.equal(routeKey(1), "caselight.v1.route.1")
   assert.equal(routeKey(2), "caselight.v1.route.2")
   assert.equal(LAST_KEY, "caselight.v1.last")
-  assert.deepEqual(ourKeys([1, 2]), ["caselight.v1.route.1", "caselight.v1.route.2", "caselight.v1.last"])
+  assert.equal(historyKey(1), "caselight.v1.history.1")
+  assert.equal(historyKey(2), "caselight.v1.history.2")
+  // What Reset progress removes: every key of ours, the learning curves included.
+  assert.deepEqual(ourKeys([1, 2]), ["caselight.v1.route.1", "caselight.v1.route.2", "caselight.v1.last", "caselight.v1.history.1", "caselight.v1.history.2"])
 })
 
 test("route value: encode and decode round trip, rows ascending and unique", () => {

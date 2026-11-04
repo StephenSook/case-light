@@ -23,6 +23,19 @@ def tracked_files():
     return [p for p in out.decode().split("\0") if p]
 
 
+def lens_version():
+    """The version the Lens shows and logs, read from CaseLightVersion.ts (the one source)."""
+    path = ROOT / "Assets" / "Scripts" / "CaseLightVersion.ts"
+    if not path.is_file():
+        fail("Assets/Scripts/CaseLightVersion.ts missing")
+        return None
+    m = re.search(r'CASELIGHT_VERSION\s*=\s*"(v\d+\.\d+(?:\.\d+)?)"', path.read_text())
+    if not m:
+        fail("CaseLightVersion.ts: no CASELIGHT_VERSION string found")
+        return None
+    return m.group(1)
+
+
 def leaf_scenarios():
     ids = set()
     files = list((ROOT / "Assets").rglob("*.ts"))
@@ -196,18 +209,29 @@ def main():
     ids = leaf_scenarios()
     if len(ids) < LEAF_FLOOR:
         fail(f"{len(ids)} LEAF scenarios, floor is {LEAF_FLOOR}")
-    readme = ROOT / "README.md"
-    if not readme.exists():
-        fail("README.md missing")
-    else:
-        claimed = re.findall(r"(\d+) LEAF scenarios", readme.read_text())
+    # The judge-facing pages state the scenario count and the version; both must match the code.
+    version = lens_version()
+    for name in ("README.md", "JUDGING.md"):
+        page = ROOT / name
+        if not page.exists():
+            fail(f"{name} missing")
+            continue
+        text = page.read_text()
+        claimed = re.findall(r"(\d+) LEAF scenarios", text)
         if not claimed:
-            fail("README.md does not state the LEAF scenario count")
+            fail(f"{name} does not state the LEAF scenario count")
         for c in claimed:
             if int(c) != len(ids):
-                fail(f"README claims {c} LEAF scenarios; the code has {len(ids)}")
+                fail(f"{name} claims {c} LEAF scenarios; the code has {len(ids)}")
+        named = set(re.findall(r"(?<![\w.])v\d+\.\d+(?:\.\d+)?\b", text))
+        if version and version not in named:
+            fail(f"{name} does not name the Lens version {version}")
+        for v in sorted(named - {version}):
+            fail(f"{name} names version {v}; the Lens is {version}")
+    if version:
+        print(f"version read from CaseLightVersion.ts: {version} (README.md and JUDGING.md checked against it)")
 
-    docs = [p for p in files if p == "README.md" or (p.startswith("devpost/") and p.endswith(".md"))]
+    docs = [p for p in files if p in ("README.md", "JUDGING.md") or (p.startswith("devpost/") and p.endswith(".md"))]
     print(f"em dash scan: {len(docs)} documents")
     for p in docs:
         if "—" in (ROOT / p).read_text(errors="ignore"):

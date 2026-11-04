@@ -132,8 +132,8 @@ export function checkView(label: string, spec: ViewSpec): Census {
   return c
 }
 
-/** World corners of a Text's rendered local box (4 corners on its plane). */
-function textCorners(so: SceneObject): vec3[] | null {
+/** World corners of a Text's rendered local box (4 corners on its plane); null when the object has no Text. */
+export function textCorners(so: SceneObject): vec3[] | null {
   const t = so.getComponent("Component.Text") as Text
   if (!t) return null
   const lo = t.localAabbMin()
@@ -155,6 +155,26 @@ export interface CaseClearance {
 }
 
 /**
+ * The case's cells and its row labels as drawn, as angle boxes from the eye: each cell's drawn
+ * corners (CaseLightMain.targetCornersWorld, slots 0 to 79) and each row label's Text box that is
+ * on now (Label_n, StreetName*, HoldLabel).
+ */
+export function caseItemBoxes(main: CaseLightMain): NamedBox[] {
+  const items: NamedBox[] = []
+  for (let slot = 0; slot < 80; slot++) items.push({name: `cell ${slot}`, box: angleBox(main.targetCornersWorld(slot))})
+  const walkLabels = (so: SceneObject) => {
+    const n = so.name
+    if ((/^Label_\d+$/.test(n) || n.indexOf("StreetName") === 0 || n === "HoldLabel") && so.isEnabledInHierarchy) {
+      const c = textCorners(so)
+      if (c) items.push({name: n, box: angleBox(c)})
+    }
+    for (let i = 0; i < so.getChildrenCount(); i++) walkLabels(so.getChild(i))
+  }
+  walkLabels(main.caseRoot)
+  return items
+}
+
+/**
  * How far the scaled controls stay from the case's cells and row labels, as seen from the eye:
  * every drawn rounded rectangle under CaseControls that is on (panel backplates, buttons, the score
  * card's backing, the hint and caption backings) against each cell's drawn corners
@@ -173,17 +193,7 @@ export function controlsClearOfCase(main: CaseLightMain): CaseClearance {
     for (let i = 0; i < so.getChildrenCount(); i++) walk(so.getChild(i))
   }
   walk(mustFind("CaseControls"))
-  const items: NamedBox[] = []
-  for (let slot = 0; slot < 80; slot++) items.push({name: `cell ${slot}`, box: angleBox(main.targetCornersWorld(slot))})
-  const walkLabels = (so: SceneObject) => {
-    const n = so.name
-    if ((/^Label_\d+$/.test(n) || n.indexOf("StreetName") === 0 || n === "HoldLabel") && so.isEnabledInHierarchy) {
-      const c = textCorners(so)
-      if (c) items.push({name: n, box: angleBox(c)})
-    }
-    for (let i = 0; i < so.getChildrenCount(); i++) walkLabels(so.getChild(i))
-  }
-  walkLabels(main.caseRoot)
+  const items = caseItemBoxes(main)
   let smallest = 1e9
   let pair = ""
   for (const c of controls)

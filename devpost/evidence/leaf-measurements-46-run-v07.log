@@ -1,0 +1,495 @@
+# Measurement lines the 46 scenarios logged during the full run of 2026-11-03, 18:19 to 19:18 ET (devpost/evidence/leaf-full-46-run-v07.log),
+# copied as written from Lens Studio's log (LensStudioLog-2026-11-03-17-40-46-588-ee780.txt), from the c1 rerun at 18:19:48 to the last verdict at 19:18:23; only the time and the test's own text kept.
+18:19:48.799 C1 letter 13.2 x 5.4 cm, print width 12 cm, address capitals requested 0.8500000238418579 cm (brief: about 3 cm)
+18:19:48.803 C1 versionText="v0.7" VersionLabel="v0.7"
+18:19:52.369 C1 address box on the letter (-5.32, -1.46, 0.40)..(5.32, 0.06, 0.40) (w 10.64 h 1.51 cm); Text local box characters -5.32..5.32 x -0.76..0.76, mesh (-5.52, -0.64, 0.00)..(5.52, 0.64, 0.00)
+18:19:52.369 C1 held=0 addr="2195 FAIRWAYS CT" enabled=true Text.size=53.3 snapPreview=9
+18:19:52.369 C1 BRIEF: the brief asks for about 3 cm address text; this build requests 0.8500000238418579 cm capitals (line box 1.51 cm)
+18:19:52.372 C1 placed at (-26.07, -21.80, -60.60) slot 9 opening centre (-26.67, -19.00, -57.00)
+18:19:54.385 C1 wrong drop piece 1 over slot 47: result=miss snapped at (-31.75, -6.80, -60.60) vs opening (-31.75, -4.00, -57.00)
+18:19:55.020 C1 done
+18:20:09.183 C2 piece 1 target 46 centreOutside=true cellOutside=true measuredPad=(0.947, 5.823)
+18:20:10.009 C2 piece 2 target 56 centreOutside=false cellOutside=false measuredPad=(1.250, 5.823)
+18:20:10.880 C2 piece 3 target 17 centreOutside=false cellOutside=true measuredPad=(1.264, 5.396)
+18:20:10.880 C2 stepPadDeg=(1.2764, 5.8101) independent=(1.2764, 5.8101) cell half 1.27 x 5.80 cm at 57.00 cm; boundaries |yaw|>10.5236 |pitch|>13.2399
+18:20:10.881 C2 slot 46 at yaw -31.03 pitch -4.01; arrow hides after 20.75 deg (whole-cell boundary at 20.51)
+18:20:10.881 C2 slot 9 at yaw -25.07 pitch -18.43; yaw+pitch turn hides the arrow at 60% of the way
+18:20:10.881 C2 done
+18:20:19.851 C3 recall order [4,3,2,6,1,7,5,0]
+18:20:22.361 C3 miss #1: outline look 2.420x11.480 cm, scale 1.0000,1.0000, 96 vertex colours
+18:20:50.082 C3 miss #1: piece 4 target 76 wrong 75 outside=true
+18:20:52.374 C3 miss #2: outline look 2.420x11.480 cm, scale 1.0000,1.0000, 96 vertex colours
+18:20:54.059 C3 miss #2: piece 2 target 56 wrong 57 outside=false
+18:20:56.638 C3 done
+18:21:11.918 C4 in hand: note=true "Hold: set this piece aside" gloss=true "HOLD: mail kept at the office" litLabel=-2; ordinary drop result=refused-hold
+18:21:13.712 C4 hold piece placed at (44.45, -21.80, -60.60); HOLD block x 40.64..50.80
+18:21:15.841 C4 done
+18:21:33.208 C5 pass 1: mode=idle unaided +7 helped +1 total +8; ResultText enabled=true text="From memory: 7 of 8 this session"
+18:21:41.647 C5 pass 2: text="From memory: 15 of 16 this session"
+18:21:41.647 C5 done
+18:31:44.628 EXTRA result after pass 2: "From memory: 16 of 16 this session"
+18:31:45.096 EXTRA result-hide done
+18:34:28.065 SOUND piece 0 right drop: read at release {"cues":1,"playing":true,"duration":0.36000001430511475,"position":0.13931973278522491,"rightTrack":true,"volume":0.5,"spatial":true,"listener":true}; playing at poll frame 0 (f0:on@0.139)
+18:34:28.067 SOUND chime from 9, count 1
+18:34:29.604 SOUND piece 1 miss: read at release {"cues":2,"playing":true,"duration":0.30000001192092896,"position":0.09287981688976288,"rightTrack":true,"volume":0.5,"spatial":true,"listener":true}; playing at poll frame 0 (f0:on@0.093)
+18:34:29.605 SOUND miss from 46 (dropped on 47), count 2
+18:34:34.864 SOUND hold piece refused in cell 23: read at release {"cues":7,"playing":false,"duration":0.30000001192092896,"position":0.09287981688976288,"rightTrack":true,"volume":0.5,"spatial":true,"listener":true}; playing at poll frame 0 (f0:on@0.093)
+18:34:36.646 SOUND hold piece accepted in cell 37: read at release {"cues":8,"playing":false,"duration":0.36000001430511475,"position":0.09287981688976288,"rightTrack":true,"volume":0.5,"spatial":true,"listener":true}; playing at poll frame 0 (f0:on@0.093)
+18:34:36.647 SOUND done: last chime from -2, count 8
+18:34:54.533 PACE default: {"on":false,"sweep":-1,"light":false,"lightObj":false,"label":false,"steps":0,"elapsed":0}
+18:34:54.533 PACE state before toggle {"mode":"recall","lit":76,"glow":true,"arrow":true,"unaided":0,"helped":0,"total":0,"sounds":1,"held":-1,"placed":0,"top":3,"order":"[4,3,2,6,1,7,5,0]","lastDrop":"miss"} after {"mode":"recall","lit":76,"glow":true,"arrow":true,"unaided":0,"helped":0,"total":0,"sounds":1,"held":-1,"placed":0,"top":3,"order":"[4,3,2,6,1,7,5,0]","lastDrop":"miss"}
+18:35:17.561 PACE changes at k=1,2,3,4,5,6,7; intervals 3.334, 3.333, 3.311, 3.356, 3.333, 3.335 s; rate 17.999/min over 6 steps (20.001 s)
+18:35:42.029 PACE wrap: visited 74 separations, 7,8,9..77,78,79,0; light at 39 (49.53, -24.80, 0.00), 40 (-49.53, -9.80, 0.00), 79 (49.53, -9.80, 0.00), 0 (-49.53, -24.80, 0.00)
+18:35:42.029 PACE wrap: 0 separations not observed settled (frame timing, not asserted)
+18:35:42.534 PACE done
+18:36:15.728 EXIT before Done: counts {"unaided":15,"helped":1,"total":16} arrowWasOn=true ripple=1/1
+18:36:16.226 EXIT done
+18:36:57.833 LADDER-DEFAULT counts before {"u":0,"h":0,"t":0} after practice {"u":0,"h":0,"t":0,"result":false,"resultObj":false,"exit":false}
+18:36:57.833 LADDER-DEFAULT done
+18:37:22.050 LADDER-ON after pass 1 rungs [1,1,1,1,1,1,1,1]
+18:37:34.923 LADDER-ON after pass 2 rungs [2,2,1,2,2,1,2,2]
+18:37:45.565 LADDER-ON after pass 3 rungs [2,2,2,2,2,2,2,2], row cues 12, band cues 6
+18:37:55.798 LADDER-ON recall done, rungs [2,2,2,2,2,2,2,2]
+18:37:55.798 LADDER-ON done
+18:38:21.035 MIXUP recall 1 order [4,3,2,6,1,7,5,0]
+18:38:34.400 MIXUP recall 1 expected 23->-2,57->56,75->76, shown 23->-2,57->56,75->76, lines 3
+18:38:34.410 MIXUP-ENDS MixUpLabel_0_dropped "1460 TRIBUTARY CT / was put here" yaw 30.31..38.50, pitch -1.25..1.80 deg; cell 75 yaw 33.76..35.49, pitch -9.76..1.81 deg
+18:38:34.411 MIXUP-ENDS MixUpLabel_0_right "goes here" yaw 34.05..38.43, pitch -9.53..-8.04 deg; cell 76 yaw 35.49..37.15, pitch -9.76..1.81 deg
+18:38:34.413 MIXUP-ENDS MixUpLabel_1_dropped "3581 FREY LAKE RD / was put here" yaw -12.23..-0.34, pitch -1.25..1.80 deg; cell 57 yaw -7.61..-5.09, pitch -9.76..1.81 deg
+18:38:34.415 MIXUP-ENDS MixUpLabel_1_right "goes here" yaw -12.12..-5.54, pitch -9.53..-8.04 deg; cell 56 yaw -10.11..-7.61, pitch -9.76..1.81 deg
+18:38:34.417 MIXUP-ENDS MixUpLabel_2_dropped "3553 FREY LAKE RD / was put here" yaw 2.89..14.64, pitch -15.90..-13.05 deg; cell 23 yaw 7.61..10.11, pitch -23.51..-13.04 deg
+18:38:34.418 MIXUP-ENDS MixUpLabel_2_right "goes here" yaw 36.59..40.70, pitch -23.32..-22.02 deg; HOLD block yaw 35.49..41.71, pitch -23.51..-13.04 deg
+18:38:34.420 MIXUP-ENDS outline of cell 75 (pair 75->76): LRgg
+18:38:34.421 MIXUP-ENDS outline of cell 76 (pair 75->76): LRgg
+18:38:34.421 MIXUP-ENDS outline of cell 57 (pair 57->56): LRgg
+18:38:34.422 MIXUP-ENDS outline of cell 56 (pair 57->56): LRgg
+18:38:34.423 MIXUP-ENDS outline of cell 23 (pair 23->-2): LRBg
+18:38:34.424 MIXUP-ENDS outline of the HOLD block (pair 23->-2): LRBT
+18:38:34.488 MIXUP after recall 1: 20 no-line observations checked so far
+18:38:43.643 MIXUP-ENDS MixUpLabel_0_dropped "3581 FREY LAKE RD / was put here" yaw -12.23..-0.34, pitch -1.25..1.80 deg; cell 57 yaw -7.61..-5.09, pitch -9.76..1.81 deg
+18:38:43.645 MIXUP-ENDS MixUpLabel_0_right "goes here" yaw -12.12..-5.54, pitch -9.53..-8.04 deg; cell 56 yaw -10.11..-7.61, pitch -9.76..1.81 deg
+18:38:43.646 MIXUP-ENDS outline of cell 57 (pair 57->56): LRgg
+18:38:43.647 MIXUP-ENDS outline of cell 56 (pair 57->56): LRgg
+18:38:43.689 MIXUP after recall 2: 28 no-line observations checked so far
+18:38:53.910 MIXUP-ENDS MixUpLabel_0_dropped "3553 FREY LAKE RD / was put here" yaw 2.89..14.64, pitch -15.90..-13.05 deg; cell 23 yaw 7.61..10.11, pitch -23.51..-13.04 deg
+18:38:53.911 MIXUP-ENDS MixUpLabel_0_right "goes here" yaw 36.59..40.70, pitch -23.32..-22.02 deg; HOLD block yaw 35.49..41.71, pitch -23.51..-13.04 deg
+18:38:53.913 MIXUP-ENDS outline of cell 23 (pair 23->-2): LRBg
+18:38:53.913 MIXUP-ENDS outline of the HOLD block (pair 23->-2): LRBT
+18:38:53.957 MIXUP after recall 3: 36 no-line observations checked so far
+18:39:03.095 MIXUP after recall 4: 44 no-line observations checked so far
+18:39:04.465 MIXUP done
+18:39:37.725 HOLD refusals [{"slot":35,"result":"refused-hold","placed":false,"drop":35},{"slot":76,"result":"refused-hold","placed":false,"drop":76},{"slot":77,"result":"refused-hold","placed":false,"drop":77},{"slot":78,"result":"refused-hold","placed":false,"drop":78},{"slot":79,"result":"refused-hold","placed":false,"drop":79}]
+18:39:56.164 HOLD recall 1 counts before {"u":0,"h":0,"t":0} after {"u":7,"h":1,"t":8}; refusal delta {"u":0,"h":0,"t":0}; hold piece delta {"u":0,"h":1,"t":1}
+18:40:05.025 HOLD done: 36, 37, 38, 39 accepted; 35, 76, 77, 78, 79 refused
+18:40:26.862 PRINT-FIT piece 0 AddressText "2195 FAIRWAYS CT" box (-5.32, -1.46, 0.40)..(5.32, 0.06, 0.40) (w 10.64 of 12 cm); mesh box x -5.52..5.52 (w 11.03)
+18:40:26.862 PRINT-FIT piece 1 AddressText "3498 LEE CT" box (-3.57, -1.46, 0.40)..(3.57, 0.06, 0.40) (w 7.14 of 12 cm); mesh box x -3.77..3.77 (w 7.53)
+18:40:26.862 PRINT-FIT piece 2 AddressText "3581 FREY LAKE RD" box (-5.48, -1.46, 0.40)..(5.48, 0.06, 0.40) (w 10.95 of 12 cm); mesh box x -5.67..5.67 (w 11.35)
+18:40:26.862 PRINT-FIT piece 3 AddressText "2355 FAIRWAYS CT" box (-5.44, -1.46, 0.40)..(5.44, 0.06, 0.40) (w 10.88 of 12 cm); mesh box x -5.63..5.63 (w 11.27)
+18:40:26.862 PRINT-FIT piece 4 AddressText "1460 TRIBUTARY CT" box (-5.59, -1.46, 0.40)..(5.59, 0.06, 0.40) (w 11.18 of 12 cm); mesh box x -5.78..5.78 (w 11.57)
+18:40:26.862 PRINT-FIT piece 5 AddressText "3553 FREY LAKE RD" box (-5.59, -1.46, 0.40)..(5.59, 0.06, 0.40) (w 11.18 of 12 cm); mesh box x -5.78..5.78 (w 11.57)
+18:40:26.862 PRINT-FIT piece 5 HoldNoteText "Hold: set this piece aside" box (-4.48, 1.27, 0.40)..(4.48, 2.29, 0.40) (w 8.97 of 12 cm); mesh box x -4.62..4.62 (w 9.23)
+18:40:26.862 PRINT-FIT piece 5 HoldGlossText "HOLD: mail kept at the office" box (-4.04, 0.52, 0.40)..(4.04, 1.32, 0.40) (w 8.08 of 12 cm); mesh box x -4.14..4.14 (w 8.29)
+18:40:26.862 PRINT-FIT piece 6 AddressText "2200 FAIRWAYS CT" box (-5.48, -1.46, 0.40)..(5.48, 0.06, 0.40) (w 10.95 of 12 cm); mesh box x -5.67..5.67 (w 11.35)
+18:40:26.862 PRINT-FIT piece 7 AddressText "2035 FAIRWAYS CT" box (-5.46, -1.46, 0.40)..(5.46, 0.06, 0.40) (w 10.93 of 12 cm); mesh box x -5.66..5.66 (w 11.32)
+18:40:26.862 PRINT-FIT widest 11.18 cm against 12 cm (letter 13.2 x 5.4 cm, capitals requested 0.8500000238418579 cm)
+18:40:26.862 PRINT-FIT done: widest 11.18 cm inside 12 cm (letter 13.2 x 5.4 cm)
+18:40:44.114 LAYOUT reach: letter centre (0.00, 6.50, -42.80), eye (0.00, 0.00, 0.00), distance 43.3 cm, height 6.5 cm (pitch 8.6 deg); letter bottom 3.71 vs upper row top 1.80 (drop 1.91 cm), 13.6 cm in front of the face; longest move to a sample answer 55.3 cm
+18:40:44.115 LAYOUT display rectangle +-11.80 x +-19.06 deg; top letter yaw -9.02..9.02, pitch 4.91..12.36 deg
+18:40:44.118 LAYOUT start hint (both lines and backing): yaw -7.99..4.08, pitch 15.72..18.57 deg
+18:40:44.118 LAYOUT Start practice button: yaw -7.89..-2.52, pitch 12.84..15.44 deg
+18:40:44.118 LAYOUT Start recall button: yaw -1.36..4.03, pitch 12.84..15.44 deg
+18:40:44.118 LAYOUT case caption (text and backing): yaw -11.04..7.31, pitch 1.81..3.82 deg
+18:40:44.118 LAYOUT small print under the caption: yaw -10.22..6.47, pitch 1.81..2.53 deg
+18:40:44.120 LAYOUT Options toggle: yaw -11.50..-8.95, pitch 12.84..15.44 deg, spare 0.30 deg
+18:40:44.121 LAYOUT Show my case toggle: yaw 5.15..7.71, pitch 12.84..15.44 deg, spare 3.62 deg
+18:40:44.548 LAYOUT Drill pace toggle: yaw -11.64..-9.25, pitch 9.62..11.69 deg, spare 0.16 deg
+18:40:44.550 LAYOUT Hide stand-in case toggle: yaw -11.64..-9.29, pitch 6.43..8.49 deg, spare 0.16 deg
+18:40:45.019 LAYOUT caption "Practice mail, real house numbers", small print "Not a USPS route. Address data (c) OpenStreetMap contributors"
+18:40:45.021 LAYOUT caption ink yaw -8.31..4.53, pitch 2.70..3.77 deg; small print ink yaw -10.13..6.38, pitch 1.86..2.58 deg; version yaw 7.81..9.97, pitch 2.04..3.19 deg
+18:40:54.238 LAYOUT exit after an Options press: 13 buttons and 6 exempt objects measured; over the score card: none
+18:40:54.241 LAYOUT exit score card backing: yaw -10.34..-0.25, pitch 5.76..10.42 deg, 1.46 deg to spare
+18:40:54.241 LAYOUT exit score card backing over the closed Options panel's DrillPaceButton place: true
+18:40:54.241 LAYOUT exit score card backing over the closed Options panel's HideStandInButton place: true
+18:40:54.241 LAYOUT exit score card backing over the (now empty) stack place at open: true
+18:40:54.241 LAYOUT exit Again button: yaw 0.42..4.72, pitch 5.70..8.34 deg, 7.08 deg to spare
+18:40:54.241 LAYOUT exit Again button over the closed Options panel's DrillPaceButton place: false
+18:40:54.241 LAYOUT exit Again button over the closed Options panel's HideStandInButton place: false
+18:40:54.241 LAYOUT exit Again button over the (now empty) stack place at open: true
+18:40:54.241 LAYOUT exit Done button: yaw 5.87..10.18, pitch 5.74..8.41 deg, 1.62 deg to spare
+18:40:54.241 LAYOUT exit Done button over the closed Options panel's DrillPaceButton place: false
+18:40:54.241 LAYOUT exit Done button over the closed Options panel's HideStandInButton place: false
+18:40:54.241 LAYOUT exit Done button over the (now empty) stack place at open: true
+18:40:54.241 LAYOUT tray yaw -9.44..9.44, pitch 3.80..5.27 deg; start row OptionsButton yaw -11.50..-8.95, pitch 12.84..15.44 deg; StartPracticeButton yaw -7.89..-2.52, pitch 12.84..15.44 deg; StartRecallButton yaw -1.36..4.03, pitch 12.84..15.44 deg; ShowMyCaseButton yaw 5.15..7.71, pitch 12.84..15.44 deg
+18:40:54.241 LAYOUT done
+18:41:09.321 OVERLAY hidden; LeafDebugUICamera (LEAF log strip) present: true
+18:41:09.322 OVERLAY done
+18:43:06.369 ONE-PRESS Start practice pressed 0.40 s after Again (guard 0.60 s): mode recall, ignored 1
+18:43:06.932 ONE-PRESS Start practice pressed 0.969 s after Again: mode practice
+18:43:16.201 ONE-PRESS Start recall pressed 0.40 s after Done (guard 0.60 s): mode idle, ignored 1
+18:43:16.742 ONE-PRESS stray release on Start practice: TriggerStart false, TriggerEnd true; stray count +1, mode idle
+18:43:17.202 ONE-PRESS done
+18:43:27.875 RETIRE pass A start (nothing retired): 8 letters shown and in the bundle, 0 retired letters hidden
+18:43:38.226 RETIRE x 5 back with no other letter picked up in between: answer lit true (lit slot -2)
+18:43:39.347 RETIRE c/g after pass A: card "From memory: 6 of 8 this session" / "Came back: 3"; product unaided 6 helped 2 total 8; ours 6 / 2 / 8; came back ours 3, product 3
+18:43:39.347 RETIRE d. after pass A (nothing retired yet: one pass is not enough): retired product [] ours [], runs [1,1,1,1,0,0,1,1]
+18:43:39.753 RETIRE pass B start (nothing retired): 8 letters shown and in the bundle, 0 retired letters hidden
+18:43:48.431 RETIRE c/g after pass B: card "From memory: 13 of 16 this session" / "Came back: 1"; product unaided 13 helped 3 total 16; ours 13 / 3 / 16; came back ours 1, product 1
+18:43:48.431 RETIRE d. after pass B: retired product [0,1,3,6,7] ours [0,1,3,6,7], runs [2,2,0,2,1,1,2,2]
+18:43:48.843 RETIRE pass C start ours [5,2,4], product [5,2,4]; o0 4, x 5, z 2
+18:43:48.851 RETIRE d. pass C start: 3 letters shown and in the bundle, 5 retired letters hidden
+18:43:51.839 RETIRE c/g after pass C: card "From memory: 16 of 19 this session" / "Came back: 0"; product unaided 16 helped 3 total 19; ours 16 / 3 / 19; came back ours 0, product 0
+18:43:51.839 RETIRE d. after pass C: retired product [0,1,3,4,5,6,7] ours [0,1,3,4,5,6,7], runs [2,2,1,2,2,2,2,2]
+18:43:52.249 RETIRE d. pass D start: 1 letters shown and in the bundle, 7 retired letters hidden
+18:43:53.059 RETIRE c/g after pass D: card "From memory: 17 of 20 this session" / "Came back: 0"; product unaided 17 helped 3 total 20; ours 17 / 3 / 20; came back ours 0, product 0
+18:43:53.059 RETIRE d. after pass D (every letter retired): retired product [0,1,2,3,4,5,6,7] ours [0,1,2,3,4,5,6,7], runs [2,2,2,2,2,2,2,2]
+18:43:53.709 RETIRE all retired, Again: card "All letters learned" / "Done starts over", mode idle, passes 4, queue []
+18:43:55.079 RETIRE f. after Done (retirement cleared): retired product [] ours [], runs [0,0,0,0,0,0,0,0]
+18:43:56.072 RETIRE f. pass after Done: 8 letters shown and in the bundle, 0 retired letters hidden
+18:43:56.072 RETIRE done: session from memory 17 of 20 (ours), product 17 of 20
+18:44:12.235 NOTES toggle at open yaw 15.06..24.65, pitch 6.24..9.25 deg (spare -12.85 deg); head turned yaw 19.9, pitch 7.2 deg: yaw -4.74..4.74, pitch -1.20..1.20 deg (spare 7.06 deg)
+18:44:13.403 NOTES b. slot 20 without a note: chooser getter ["Check the street name","Odd side up, even side back","Read the whole number"], drawn ["Check the street name","Odd side up, even side back","Read the whole number"]
+18:44:13.869 NOTES c. after pick 1: card yaw -3.76..6.46, pitch -21.08..-17.89 deg; cell yaw -0.00..2.55, pitch -23.51..-13.04 deg; label yaw 0.06..2.50, pitch -25.65..-23.48 deg
+18:44:14.277 NOTES b. slot 20 with a note (Remove note added): chooser getter ["Check the street name","Odd side up, even side back","Read the whole number","Remove note"], drawn ["Check the street name","Odd side up, even side back","Read the whole number","Remove note"]
+18:44:14.848 NOTES c. after the re-pick: card yaw -3.76..6.46, pitch -21.08..-17.89 deg; cell yaw -0.00..2.55, pitch -23.51..-13.04 deg; label yaw 0.06..2.50, pitch -25.65..-23.48 deg
+18:44:15.612 NOTES c. before Remove note: chooser getter ["Check the street name","Odd side up, even side back","Read the whole number","Remove note"], drawn ["Check the street name","Odd side up, even side back","Read the whole number","Remove note"]
+18:44:17.175 NOTES b. no note again: no Remove note: chooser getter ["Check the street name","Odd side up, even side back","Read the whole number"], drawn ["Check the street name","Odd side up, even side back","Read the whole number"]
+18:44:17.857 NOTES c. after pick 3: card yaw -3.76..6.46, pitch -21.08..-17.89 deg; cell yaw -0.00..2.55, pitch -23.51..-13.04 deg; label yaw 0.06..2.50, pitch -25.65..-23.48 deg
+18:44:18.556 NOTES b. slot 61 without a note: chooser getter ["Check the street name","Odd side up, even side back","Read the whole number"], drawn ["Check the street name","Odd side up, even side back","Read the whole number"]
+18:44:19.267 NOTES c. slot B: card yaw -1.06..9.12, pitch -6.04..-2.48 deg; cell yaw 2.55..5.09, pitch -9.76..1.81 deg; label yaw 2.74..4.93, pitch -12.22..-9.66 deg
+18:44:19.277 NOTES c. slot A kept beside slot B: card yaw -3.76..6.46, pitch -21.08..-17.89 deg; cell yaw -0.00..2.55, pitch -23.51..-13.04 deg; label yaw 0.06..2.50, pitch -25.65..-23.48 deg
+18:44:20.357 NOTES start-off pinch: start false, end true, chooser false
+18:44:21.561 NOTES end-off pinch: on target true, start true, end false, chooser false
+18:44:22.846 NOTES h. Veteran mode on again: slot A card: card yaw -3.76..6.46, pitch -21.08..-17.89 deg; cell yaw -0.00..2.55, pitch -23.51..-13.04 deg; label yaw 0.06..2.50, pitch -25.65..-23.48 deg
+18:44:22.856 NOTES h. Veteran mode on again: slot B card: card yaw -1.06..9.12, pitch -6.04..-2.48 deg; cell yaw 2.55..5.09, pitch -9.76..1.81 deg; label yaw 2.74..4.93, pitch -12.22..-9.66 deg
+18:44:23.452 NOTES done
+18:46:38.219 VETPASS recall order [4,3,2,6,1,7,5,0]: L 4 (slot 76), M 3 (slot 17); practice P 0 (slot 9)
+18:46:40.285 NOTES control: Veteran mode shows the note on slot 76: card yaw 34.67..41.04, pitch -6.04..-2.48 deg; cell yaw 35.49..37.15, pitch -9.76..1.81 deg; label yaw 35.64..37.13, pitch -12.22..-9.66 deg
+18:46:42.083 NOTES control: Veteran mode shows the note on slot 17: card yaw -11.74..-1.65, pitch -21.08..-17.89 deg; cell yaw -7.61..-5.09, pitch -23.51..-13.04 deg; label yaw -7.57..-5.17, pitch -25.65..-23.48 deg
+18:46:43.605 NOTES control: Veteran mode shows the note on slot 9: card yaw -30.40..-22.18, pitch -21.08..-17.89 deg; cell yaw -26.11..-24.02, pitch -23.51..-13.04 deg; label yaw -26.03..-24.22, pitch -25.66..-23.46 deg
+18:46:46.951 NOTES f. after the miss on L (its answer lit): card yaw 34.67..41.04, pitch -6.04..-2.48 deg; cell yaw 35.49..37.15, pitch -9.76..1.81 deg; label yaw 35.64..37.13, pitch -12.22..-9.66 deg
+18:46:46.954 NOTES f. still lit before another letter is picked up: card yaw 34.67..41.04, pitch -6.04..-2.48 deg; cell yaw 35.49..37.15, pitch -9.76..1.81 deg; label yaw 35.64..37.13, pitch -12.22..-9.66 deg
+18:46:48.620 VETPASS d. pinch at top letter 2 in Veteran mode: ray met it false (hit (nothing)), held -1
+18:46:48.623 NOTES d. Veteran mode mid-pass shows the note on slot 76: card yaw 34.67..41.04, pitch -6.04..-2.48 deg; cell yaw 35.49..37.15, pitch -9.76..1.81 deg; label yaw 35.64..37.13, pitch -12.22..-9.66 deg
+18:46:48.628 NOTES d. Veteran mode mid-pass shows the note on slot 17: card yaw -11.74..-1.65, pitch -21.08..-17.89 deg; cell yaw -7.61..-5.09, pitch -23.51..-13.04 deg; label yaw -7.57..-5.17, pitch -25.65..-23.48 deg
+18:46:48.630 NOTES d. Veteran mode mid-pass shows the note on slot 9: card yaw -30.40..-22.18, pitch -21.08..-17.89 deg; cell yaw -26.11..-24.02, pitch -23.51..-13.04 deg; label yaw -26.03..-24.22, pitch -25.66..-23.46 deg
+18:46:49.872 VETPASS d. control: pinch at the top letter after Veteran mode off: ray met it true
+18:46:58.683 NOTES g. P in hand (its slot lit): card yaw -30.40..-22.18, pitch -21.08..-17.89 deg; cell yaw -26.11..-24.02, pitch -23.51..-13.04 deg; label yaw -26.03..-24.22, pitch -25.66..-23.46 deg
+18:46:59.434 VETPASS done
+18:47:12.514 STRAY control (no aborted pinch before): start false, end true, chooser false
+18:47:16.329 STRAY after the aborted pinch: start false, end true, chooser false (slot -1), slot pinches +0
+18:49:38.012 ROUTE Route 1 at open: 75 of 75 cell labels match route 1's data, 1 print one number
+18:49:38.044 ROUTE Route 1 at open: printed street names ["FAIRWAYS CT","FREY LAKE RD","LEE CT","TRIBUTARY CT"]; getter ["FAIRWAYS CT","LEE CT","LEE CT","FREY LAKE RD","TRIBUTARY CT"]
+18:49:38.066 ROUTE Route 1 at open: caption "Practice mail, real house numbers" (shown true), credit "Not a USPS route. Address data (c) OpenStreetMap contributors" (shown true)
+18:49:41.343 ROUTE Route 2: 75 of 75 cell labels match route 2's data, 4 print one number
+18:49:41.376 ROUTE Route 2: printed street names ["DOUGLAS LN","DUVALL PL","IRVIN CT","JEBS CT","MCGARITY LN","PINE HILL DR","SHIRLEY DR","TERRY LN NW"]; getter ["IRVIN CT","SHIRLEY DR","PINE HILL DR","DUVALL PL","DOUGLAS LN","DOUGLAS LN","MCGARITY LN","JEBS CT","TERRY LN NW"]
+18:49:41.399 ROUTE Route 2: caption "Practice mail, real house numbers" (shown true), credit "Not a USPS route. Address data (c) OpenStreetMap contributors" (shown true)
+18:49:50.463 ROUTE Route 1 after two round trips: 75 of 75 cell labels match route 1's data, 1 print one number
+18:49:50.497 ROUTE Route 1 after two round trips: printed street names ["FAIRWAYS CT","FREY LAKE RD","LEE CT","TRIBUTARY CT"]; getter ["FAIRWAYS CT","LEE CT","LEE CT","FREY LAKE RD","TRIBUTARY CT"]
+18:49:50.519 ROUTE Route 1 after two round trips: caption "Practice mail, real house numbers" (shown true), credit "Not a USPS route. Address data (c) OpenStreetMap contributors" (shown true)
+18:49:50.519 ROUTE labels done
+19:04:51.869 ROUTE letters: Route 1 8 placed, Route 2 8 placed; widest Route 2 print 11.16 of 12 cm; hold 3053 SHIRLEY DR at (45.72, -19.00, -57.00)
+19:06:14.946 ROUTE reset: Route 2 press during recall 2: not pressable (Error: Button "RouteButton_2" not found or not enabled); route 1, switches +0, mode recall
+19:06:24.555 ROUTE reset before the switch: {"u":15,"h":1,"t":16,"retired":7,"passes":2,"card":true}; ours from memory 15, helped 1, total 16, retired 7
+19:06:25.277 ROUTE reset after the switch: unaided 0, helped 0, total 0, came back 0, retired 0, passes 0, mix-up lines 0, card false, exit false
+19:06:25.691 ROUTE reset done
+19:07:00.463 LASTDARK letter 0 (slot 9): card "From memory: 7 of 8 this session" / "Came back: 1"
+19:07:22.422 PICKER control: Place on wall at open yaw 15.01..24.70, pitch 14.74..18.06 deg
+19:07:22.433 PICKER RouteButton_1 at open yaw 9.00..11.20, pitch 15.85..17.93 deg, 0.60 deg to spare
+19:07:22.434 PICKER RouteButton_2 at open yaw 8.88..11.05, pitch 12.68..14.76 deg, 0.75 deg to spare
+19:07:37.079 PLACELOG at open: ["progress-loaded"]
+19:08:09.427 PLACELOG 41 lines; session s1-4croea; 29 attempts made; last line: CASELIGHT_LOG v1 seq=41 session=s1-4croea route=2 pass=3 mode=idle event=route-switch from=1
+19:08:09.427 PLACELOG attempts: off-case 1, miss 2, refused-hold 2, memory=1 13
+19:08:09.428 PLACELOG recount: after recall 1 6 of 8, came back 2 (card "From memory: 6 of 8 this session" / "Came back: 2"); after recall 2 13 of 16, came back 1 (card "From memory: 13 of 16 this session" / "Came back: 1")
+19:08:47.641 NOGLOW sampled 448 frames (pass frames 448); dark frames 415; miss 1 (cell 76) glow on 6 frames, card on 6; miss 2 (cell 9) glow on 25 frames; pick-ups 10; violations 0
+19:09:18.891 DEMO-OFF 308 frames sampled; label drawn on 0, replay seen on 0; 11 log lines, sessions ["s1-la94cn"]
+19:10:43.187 DEMO 1969 frames sampled, label missing on 0; scenes ["replay-start","practice-start","off-case","refused-hold","pass-end","recall-start","miss","come-back","refused-hold","come-back","result","recall-start","miss","come-back","result","replay-end"]; stop reason ""; session r1-fiyteg; cards seen ["From memory: 6 of 8 this session / Came back: 2","From memory: 13 of 16 this session / Came back: 1"]
+19:10:58.419 CC own answers [9,46,56,17,76,-2,23,1]; pitch 2.54 cm; label rows y -26.00, -11.00
+19:11:09.611 CC item 11: miss of letter 4 (answer 76): sound miss at 76, lit 76, MissSource 0.00 cm from the cell centre, across 0.00 cm from its label; playing at frame 0 (f0:on@0.186)
+19:11:10.029 CC run 1: drawn away from own cells [{"letter":1,"drawn":45},{"letter":3,"drawn":16}]; getter [{"letter":1,"address":"3498 LEE CT","wrongCell":45,"rightCell":46},{"letter":3,"address":"2355 FAIRWAYS CT","wrongCell":16,"rightCell":17}]
+19:11:11.569 CC run 1: outline vertices in cell 45: 16, in cell 46: 0
+19:11:13.299 CC run 1 end: card "From memory: 7 of 8 this session" / "Case check: 2 of 2 found"
+19:11:22.107 CC run 2: drawn away [{"letter":2,"drawn":58},{"letter":6,"drawn":25}]; getter [{"letter":2,"address":"3581 FREY LAKE RD","wrongCell":58,"rightCell":56},{"letter":6,"address":"2200 FAIRWAYS CT","wrongCell":25,"rightCell":23}]
+19:11:22.965 CC run 2 end (Done): card "From memory: 15 of 16 this session" / "Case check: 1 of 2 found"
+19:11:22.980 CC done
+19:11:42.165 SCALE MEASURED (case frame, cm): 3360 vertices; divider rows 41 dividers y -28.20..-13.20, 41 dividers y -13.20..1.80; pitch median 2.54 (every separation 2.54..2.54, 80 widths); 40-cell spans 101.60 and 101.60; shelf spacing 15.00 (bottoms) / 15.00 (tops); depth 30.00 (14 edges, 30.00..30.00); overall (outer edge of the drawn lines, 0.15 cm bars included) 122.15 x 190.15; lower playable shelf top 127.07 above the drawn floor, 24.80 below the eye
+19:11:42.171 SCALE control: 0.9 copy reads pitch 2.29, spans 91.44 and 91.44
+19:11:42.259 SCALE control: 75 labels, worst offset from the midpoint of their dividers 0.000 cm; label pitch 2.54
+19:11:42.260 SCALE CHECK ok  row 0: 41 dividers, want 41 (40 separations)
+19:11:42.260 SCALE CHECK ok  row 1: 41 dividers, want 41 (40 separations)
+19:11:42.260 SCALE CHECK ok  slot pitch 2.54 cm within 2.54 +/- 0.05 (one inch, M-41 221.2, VERIFIED)
+19:11:42.260 SCALE CHECK ok  every separation width (2.54..2.54) within 2.54 +/- 0.05
+19:11:42.260 SCALE CHECK ok  row 0: 40-cell span 101.60 cm within 101.6 +/- 0.5 (40 one-inch separations)
+19:11:42.260 SCALE CHECK ok  row 1: 40-cell span 101.60 cm within 101.6 +/- 0.5 (40 one-inch separations)
+19:11:42.260 SCALE CHECK ok  shelf spacing (bottoms) 15.00 cm inside the 1974 field range 11.91..19.68 (NB-NAT-3233, VERIFIED historical)
+19:11:42.260 SCALE CHECK ok  shelf spacing (bottoms) 15.00 cm within 15.24 +/- 0.5 (6 in)
+19:11:42.260 SCALE CHECK ok  shelf spacing (tops) 15.00 cm inside the 1974 field range 11.91..19.68 (NB-NAT-3233, VERIFIED historical)
+19:11:42.260 SCALE CHECK ok  shelf spacing (tops) 15.00 cm within 15.24 +/- 0.5 (6 in)
+19:11:42.260 SCALE CHECK ok  shelf depth 30.00 cm within 30.48 +/- 1 (12 in, vendor, REPORTED)
+19:11:42.260 SCALE case 122.15 x 190.15 cm (width vs 44 in vendor shelf: +10.39 cm, REPORTED, printed not asserted; height: no USPS source), slot pitch 2.54 cm, 40 cells 101.60 cm, shelf spacing 15.00 cm, depth 30.00 cm, lower playable shelf top 24.80 cm below the eye and 127.07 cm above the drawn floor (design brief, not a USPS figure), real scale: pitch/span/spacing/depth OK
+19:11:59.158 MASTERY rows of letters [0,1,1,0,1,0,0,0], hold letter 5
+19:11:59.159 MASTERY Show my case at open: yaw 5.15..7.71, pitch 12.84..15.44 deg, spare 3.62 deg
+19:11:59.167 MASTERY neighbour start hint (both lines and backing): yaw -7.99..4.08, pitch 15.72..18.57 deg
+19:11:59.168 MASTERY neighbour Options button: yaw -11.50..-8.95, pitch 12.84..15.44 deg
+19:11:59.168 MASTERY neighbour Start practice button: yaw -7.89..-2.52, pitch 12.84..15.44 deg
+19:11:59.168 MASTERY neighbour Start recall button: yaw -1.36..4.03, pitch 12.84..15.44 deg
+19:11:59.168 MASTERY neighbour Drill pace button: yaw -11.64..-9.25, pitch 9.62..11.69 deg
+19:11:59.168 MASTERY neighbour drill pace caption's place (shown only while the pace is on): yaw 4.54..8.43, pitch 16.01..17.36 deg
+19:11:59.168 MASTERY neighbour Route 1 button: yaw 9.00..11.20, pitch 15.85..17.93 deg
+19:11:59.168 MASTERY neighbour Route 2 button: yaw 8.88..11.05, pitch 12.68..14.76 deg
+19:11:59.168 MASTERY neighbour Hide stand-in case toggle: yaw -11.64..-9.29, pitch 6.43..8.49 deg
+19:11:59.168 MASTERY neighbour top letter: yaw -9.02..9.02, pitch 4.91..12.36 deg
+19:11:59.168 MASTERY neighbour score card's place: yaw -10.34..-0.25, pitch 5.76..10.42 deg
+19:11:59.168 MASTERY neighbour Again button's place: yaw 0.42..4.72, pitch 5.70..8.34 deg
+19:11:59.168 MASTERY neighbour Done button's place: yaw 5.87..10.18, pitch 5.74..8.41 deg
+19:11:59.168 MASTERY neighbour Case check button's place: yaw 2.34..8.27, pitch 9.51..11.69 deg
+19:11:59.601 MASTERY a. before any recall: rows unseen / unseen, counts [learned 0, weak 0, unseen 5] [learned 0, weak 0, unseen 3], words "Not tried 5" / "Not tried 3", marks 8
+19:11:59.602 MASTERY log: CASELIGHT_LOG v1 seq=2 session=s1-k8n5nn route=1 pass=0 mode=idle event=mastery-map row0=unseen row0_learned=0 row0_weak=0 row0_unseen=5 row1=unseen row1_learned=0 row1_weak=0 row1_unseen=3
+19:12:00.529 MASTERY log: CASELIGHT_LOG v1 seq=4 session=s1-k8n5nn route=1 pass=1 mode=recall event=mastery-ignored reason=pass
+19:12:09.978 MASTERY c. after the pass: rows learned / weak, counts [learned 5, weak 0, unseen 0] [learned 2, weak 1, unseen 0], words "Learned" / "Review 1", marks 8
+19:12:09.979 MASTERY log: CASELIGHT_LOG v1 seq=17 session=s1-k8n5nn route=1 pass=1 mode=idle event=mastery-map row0=learned row0_learned=5 row0_weak=0 row0_unseen=0 row1=weak row1_learned=2 row1_weak=1 row1_unseen=0
+19:12:24.700 PROGRESS at open: keys ["caselight.v1.history.1","caselight.v1.last","caselight.v1.route.1"]; caselight.v1.route.1 {"rows":[0]}; caselight.v1.route.2 (none); caselight.v1.last {"x":7,"y":8}; caselight.v1.history.1 [{"x":6,"y":8},{"x":7,"y":8},{"x":7,"y":8},{"x":8,"y":8},{"x":7,"y":8}]; caselight.v1.history.2 (none)
+19:12:24.700 PROGRESS welcome up at open: pressing Reset progress
+19:12:25.343 PROGRESS rows of letters [0,1,1,0,1,0,0,0]
+19:12:34.770 PROGRESS after the pass: keys ["caselight.v1.history.1","caselight.v1.last","caselight.v1.route.1"]; caselight.v1.route.1 {"rows":[0]}; caselight.v1.route.2 (none); caselight.v1.last {"x":7,"y":8}; caselight.v1.history.1 [{"x":7,"y":8}]; caselight.v1.history.2 (none)
+19:12:34.770 PROGRESS last saved {"x":7,"y":8}; our tally 7 of 8
+19:12:34.771 PROGRESS log: CASELIGHT_LOG v1 seq=15 session=s1-2ck246 route=1 pass=1 mode=idle event=progress-saved rows=0 x=7 y=8
+19:12:47.748 PROGRESS at open: keys ["caselight.v1.history.1","caselight.v1.last","caselight.v1.route.1"]; caselight.v1.route.1 {"rows":[0]}; caselight.v1.route.2 (none); caselight.v1.last {"x":7,"y":8}; caselight.v1.history.1 [{"x":7,"y":8}]; caselight.v1.history.2 (none)
+19:12:47.749 PROGRESS expected "Welcome back. Last time: 7 of 8 from memory" / "Route 1: 1 of 2 rows learned"; drawn "Welcome back. Last time: 7 of 8 from memory" / "Route 1: 1 of 2 rows learned"
+19:12:47.752 PROGRESS log: CASELIGHT_LOG v1 seq=1 session=s1-87t2w0 route=1 pass=0 mode=idle event=progress-loaded found=1 route1=0 route2=- x=7 y=8
+19:12:47.760 PROGRESS Reset progress button: yaw -2.80..2.80, pitch -3.50..-1.38 deg, spare 9.00 deg
+19:12:47.760 PROGRESS welcome line 1: yaw -9.43..9.43, pitch -0.17..0.98 deg, spare 2.37 deg
+19:12:47.760 PROGRESS welcome line 2: yaw -4.73..4.73, pitch -1.00..-0.19 deg, spare 7.07 deg
+19:12:47.760 PROGRESS Reset progress size 5.60 x 2.12 deg
+19:12:47.760 PROGRESS Reset progress to the start hint (both lines and backing): 17.10 deg
+19:12:47.760 PROGRESS Reset progress to the Options button: 15.49 deg
+19:12:47.760 PROGRESS Reset progress to the Start practice button: 14.21 deg
+19:12:47.760 PROGRESS Reset progress to the Start recall button: 14.21 deg
+19:12:47.760 PROGRESS Reset progress to the Drill pace button: 12.75 deg
+19:12:47.760 PROGRESS Reset progress to the Show my case button: 14.41 deg
+19:12:47.760 PROGRESS Reset progress to the Hide stand-in case button: 10.15 deg
+19:12:47.760 PROGRESS Reset progress to the drill pace caption's place: 17.47 deg
+19:12:47.760 PROGRESS Reset progress to the Route 1 button: 18.31 deg
+19:12:47.760 PROGRESS Reset progress to the Route 2 button: 15.32 deg
+19:12:47.760 PROGRESS Reset progress to the Place on wall button: 20.22 deg
+19:12:47.761 PROGRESS Reset progress to the Veteran mode button: 14.43 deg
+19:12:47.761 PROGRESS Reset progress to the case caption (text and backing): 3.19 deg
+19:12:47.761 PROGRESS Reset progress to the version tag: 6.06 deg
+19:12:47.762 SPACING welcome view: 11 buttons checked (ResetProgressButton, OptionsButton, StartPracticeButton, StartRecallButton, ShowMyCaseButton, RouteButton_1, RouteButton_2, PlaceOnWallButton, PlaceInFrontButton, VeteranModeButton, ShareNotesButton); exempt {"panel backplate":6}; unclassified 0
+19:12:47.762 SPACING welcome view smallest target: 2.19 x 2.07 deg (RouteButton_1)
+19:12:47.762 SPACING welcome view smallest gap: 1.06 deg (OptionsButton ~ StartPracticeButton)
+19:12:47.762 SPACING welcome view 5 smallest gaps: OptionsButton ~ StartPracticeButton 1.06; RouteButton_1 ~ RouteButton_2 1.09; StartRecallButton ~ ShowMyCaseButton 1.12; StartPracticeButton ~ StartRecallButton 1.16; PlaceInFrontButton ~ VeteranModeButton 1.16
+19:12:47.763 SPACING welcome view pairs under 1 deg: none
+19:12:48.711 PROGRESS after Route 2: "Welcome back. Last time: 7 of 8 from memory" / "Route 2: 0 of 2 rows learned" (expected line 2 "Route 2: 0 of 2 rows learned")
+19:12:49.647 PROGRESS after the opening Start: keys ["caselight.v1.history.1","caselight.v1.last","caselight.v1.route.1"]; caselight.v1.route.1 {"rows":[0]}; caselight.v1.route.2 (none); caselight.v1.last {"x":7,"y":8}; caselight.v1.history.1 [{"x":7,"y":8}]; caselight.v1.history.2 (none)
+19:13:02.948 PROGRESS at open: keys ["caselight.v1.history.1","caselight.v1.last","caselight.v1.route.1"]; caselight.v1.route.1 {"rows":[0]}; caselight.v1.route.2 (none); caselight.v1.last {"x":7,"y":8}; caselight.v1.history.1 [{"x":7,"y":8}]; caselight.v1.history.2 (none)
+19:13:03.000 CURVE saved at open (test's own reading): [{"x":7,"y":8}]
+19:13:03.005 CURVE at open: points [{"x":7,"y":8}]; labels ["7/8"]; drawn 0:"7/8"@4.68; caption "Recall passes"
+19:13:03.010 CURVE at open: caption yaw 5.09..7.79, pitch 17.72..18.23 deg; label 0 yaw 4.31..5.05, pitch 15.96..16.40 deg; line yaw 4.61..4.79, pitch 17.25..17.43 deg
+19:13:03.011 CURVE at open: whole curve yaw 4.31..7.79, pitch 15.96..18.23 deg; display spare 0.83 deg; inside the preview still true
+19:13:03.013 CURVE at open: welcome panel yaw -9.91..9.91, pitch -3.82..1.26 deg (2 rounded rectangles, 3 Texts)
+19:13:03.016 CURVE at open: 21 neighbours checked (ResetProgressButton, OptionsButton, StartPracticeButton, StartRecallButton, ShowMyCaseButton, RouteButton_1, RouteButton_2, PlaceOnWallButton, PlaceInFrontButton, VeteranModeButton, ShareNotesButton, WelcomeProgress, LedgeControls, RoutePicker, PlacementControls, VeteranControls, ShareNotesPanel, welcome panel, start hint, version tag, case caption); nearest label 0 ~ LedgeControls 0.18 deg
+19:13:03.018 CURVE at open: 166 cells and row labels; nearest label 0 ~ cell 61 14.15 deg
+19:13:03.019 CURVE at open: pinch takers under the curve []; census entries of it []
+19:13:03.020 CURVE parents: RoutePicker < CaseControls < CaseRoot < CaseLight
+19:13:03.410 PROGRESS after Reset progress: keys []; caselight.v1.route.1 (none); caselight.v1.route.2 (none); caselight.v1.last (none); caselight.v1.history.1 (none); caselight.v1.history.2 (none)
+19:13:03.413 CURVE after Reset progress: shown parts []; points []; labels []
+19:13:12.736 CURVE pass 1 tally: 7 from memory, 1 helped (point 7/8)
+19:13:12.742 CURVE after pass 1: points [{"x":7,"y":8}]; labels ["7/8"]; drawn 0:"7/8"@4.68; caption "Recall passes"
+19:13:21.166 CURVE pass 2 tally: 8 from memory, 0 helped (point 8/8)
+19:13:21.174 CURVE after pass 2: points [{"x":7,"y":8},{"x":8,"y":8}]; labels ["7/8","8/8"]; drawn 0:"7/8"@4.68 1:"8/8"@5.53; caption "Recall passes"
+19:13:21.177 CURVE after pass 2: line 14 vertices; leftmost dot at pitch 17.342 deg (share 0.875), rightmost at 17.452 deg (share 1.000)
+19:13:21.177 CURVE caselight.v1.history.1 after pass 2 (test's own reading): [{"x":7,"y":8},{"x":8,"y":8}]
+19:13:21.177 CURVE log: CASELIGHT_LOG v1 seq=14 session=s1-psxi2m route=1 pass=1 mode=idle event=history-saved x=7 y=8 passes=1 | CASELIGHT_LOG v1 seq=26 session=s1-psxi2m route=1 pass=2 mode=idle event=history-saved x=8 y=8 passes=2
+19:13:21.181 CURVE after pass 2: caption yaw 5.09..7.79, pitch 17.72..18.23 deg; label 0 yaw 4.31..5.05, pitch 15.96..16.40 deg; label 1 yaw 5.14..5.93, pitch 15.96..16.40 deg; line yaw 4.61..5.66, pitch 17.25..17.54 deg
+19:13:21.182 CURVE after pass 2: whole curve yaw 4.31..7.79, pitch 15.96..18.23 deg; display spare 0.83 deg; inside the preview still true
+19:13:21.186 CURVE after pass 2: 21 neighbours checked (OptionsButton, StartPracticeButton, StartRecallButton, ShowMyCaseButton, RouteButton_1, RouteButton_2, PlaceOnWallButton, PlaceInFrontButton, VeteranModeButton, ShareNotesButton, AgainButton, DoneButton, CaseCheckButton, LedgeControls, RoutePicker, PlacementControls, VeteranControls, ShareNotesPanel, ExitControls, version tag, case caption); nearest label 0 ~ LedgeControls 0.18 deg
+19:13:21.189 CURVE after pass 2: 166 cells and row labels; nearest label 0 ~ cell 61 14.15 deg
+19:13:21.190 CURVE after pass 2: pinch takers under the curve []; census entries of it []
+19:13:21.190 CURVE done: 7/8 then 8/8
+19:13:35.463 PROGRESS at open: keys ["caselight.v1.history.1","caselight.v1.last","caselight.v1.route.1"]; caselight.v1.route.1 {"rows":[0,1]}; caselight.v1.route.2 (none); caselight.v1.last {"x":15,"y":16}; caselight.v1.history.1 [{"x":7,"y":8},{"x":8,"y":8}]; caselight.v1.history.2 (none)
+19:13:35.463 PROGRESS reset: our keys before ["caselight.v1.history.1","caselight.v1.last","caselight.v1.route.1"], other keys []
+19:13:35.466 PROGRESS welcome at open: ["Welcome back. Last time: 15 of 16 from memory","Route 1: 2 of 2 rows learned"]; live colliders under it ["WelcomeProgress","Collider","InteractionPlaneColliderRoot"]
+19:13:35.876 PROGRESS Veteran on: live colliders under the welcome []
+19:13:36.726 PROGRESS Veteran off: welcome ["Welcome back. Last time: 15 of 16 from memory","Route 1: 2 of 2 rows learned"]
+19:13:37.133 PROGRESS after Reset progress: keys []; caselight.v1.route.1 (none); caselight.v1.route.2 (none); caselight.v1.last (none); caselight.v1.history.1 (none); caselight.v1.history.2 (none)
+19:13:37.134 PROGRESS log: CASELIGHT_LOG v1 seq=2 session=s1-ctzqrd route=1 pass=0 mode=idle event=progress-reset removed=3
+19:13:48.181 HINT at open: shown true, playing true, end none, drawn true, top letter 0
+19:13:49.957 HINT full hand over 1.8 s (18 frames): yaw 1.15..12.64, pitch 4.80..11.94 deg; nearest skinned vertex to the index tip 0.50 cm
+19:13:49.957 HINT clearance to version tag (yaw 7.81..9.97, pitch 2.04..3.19 deg): 1.79 deg
+19:13:49.957 HINT clearance to caption (yaw -11.04..7.31, pitch 1.81..3.82 deg): 0.98 deg
+19:13:49.957 HINT clearance to credit line (yaw -10.22..6.47, pitch 1.81..2.53 deg): 2.27 deg
+19:13:49.957 HINT clearance to start hint (yaw -7.99..4.08, pitch 15.72..18.57 deg): 3.78 deg
+19:13:49.957 HINT clearance to drill pace caption's place (yaw 4.54..8.43, pitch 16.01..17.36 deg): 4.07 deg
+19:13:49.957 HINT clearance to OptionsButton (yaw -11.50..-8.95, pitch 12.84..15.44 deg): 10.10 deg
+19:13:49.957 HINT clearance to StartPracticeButton (yaw -7.89..-2.52, pitch 12.84..15.44 deg): 4.49 deg
+19:13:49.957 HINT clearance to StartRecallButton (yaw -1.36..4.03, pitch 12.84..15.44 deg): 0.90 deg
+19:13:49.957 HINT clearance to DrillPaceButton (yaw -11.64..-9.25, pitch 9.62..11.69 deg): 10.39 deg
+19:13:49.957 HINT clearance to ShowMyCaseButton (yaw 5.15..7.71, pitch 12.84..15.44 deg): 0.90 deg
+19:13:49.957 HINT clearance to HideStandInButton (yaw -11.64..-9.29, pitch 6.43..8.49 deg): 10.43 deg
+19:13:49.957 HINT clearance to RouteButton_1 (yaw 9.00..11.20, pitch 15.85..17.93 deg): 4.51 deg
+19:13:49.957 HINT clearance to RouteButton_2 (yaw 8.88..11.05, pitch 12.68..14.76 deg): 1.73 deg
+19:13:49.957 HINT clearance to PlaceOnWallButton (yaw 15.01..24.70, pitch 14.74..18.06 deg): 5.77 deg
+19:13:49.957 HINT clearance to VeteranModeButton (yaw 15.06..24.65, pitch 6.24..9.25 deg): 2.42 deg
+19:13:50.576 HINT end line: CASELIGHT_LOG v1 seq=4 session=s1-gcln8z route=1 pass=1 mode=practice event=pinch-hint-end reason=grab
+19:14:13.450 STANDIN welcome up at open: pressing Reset progress to leave the store empty
+19:14:13.897 STANDIN top letter 0: answer cell 9, its label at x -26.67, the cell at x -26.67
+19:14:14.832 STANDIN on: hidden true, toggle true, CaseLines false, labels 0/75, street names 0/10, HOLD false; log: CASELIGHT_LOG v1 seq=3 session=s1-imnu76 route=1 pass=0 mode=idle event=stand-in hidden=1
+19:14:16.242 STANDIN drop: cell 9, result correct; log: CASELIGHT_LOG v1 seq=5 session=s1-imnu76 route=1 pass=1 mode=practice piece=0 address="2195 FAIRWAYS CT" placed=9 right=9 result=correct memory=0
+19:14:29.687 IKLOOP body: eye (0.00, 0.00, 0.00), left shoulder (-20.00, -37.00, 0.00), right shoulder (20.00, -37.00, 0.00), CaseRoot (0.00, 0.00, -57.00)
+19:14:31.806 IKLOOP press StartPracticeButton: left hand, LEAF's pick indirect, shoulder 75.0 cm (direct reach 67.5), elbow 180 deg, pressed direct; wrist to button at trigger start 14.1 cm; the hand's SIK interactor targeted StartPracticeButton (triggering) 4 frames, StartPracticeButton 1 frames; events triggerStart:LeftHand triggerEnd:LeftHand; pass-start lines 1
+19:14:34.744 IKLOOP practice: Piece_0 to cell 9 by the left hand; grab point direct, shoulder 64.2 cm (direct reach 67.5), elbow 133 deg; let-go point 48.5 cm from the shoulder (elbow 86 deg); pinch point to letter at grab 0.54 cm; letter on its last held frame 0.50 cm from the aim ((-19.73, -14.42, -42.43) vs (-20.03, -14.27, -42.80)); 46 frames in hand; the hand's SIK interactor targeted Piece_0 2 frames, Piece_0 (triggering) 46 frames; events triggerStart:LeftHand dragStart:LeftHand triggerEnd:LeftHand dragEnd:LeftHand
+19:14:34.773 IKLOOP practice: Piece_0 placed in cell 9 (lit while in hand on all 46 frames)
+19:14:36.842 IKLOOP press StartRecallButton: right hand, LEAF's pick indirect, shoulder 75.8 cm (direct reach 67.5), elbow 180 deg, pressed direct; wrist to button at trigger start 13.5 cm; the hand's SIK interactor targeted StartRecallButton (triggering) 4 frames, StartRecallButton 1 frames; events triggerStart:RightHand triggerEnd:RightHand; pass-start lines 1
+19:14:39.975 IKLOOP recall right: Piece_4 to cell 76 by the right hand; grab point direct, shoulder 64.2 cm (direct reach 67.5), elbow 133 deg; let-go point 55.8 cm from the shoulder (elbow 105 deg); pinch point to letter at grab 0.50 cm; letter on its last held frame 0.42 cm from the aim ((31.45, -3.25, -42.46) vs (31.47, -3.00, -42.80)); 34 frames in hand; the hand's SIK interactor targeted Piece_4 2 frames, Piece_4 (triggering) 34 frames; events triggerStart:RightHand dragStart:RightHand triggerEnd:RightHand dragEnd:RightHand
+19:14:40.009 IKLOOP recall right: Piece_4 placed in cell 76 from memory (dark on all 34 frames in hand)
+19:14:43.728 IKLOOP recall miss: Piece_3 to cell 18 by the left hand; grab point direct, shoulder 64.5 cm (direct reach 67.5), elbow 134 deg; let-go point 51.6 cm from the shoulder (elbow 94 deg); pinch point to letter at grab 0.09 cm; letter on its last held frame 0.14 cm from the aim ((-2.89, -14.52, -43.11) vs (-2.88, -14.39, -43.16)); 33 frames in hand; the hand's SIK interactor targeted Piece_3 2 frames, Piece_3 (triggering) 33 frames; events triggerStart:LeftHand dragStart:LeftHand triggerEnd:LeftHand dragEnd:LeftHand
+19:14:43.976 IKLOOP recall miss: Piece_3 in cell 18, answer 17 lit (outside the display true, head still after 6 frames; dark on all 33 frames in hand)
+19:14:43.977 IKLOOP done: hands left, right, left; no LEAF diagnostic
+19:14:43.980 IKLOOP camera restored (the IK head had turned it 0.00 deg)
+19:14:58.241 SPACING camera at (0.00, 0.00, 0.00), forward (0.00, 0.00, 1.00)
+19:14:58.243 SPACING opening view: 10 buttons checked (OptionsButton, StartPracticeButton, StartRecallButton, ShowMyCaseButton, RouteButton_1, RouteButton_2, PlaceOnWallButton, PlaceInFrontButton, VeteranModeButton, ShareNotesButton); exempt {"panel backplate":5}; unclassified 0
+19:14:58.243 SPACING opening view smallest target: 2.19 x 2.07 deg (RouteButton_1)
+19:14:58.243 SPACING opening view smallest gap: 1.06 deg (OptionsButton ~ StartPracticeButton)
+19:14:58.243 SPACING opening view 5 smallest gaps: OptionsButton ~ StartPracticeButton 1.06; RouteButton_1 ~ RouteButton_2 1.09; StartRecallButton ~ ShowMyCaseButton 1.12; StartPracticeButton ~ StartRecallButton 1.16; PlaceInFrontButton ~ VeteranModeButton 1.16
+19:14:58.243 SPACING opening view pairs under 1 deg: none
+19:14:58.701 SPACING Options open: 12 buttons checked (OptionsButton, StartPracticeButton, StartRecallButton, ShowMyCaseButton, DrillPaceButton, HideStandInButton, RouteButton_1, RouteButton_2, PlaceOnWallButton, PlaceInFrontButton, VeteranModeButton, ShareNotesButton); exempt {"panel backplate":5}; unclassified 0
+19:14:58.701 SPACING Options open smallest target: 2.36 x 2.05 deg (HideStandInButton)
+19:14:58.701 SPACING Options open smallest gap: 1.06 deg (OptionsButton ~ StartPracticeButton)
+19:14:58.701 SPACING Options open 5 smallest gaps: OptionsButton ~ StartPracticeButton 1.06; RouteButton_1 ~ RouteButton_2 1.09; StartRecallButton ~ ShowMyCaseButton 1.12; DrillPaceButton ~ HideStandInButton 1.14; OptionsButton ~ DrillPaceButton 1.14
+19:14:58.702 SPACING Options open pairs under 1 deg: none
+19:14:59.210 SPACING Options closed again: 10 buttons checked (OptionsButton, StartPracticeButton, StartRecallButton, ShowMyCaseButton, RouteButton_1, RouteButton_2, PlaceOnWallButton, PlaceInFrontButton, VeteranModeButton, ShareNotesButton); exempt {"panel backplate":5}; unclassified 0
+19:14:59.210 SPACING Options closed again smallest target: 2.19 x 2.07 deg (RouteButton_1)
+19:14:59.210 SPACING Options closed again smallest gap: 1.06 deg (OptionsButton ~ StartPracticeButton)
+19:14:59.210 SPACING Options closed again 5 smallest gaps: OptionsButton ~ StartPracticeButton 1.06; RouteButton_1 ~ RouteButton_2 1.09; StartRecallButton ~ ShowMyCaseButton 1.12; StartPracticeButton ~ StartRecallButton 1.16; PlaceInFrontButton ~ VeteranModeButton 1.16
+19:14:59.210 SPACING Options closed again pairs under 1 deg: none
+19:14:59.210 SPACING done
+19:15:10.913 SPACING mid-pass, Options open: 10 buttons checked (OptionsButton, StartPracticeButton, StartRecallButton, ShowMyCaseButton, DrillPaceButton, HideStandInButton, PlaceOnWallButton, PlaceInFrontButton, VeteranModeButton, ShareNotesButton); exempt {"letter":1,"panel backplate":5}; unclassified 0
+19:15:10.913 SPACING mid-pass, Options open smallest target: 2.36 x 2.05 deg (HideStandInButton)
+19:15:10.914 SPACING mid-pass, Options open smallest gap: 1.06 deg (OptionsButton ~ StartPracticeButton)
+19:15:10.914 SPACING mid-pass, Options open 5 smallest gaps: OptionsButton ~ StartPracticeButton 1.06; StartRecallButton ~ ShowMyCaseButton 1.12; DrillPaceButton ~ HideStandInButton 1.14; OptionsButton ~ DrillPaceButton 1.14; StartPracticeButton ~ StartRecallButton 1.16
+19:15:10.914 SPACING mid-pass, Options open pairs under 1 deg: none
+19:15:19.222 SPACING exit view, score card up: 13 buttons checked (OptionsButton, StartPracticeButton, StartRecallButton, ShowMyCaseButton, RouteButton_1, RouteButton_2, PlaceOnWallButton, PlaceInFrontButton, VeteranModeButton, ShareNotesButton, AgainButton, DoneButton, CaseCheckButton); exempt {"panel backplate":6}; unclassified 0
+19:15:19.222 SPACING exit view, score card up smallest target: 2.19 x 2.07 deg (RouteButton_1)
+19:15:19.222 SPACING exit view, score card up smallest gap: 1.06 deg (OptionsButton ~ StartPracticeButton)
+19:15:19.222 SPACING exit view, score card up 5 smallest gaps: OptionsButton ~ StartPracticeButton 1.06; RouteButton_1 ~ RouteButton_2 1.09; DoneButton ~ CaseCheckButton 1.09; StartRecallButton ~ ShowMyCaseButton 1.12; AgainButton ~ DoneButton 1.15
+19:15:19.223 SPACING exit view, score card up pairs under 1 deg: none
+19:15:19.223 SPACING exit view, score card up: score card yaw -10.34..-0.25, pitch 5.76..10.42 deg; 19 pinchable objects measured, over the card: none
+19:15:19.718 SPACING exit view, score card up: Options press: open false, panel drawn false, ignored +1; log: CASELIGHT_LOG v1 seq=16 session=s1-o7f4wf route=1 pass=1 mode=idle event=options-ignored reason=score-card
+19:15:19.721 SPACING exit view after an Options press: 13 buttons checked (OptionsButton, StartPracticeButton, StartRecallButton, ShowMyCaseButton, RouteButton_1, RouteButton_2, PlaceOnWallButton, PlaceInFrontButton, VeteranModeButton, ShareNotesButton, AgainButton, DoneButton, CaseCheckButton); exempt {"panel backplate":6}; unclassified 0
+19:15:19.721 SPACING exit view after an Options press smallest target: 2.19 x 2.07 deg (RouteButton_1)
+19:15:19.721 SPACING exit view after an Options press smallest gap: 1.06 deg (OptionsButton ~ StartPracticeButton)
+19:15:19.721 SPACING exit view after an Options press 5 smallest gaps: OptionsButton ~ StartPracticeButton 1.06; RouteButton_1 ~ RouteButton_2 1.09; DoneButton ~ CaseCheckButton 1.09; StartRecallButton ~ ShowMyCaseButton 1.12; AgainButton ~ DoneButton 1.15
+19:15:19.721 SPACING exit view after an Options press pairs under 1 deg: none
+19:15:19.721 SPACING exit view after an Options press: score card yaw -10.34..-0.25, pitch 5.76..10.42 deg; 19 pinchable objects measured, over the card: none
+19:15:24.630 SPACING exit view, score card timed out: Options press: open false, panel drawn false, ignored +1; log: CASELIGHT_LOG v1 seq=17 session=s1-o7f4wf route=1 pass=1 mode=idle event=options-ignored reason=exit
+19:15:24.632 SPACING exit view, score card timed out: 13 buttons checked (OptionsButton, StartPracticeButton, StartRecallButton, ShowMyCaseButton, RouteButton_1, RouteButton_2, PlaceOnWallButton, PlaceInFrontButton, VeteranModeButton, ShareNotesButton, AgainButton, DoneButton, CaseCheckButton); exempt {"panel backplate":6}; unclassified 0
+19:15:24.632 SPACING exit view, score card timed out smallest target: 2.19 x 2.07 deg (RouteButton_1)
+19:15:24.632 SPACING exit view, score card timed out smallest gap: 1.06 deg (OptionsButton ~ StartPracticeButton)
+19:15:24.632 SPACING exit view, score card timed out 5 smallest gaps: OptionsButton ~ StartPracticeButton 1.06; RouteButton_1 ~ RouteButton_2 1.09; DoneButton ~ CaseCheckButton 1.09; StartRecallButton ~ ShowMyCaseButton 1.12; AgainButton ~ DoneButton 1.15
+19:15:24.632 SPACING exit view, score card timed out pairs under 1 deg: none
+19:15:25.062 SPACING Case check running: 10 buttons checked (OptionsButton, StartPracticeButton, StartRecallButton, ShowMyCaseButton, PlaceOnWallButton, PlaceInFrontButton, VeteranModeButton, ShareNotesButton, AgainButton, DoneButton); exempt {"panel backplate":6,"slot-pinch target":1}; unclassified 0
+19:15:25.062 SPACING Case check running smallest target: 2.55 x 2.60 deg (OptionsButton)
+19:15:25.062 SPACING Case check running smallest gap: 1.06 deg (OptionsButton ~ StartPracticeButton)
+19:15:25.062 SPACING Case check running 5 smallest gaps: OptionsButton ~ StartPracticeButton 1.06; StartRecallButton ~ ShowMyCaseButton 1.12; AgainButton ~ DoneButton 1.15; StartPracticeButton ~ StartRecallButton 1.16; PlaceInFrontButton ~ VeteranModeButton 1.16
+19:15:25.062 SPACING Case check running pairs under 1 deg: none
+19:15:25.975 SPACING after Done, the Case check's card up: Options press: open false, panel drawn false, ignored +1; log: CASELIGHT_LOG v1 seq=20 session=s1-o7f4wf route=1 pass=1 mode=idle event=options-ignored reason=score-card
+19:15:31.188 SPACING exit views done
+19:15:46.046 SPACING Veteran mode on: 10 buttons checked (OptionsButton, StartPracticeButton, StartRecallButton, ShowMyCaseButton, RouteButton_1, RouteButton_2, PlaceOnWallButton, PlaceInFrontButton, VeteranModeButton, ShareNotesButton); exempt {"panel backplate":5,"slot-pinch target":1}; unclassified 0
+19:15:46.046 SPACING Veteran mode on smallest target: 2.19 x 2.07 deg (RouteButton_1)
+19:15:46.046 SPACING Veteran mode on smallest gap: 1.06 deg (OptionsButton ~ StartPracticeButton)
+19:15:46.046 SPACING Veteran mode on 5 smallest gaps: OptionsButton ~ StartPracticeButton 1.06; RouteButton_1 ~ RouteButton_2 1.09; StartRecallButton ~ ShowMyCaseButton 1.12; StartPracticeButton ~ StartRecallButton 1.16; PlaceInFrontButton ~ VeteranModeButton 1.16
+19:15:46.046 SPACING Veteran mode on pairs under 1 deg: none
+19:15:46.452 SPACING chooser at slot 2: 62.2 cm from the eye
+19:15:46.453 SPACING chooser at slot 2: 3 buttons checked (NoteOption_0, NoteOption_1, NoteOption_2); exempt {"panel backplate":6,"slot-pinch target":1}; unclassified 0; out of view from the turned head 10
+19:15:46.453 SPACING chooser at slot 2 smallest target: 12.69 x 2.76 deg (NoteOption_0)
+19:15:46.453 SPACING chooser at slot 2 smallest gap: 1.27 deg (NoteOption_1 ~ NoteOption_2)
+19:15:46.453 SPACING chooser at slot 2 5 smallest gaps: NoteOption_1 ~ NoteOption_2 1.27; NoteOption_0 ~ NoteOption_1 1.27; NoteOption_0 ~ NoteOption_2 5.32
+19:15:46.453 SPACING chooser at slot 2 pairs under 1 deg: none
+19:15:47.763 SPACING chooser at slot 20: 53.2 cm from the eye
+19:15:47.763 SPACING chooser at slot 20: 3 buttons checked (NoteOption_0, NoteOption_1, NoteOption_2); exempt {"panel backplate":6,"slot-pinch target":1}; unclassified 0; out of view from the turned head 10
+19:15:47.764 SPACING chooser at slot 20 smallest target: 12.71 x 2.77 deg (NoteOption_2)
+19:15:47.764 SPACING chooser at slot 20 smallest gap: 1.27 deg (NoteOption_0 ~ NoteOption_1)
+19:15:47.764 SPACING chooser at slot 20 5 smallest gaps: NoteOption_0 ~ NoteOption_1 1.27; NoteOption_1 ~ NoteOption_2 1.27; NoteOption_0 ~ NoteOption_2 5.33
+19:15:47.764 SPACING chooser at slot 20 pairs under 1 deg: none
+19:15:49.096 SPACING chooser at slot 61: 49.5 cm from the eye
+19:15:49.097 SPACING chooser at slot 61: 7 buttons checked (NoteOption_0, NoteOption_1, NoteOption_2, OptionsButton, StartPracticeButton, StartRecallButton, ShowMyCaseButton); exempt {"panel backplate":6,"slot-pinch target":1}; unclassified 0; out of view from the turned head 6
+19:15:49.097 SPACING chooser at slot 61 smallest target: 2.63 x 2.63 deg (OptionsButton)
+19:15:49.097 SPACING chooser at slot 61 smallest gap: 1.08 deg (OptionsButton ~ StartPracticeButton)
+19:15:49.097 SPACING chooser at slot 61 5 smallest gaps: OptionsButton ~ StartPracticeButton 1.08; StartRecallButton ~ ShowMyCaseButton 1.10; StartPracticeButton ~ StartRecallButton 1.20; NoteOption_0 ~ NoteOption_1 1.27; NoteOption_1 ~ NoteOption_2 1.27
+19:15:49.097 SPACING chooser at slot 61 pairs under 1 deg: none
+19:15:50.376 SPACING chooser at slot 78: 60.9 cm from the eye
+19:15:50.377 SPACING chooser at slot 78: 5 buttons checked (NoteOption_0, NoteOption_1, NoteOption_2, VeteranModeButton, ShareNotesButton); exempt {"panel backplate":6,"slot-pinch target":1}; unclassified 0; out of view from the turned head 8
+19:15:50.377 SPACING chooser at slot 78 smallest target: 7.93 x 2.66 deg (ShareNotesButton)
+19:15:50.377 SPACING chooser at slot 78 smallest gap: 1.27 deg (NoteOption_0 ~ NoteOption_1)
+19:15:50.377 SPACING chooser at slot 78 5 smallest gaps: NoteOption_0 ~ NoteOption_1 1.27; NoteOption_1 ~ NoteOption_2 1.27; VeteranModeButton ~ ShareNotesButton 1.31; NoteOption_0 ~ ShareNotesButton 4.22; NoteOption_0 ~ NoteOption_2 5.32
+19:15:50.377 SPACING chooser at slot 78 pairs under 1 deg: none
+19:15:50.840 SPACING Veteran views done
+19:16:14.472 REFUSE precondition: eye (0.00, 0.00, 0.00), our hit (52.90, 44.28, -503.30), 508.0 cm away, tilt 0.00 deg: expect "too-far"
+19:16:16.275 REFUSE cone survey (yaw,pitch deg): (-10,-14) tilt 0.0; (0,-14) tilt 0.0; (10,-14) tilt 0.8; (-10,-10) tilt 0.1; (0,-10) tilt 0.0; (10,-10) tilt 0.0; (-10,-6) tilt 0.0; (0,-6) tilt 0.0; (10,-6) tilt 0.0; (-10,6) tilt 0.0; (0,6) tilt 0.0; (10,6) tilt 0.0; (-10,10) tilt 0.0; (0,10) tilt 0.0; (10,10) tilt 0.0; (-10,14) tilt 90.0; (0,14) tilt 90.0; (10,14) tilt 90.0; earliest surface found more than 35 deg from vertical: (-10,14) tilt 90.0 at (-83.31, 119.62, -472.49)
+19:16:17.133 REFUSE aiming: aim state not-wall, ring at (52.90, 44.28, -502.80) (0.000 cm from our hit + 0.5 cm), outline shown false
+19:16:17.396 REFUSE result: reason too-far, refused 1, placements 0, cue "Walls within 3 m" shown true
+19:16:17.399 WALL after the too-far refusal: outside CaseRoot 277 objects, moved 0; input feedback moved 0; added 0, removed 0
+19:16:17.400 WALL after the too-far refusal: inside CaseRoot 267 objects, local change 0; allowed (aim visuals, cue, named) 1; added 1 (CaseRoot/13:CaseControls/2:PlacementControls/2:PlacementCue), removed 0
+19:16:19.772 REFUSE not-wall: surface tilt 90.0 deg at (-83.31, 119.62, -472.49): reason not-wall, refused 2, cue "Walls only"
+19:16:19.775 WALL after the not-wall refusal: outside CaseRoot 277 objects, moved 0; input feedback moved 0; added 0, removed 0
+19:16:19.777 WALL after the not-wall refusal: inside CaseRoot 267 objects, local change 0; allowed (aim visuals, cue, named) 1; added 1 (CaseRoot/13:CaseControls/2:PlacementControls/2:PlacementCue), removed 0
+19:16:20.236 REFUSE aiming off: ring shown true (it stays with the refuse cue for its 1.5 s), cue shown true
+19:16:21.968 REFUSE done
+19:16:40.558 WALL precondition: eye (0.00, 0.00, -350.00), ray -> (104.13, 87.16, -1340.74): hit (16.11, 13.49, -503.30) (154.7 cm away) normal (-0.00, 0.00, 1.00) tilt 0.00 deg (11 results, 3 empty)
+19:16:41.368 WALL control: ray 40 deg off the camera axis: no hit (25 results, 25 empty)
+19:16:41.370 WALL controls design distance: 57.13 cm (product 57.13)
+19:16:41.371 WALL controls at Lens start (wherever the camera started): group 293.02 cm from the eye, behind it (depth -293.00 cm), design 57.13 cm, predicted scale 1.0000 (held), applied 1.0000
+19:16:42.066 WALL in front: CaseRoot (0.00, 0.00, -407.00) vs the eye plus its authored offset (turned by the head's yaw) (0.00, 0.00, -407.00): 0.0000 cm
+19:16:42.067 WALL controls in front of the eye: group 57.13 cm from the eye, in front of it (depth 57.00 cm), design 57.13 cm, predicted scale 1.0000, applied 1.0000
+19:16:42.569 WALL ambient (0.5 s, no input): outside CaseRoot 0 drift (0 input feedback), inside 0
+19:16:42.570 WALL pinch hint: nothing saved false, playing false; 58 hand joints left out of the rigid snapshots, 0 of them moved in the 0.5 s
+19:16:42.590 WALL open: CaseRoot (0.00, 0.00, -407.00), eye (0.00, 0.00, -350.00), lower row labels -26.00 cm above the eye (drawn), getter now -24.80, at open -24.80; 277 objects outside CaseRoot, 266 inside; drawn face finder in case frame: s 0.000, d 0.000 (336 of 3360 vertices)
+19:16:43.046 SPACING wall placement, aiming: 10 buttons checked (OptionsButton, StartPracticeButton, StartRecallButton, ShowMyCaseButton, RouteButton_1, RouteButton_2, PlaceOnWallButton, PlaceInFrontButton, VeteranModeButton, ShareNotesButton); exempt {"panel backplate":5}; unclassified 0
+19:16:43.046 SPACING wall placement, aiming smallest target: 2.19 x 2.07 deg (RouteButton_1)
+19:16:43.046 SPACING wall placement, aiming smallest gap: 1.06 deg (OptionsButton ~ StartPracticeButton)
+19:16:43.046 SPACING wall placement, aiming 5 smallest gaps: OptionsButton ~ StartPracticeButton 1.06; RouteButton_1 ~ RouteButton_2 1.09; StartRecallButton ~ ShowMyCaseButton 1.12; StartPracticeButton ~ StartRecallButton 1.16; PlaceInFrontButton ~ VeteranModeButton 1.16
+19:16:43.046 SPACING wall placement, aiming pairs under 1 deg: none
+19:16:43.665 WALL off axis: "none" after 99 ms and 3 new product hit tests; held 523 ms over 16 frames (19 hit tests since the swing)
+19:16:43.912 WALL no-hit: reason no-hit, refused 1, cue "No wall seen: Place in front of me" shown true
+19:16:43.915 WALL after the no-hit pinch: outside CaseRoot 277 objects, moved 0; input feedback moved 0; added 0, removed 0
+19:16:43.917 WALL after the no-hit pinch: inside CaseRoot 267 objects, local change 0; allowed (aim visuals, cue, named) 0; added 1 (CaseRoot/13:CaseControls/2:PlacementControls/2:PlacementCue), removed 0
+19:16:43.981 WALL targeting interactors: CaseLightLeafInteractor
+19:16:45.693 WALL aiming: our hit (16.11, 13.49, -503.30) (154.7 cm away); our wall normal (mean of 3 hits) (-0.00, 0.00, 1.00) (tilt 0.000 deg); single-hit normals 0.00/0.00/0.00 deg off it; plane through the 3 hit positions 0.00 deg off it; outline at (16.11, 0.00, -503.30); product hit tests 82, results 53
+19:16:46.227 WALL placed: product hit (16.11, 13.49, -503.30) normal (-0.00, 0.00, 1.00) vs ours (16.11, 13.49, -503.30) (-0.00, 0.00, 1.00): 0.000 cm, 0.000 deg
+19:16:46.234 WALL drawn face vs our hit: along the wall 0.000 cm, off the wall plane -0.000 cm (336 of 3360 vertices on that plane), drawn vertical centre -56.80 vs hit y 13.49 (height is kept to the eye, not to the hit)
+19:16:46.237 WALL pose: up (0.00, 1.00, 0.00) (0.000 deg), drawn up 0.000 deg; face (-0.00, 0.00, 1.00) vs wall normal 0.000 deg, drawn face 0.000 deg, vs the direction to the camera (level) 6.00 deg
+19:16:46.250 WALL shelf: lower row labels -26.000 cm above the eye (open -26.000); getter -24.800 (open -24.800); hit was 13.49 cm above the eye
+19:16:46.250 WALL controls on the wall: group 154.19 cm from the eye, predicted scale 2.6991, applied 2.6991
+19:16:46.251 SPACING case on the wall (154.2 cm, scale 2.699): 10 buttons checked (OptionsButton, StartPracticeButton, StartRecallButton, ShowMyCaseButton, RouteButton_1, RouteButton_2, PlaceOnWallButton, PlaceInFrontButton, VeteranModeButton, ShareNotesButton); exempt {"panel backplate":5}; unclassified 0
+19:16:46.251 SPACING case on the wall (154.2 cm, scale 2.699) smallest target: 2.12 x 2.11 deg (RouteButton_2)
+19:16:46.251 SPACING case on the wall (154.2 cm, scale 2.699) smallest gap: 1.02 deg (StartRecallButton ~ ShowMyCaseButton)
+19:16:46.251 SPACING case on the wall (154.2 cm, scale 2.699) 5 smallest gaps: StartRecallButton ~ ShowMyCaseButton 1.02; ShowMyCaseButton ~ RouteButton_2 1.05; RouteButton_1 ~ RouteButton_2 1.11; StartPracticeButton ~ StartRecallButton 1.13; OptionsButton ~ StartPracticeButton 1.16
+19:16:46.251 SPACING case on the wall (154.2 cm, scale 2.699) pairs under 1 deg: none
+19:16:46.254 SPACING case on the wall: 16 control rectangles vs 166 cells and row labels; smallest clearance 2.79 deg (VeteranControls ~ cell 76)
+19:16:46.254 WALL controls on the wall: group 154.19 cm from the eye, in front of it (depth 153.30 cm), design 57.13 cm, predicted scale 2.6991, applied 2.6991
+19:16:46.256 WALL after the wall placement: outside CaseRoot 277 objects, moved 0; input feedback moved 0; added 0, removed 0
+19:16:46.257 WALL after the wall placement: inside CaseRoot 267 objects, local change 0; allowed (aim visuals, cue, named) 1; added 1 (CaseRoot/13:CaseControls/2:PlacementControls/2:PlacementCue), removed 0
+19:16:46.258 WALL away from the in-front pose: 97.64 cm, predicted from our own hit 97.64 cm
+19:16:46.912 WALL fallback: CaseRoot (0.00, 0.00, -407.00) vs open (0.00, 0.00, -407.00): 0.0000 cm, 0.0000 deg (the head has not moved, so the opening pose relative to the head is the opening pose); lower shelf getter -24.800; Label_0 (-49.53, -26.00, -406.86)
+19:16:46.915 WALL controls placed back in front: group 57.13 cm from the eye, in front of it (depth 57.00 cm), design 57.13 cm, predicted scale 1.0000, applied 1.0000
+19:16:46.916 WALL after Place in front of me: outside CaseRoot 277 objects, moved 0; input feedback moved 0; added 0, removed 0
+19:16:46.917 WALL after Place in front of me: inside CaseRoot 267 objects, local change 0; allowed (aim visuals, cue, named) 1; added 1 (CaseRoot/13:CaseControls/2:PlacementControls/2:PlacementCue), removed 0
+19:16:46.918 SPACING case placed in front (57.1 cm, scale 1.000): 10 buttons checked (OptionsButton, StartPracticeButton, StartRecallButton, ShowMyCaseButton, RouteButton_1, RouteButton_2, PlaceOnWallButton, PlaceInFrontButton, VeteranModeButton, ShareNotesButton); exempt {"panel backplate":5}; unclassified 0
+19:16:46.918 SPACING case placed in front (57.1 cm, scale 1.000) smallest target: 2.19 x 2.07 deg (RouteButton_1)
+19:16:46.918 SPACING case placed in front (57.1 cm, scale 1.000) smallest gap: 1.06 deg (OptionsButton ~ StartPracticeButton)
+19:16:46.918 SPACING case placed in front (57.1 cm, scale 1.000) 5 smallest gaps: OptionsButton ~ StartPracticeButton 1.06; RouteButton_1 ~ RouteButton_2 1.09; StartRecallButton ~ ShowMyCaseButton 1.12; StartPracticeButton ~ StartRecallButton 1.16; PlaceInFrontButton ~ VeteranModeButton 1.16
+19:16:46.918 SPACING case placed in front (57.1 cm, scale 1.000) pairs under 1 deg: none
+19:16:46.921 SPACING case placed in front: 16 control rectangles vs 166 cells and row labels; smallest clearance 4.07 deg (VeteranControls ~ cell 65)
+19:16:46.921 WALL done
+19:17:07.310 WALL controls at Lens start: group 57.13 cm from the eye, in front of it (depth 57.00 cm), design 57.13 cm, predicted scale 1.0000, applied 1.0000
+19:17:07.615 CF1 precondition: eye (0.00, 0.00, 0.00), wall 508.0 cm away
+19:17:10.305 CF1 before re-placing: mode recall, unaided 1, helped 0, total 1, placed this pass 1, top 2, held -1, remaining [2,6,3,1,7,5,0], lit 17, placed letters 4
+19:17:10.364 CF1 waiting up to 150 s for the user to walk within 3 m of the wall (preview: MovePreviewCamera setPosition 0, 0, -350)
+19:18:13.301 WALL controls after the walk toward the wall: group 293.02 cm from the eye, behind it (depth -293.00 cm), design 57.13 cm, predicted scale 1.0000 (held), applied 1.0000
+19:18:13.527 CF1 walked: eye (0.00, 0.00, -350.00), wall 154.7 cm away at (16.11, 13.49, -503.30)
+19:18:15.207 WALL controls re-place 1, on the wall: group 154.19 cm from the eye, in front of it (depth 153.30 cm), design 57.13 cm, predicted scale 2.6991, applied 2.6991
+19:18:15.208 CF1 after the wall re-place: CaseRoot (16.11, 0.00, -503.30); mode recall, unaided 1, helped 0, total 1, placed this pass 1, top 2, held -1, remaining [2,6,3,1,7,5,0], lit 17, placed letters 4
+19:18:16.069 CF1 after Place in front of me (letter 2 in hand): CaseRoot (0.00, 0.00, -407.00), expected (0.00, 0.00, -407.00) (opening offset from the moved head); drag ended false; mode recall, unaided 1, helped 0, total 1, placed this pass 1, top 2, held 2, remaining [2,6,3,1,7,5,0], lit -1, placed letters 4
+19:18:16.070 WALL controls re-place 2, in front of the eye: group 57.13 cm from the eye, in front of it (depth 57.00 cm), design 57.13 cm, predicted scale 1.0000, applied 1.0000
+19:18:23.386 CF1 final: unaided 7, helped 1, total 8; own count unaided 7, helped 1, total 8; card "From memory: 7 of 8 this session"
+19:18:23.386 CF1 done

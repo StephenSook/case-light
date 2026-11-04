@@ -1,4 +1,4 @@
-// Owns: the placement log's line format (CASELIGHT_LOG v1): one line per placement attempt and per pass start, pass end, route switch, Case check start, Case check pinch, Case check end, mastery map shown, mastery map press ignored, Options press ignored, saved progress loaded, saved, reset, full or bad, the opening pinch hint started or ended, and Hide stand-in case switched; the session id shape; and a capped in-memory buffer of lines.
+// Owns: the placement log's line format (CASELIGHT_LOG v1): one line per placement attempt and per pass start, pass end, route switch, Case check start, Case check pinch, Case check end, mastery map shown, mastery map press ignored, Options press ignored, saved progress loaded, saved, reset, full or bad, the opening pinch hint started or ended, Hide stand-in case switched, a shared note sent or received, and a recall pass added to the learning curve; the session id shape; and a capped in-memory buffer of lines.
 // Talks to: nothing (pure TypeScript: no imports, no scene objects, no Lens globals), so plain node can run it; CaseLightMain writes the lines and devpost/tools/summarize_session.py reads them back.
 // Must not: carry personal data (no names, no clock-derived ids), read the scene, or print (CaseLightMain prints).
 
@@ -26,6 +26,9 @@
  *   pinch-hint-start: seq session route pass mode event=pinch-hint-start piece (the letter it aims at)
  *   pinch-hint-end:   seq session route pass mode event=pinch-hint-end reason (grab or start)
  *   stand-in:         seq session route pass mode event=stand-in hidden (1 hidden, 0 shown)
+ *   note-sent:        seq session route pass mode event=note-sent slot note
+ *   note-received:    seq session route pass mode event=note-received slot note
+ *   history-saved:    seq session route pass mode event=history-saved x y passes
  *
  * placed is a separation number, HOLD (a cell of the HOLD block) or OFF (released off the case);
  * right is a separation number or HOLD. memory=1 only for a right recall placement that counts as
@@ -42,6 +45,11 @@
  * card stands.
  * Progress lines are not placements: rows lists the rows learned ("0", "0,1"), "none" for a saved
  * route with no row learned, "-" for nothing saved; x and y are the last score ("-" when none).
+ * Note lines are not placements: one per note shared in a Connected Lenses session, sent or received;
+ * slot is the separation, note the reminder text, or "" when that slot's note was removed. They never
+ * carry a name or anything about the other person.
+ * A history-saved line follows a completed recall pass, just before its progress-saved line: x of y
+ * is that pass's score (from memory of placed) and passes how many points the route's curve now holds.
  */
 
 export const LOG_PREFIX = "CASELIGHT_LOG v1"
@@ -190,6 +198,18 @@ export function formatPinchHintEnd(h: LogHead, reason: string): string {
 
 export function formatStandIn(h: LogHead, hidden: boolean): string {
   return `${head(h)} event=stand-in hidden=${hidden ? 1 : 0}`
+}
+
+/** A completed recall pass added to the route's learning curve: that pass's score, and how many points the curve holds. */
+export function formatHistorySaved(h: LogHead, x: number, y: number, passes: number): string {
+  return `${head(h)} event=history-saved x=${x} y=${y} passes=${passes}`
+}
+
+export type NoteShareDirection = "sent" | "received"
+
+/** One shared note, sent or received: the slot and the reminder text ("" for a removal). */
+export function formatNoteShare(h: LogHead, direction: NoteShareDirection, slot: number, note: string): string {
+  return `${head(h)} event=note-${direction} slot=${slot} note=${logValue(note)}`
 }
 
 /** A short random token of lowercase letters and digits, from a [0, 1) source (Math.random in the Lens). */

@@ -1,4 +1,4 @@
-// Owns: unit tests for Assets/Scripts/CaseLightLog.ts: the CASELIGHT_LOG v1 line format, quoting, the cell tokens, the saved-progress, pinch hint, stand-in and options-ignored event lines, the session id and the capped buffer.
+// Owns: unit tests for Assets/Scripts/CaseLightLog.ts: the CASELIGHT_LOG v1 line format, quoting, the cell tokens, the saved-progress, pinch hint, stand-in, options-ignored and history-saved event lines, the session id and the capped buffer.
 // Talks to: Assets/Scripts/CaseLightLog.ts (pure, no imports), node:test, node:assert.
 // Must not: load any scene code; it parses the lines with its own small parser, not the module's.
 
@@ -22,6 +22,7 @@ import {
   formatPinchHintStart,
   formatPinchHintEnd,
   formatStandIn,
+  formatHistorySaved,
   formatOptionsIgnored,
   rowsToken,
   randomToken,
@@ -111,6 +112,11 @@ test("pinch hint and stand-in lines", () => {
   assert.equal(parse(formatPinchHintEnd(idle, "grab")).reason, "grab")
   assert.equal(formatStandIn(HEAD, true), "CASELIGHT_LOG v1 seq=7 session=s1-k3x9q2 route=2 pass=3 mode=recall event=stand-in hidden=1")
   assert.equal(parse(formatStandIn(HEAD, false)).hidden, "0")
+})
+
+test("a recall pass added to the learning curve: its score and how many points the curve holds", () => {
+  assert.equal(formatHistorySaved(HEAD, 7, 8, 2), "CASELIGHT_LOG v1 seq=7 session=s1-k3x9q2 route=2 pass=3 mode=recall event=history-saved x=7 y=8 passes=2")
+  assert.deepEqual(parse(formatHistorySaved(HEAD, 8, 8, 5)), { seq: "7", session: "s1-k3x9q2", route: "2", pass: "3", mode: "recall", event: "history-saved", x: "8", y: "8", passes: "5" })
 })
 
 test("an ignored Options press names why", () => {

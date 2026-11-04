@@ -1,6 +1,6 @@
-// Owns: the Veteran mode toggle (UIKit BackPlate + Button), the reminder chooser shown beside a pinched slot (UIKit BackPlate + Buttons), and the pinned reminder cards printed at their slots.
-// Talks to: CaseLightVeteran, which subscribes to onToggleVeteran / onPick and calls setVeteranState(), showChooser(), hideChooser(), showNotes(); CaseLightBackingUI (card plates).
-// Must not: store notes, decide which notes show, or pick a slot (CaseLightVeteran owns that; the toggle only mirrors its state).
+// Owns: the Veteran mode toggle (UIKit BackPlate + Button), the Share notes toggle on its own plate beside it, the reminder chooser shown beside a pinched slot (UIKit BackPlate + Buttons), and the pinned reminder cards printed at their slots.
+// Talks to: CaseLightVeteran, which subscribes to onToggleVeteran / onPick and calls setVeteranState(), showChooser(), hideChooser(), showNotes(); CaseLightNoteSync, which subscribes to onToggleShareNotes and calls setShareNotesState(); CaseLightBackingUI (card plates).
+// Must not: store notes, decide which notes show, pick a slot, or start a session or share anything (CaseLightVeteran and CaseLightNoteSync own that; the toggles only mirror their state).
 
 /**
  * The toggle panel sits under Place on wall / Place in front of me, past the right edge of the
@@ -10,8 +10,12 @@
  * chooser with its distance from the eye, so its buttons look the same size at every slot: at
  * least 2 deg tall and at least 1 deg apart (Snap's guidance) at the far corners of the case too. Cards are printed inside the slot's opening, above
  * its label strip, in front of any letter standing in it.
+ * Share notes stands on its own small plate to the right of the Veteran mode plate (SHARE_*), so
+ * Veteran mode keeps its place; it shows whenever the Veteran toggle does, and nothing is nearer
+ * the user over it. It only mirrors CaseLightNoteSync's on/off state.
  * One pinch, one button: a button acts on a release only if the pinch started on it.
  * SceneObject names (stable, for tests): VeteranControls (this object), VeteranModeButton,
+ * ShareNotesPanel, ShareNotesButton,
  * NoteChooser, NoteOption_0..NoteOption_3, PinnedNotes, Note_<slot>, Note_<slot>_Text.
  */
 
@@ -50,6 +54,11 @@ const MAX_OPTIONS = 4
 const EM_PER_CM = 43.886
 const CAP_PER_EM = 0.7
 const NOTE_CAP_CM = 0.8
+/**
+ * Share notes: its plate starts SHARE_PLATE_GAP_CM right of the Veteran mode plate, so the two
+ * buttons are SHARE_PLATE_GAP_CM + 2 * PAD_CM apart (1.3 cm, about 1.3 deg at the panel's 57 cm).
+ */
+const SHARE_PLATE_GAP_CM = 0.6
 /** Card plates and text draw after the case, the letters and the marks. */
 const NOTE_RENDER_ORDER = 50
 
@@ -74,6 +83,15 @@ export class CaseLightVeteranUI extends BaseScriptComponent {
   @widget(new SliderWidget(6, 14, 0.1))
   @hint("Width of the toggle, in cm")
   toggleWidthCm: number = 9.5
+
+  @input
+  @hint("Label on the toggle that shares the reminders with others in a Connected Lenses session (off by default; nothing is shared without a session)")
+  shareNotesLabel: string = "Share notes"
+
+  @input
+  @widget(new SliderWidget(5, 12, 0.1))
+  @hint("Width of the Share notes toggle, in cm")
+  shareWidthCm: number = 8
 
   @input
   @widget(new SliderWidget(8, 16, 0.1))
@@ -107,10 +125,13 @@ export class CaseLightVeteranUI extends BaseScriptComponent {
   @ui.group_end
 
   private readonly _onToggleVeteran = new Event<void>()
+  private readonly _onToggleShareNotes = new Event<void>()
   private readonly _onPick = new Event<string>()
   private toggleButton: Button | null = null
   private veteranOn = false
   private syncing = false
+  private shareButton: Button | null = null
+  private shareOn = false
   /** Name of the button the current pinch started on, or "". */
   private armedButton = ""
   private strayReleases = 0
@@ -131,6 +152,22 @@ export class CaseLightVeteranUI extends BaseScriptComponent {
   /** Fired when Veteran mode is pressed. CaseLightVeteran decides the new state. */
   get onToggleVeteran(): PublicApi<void> {
     return this._onToggleVeteran.publicApi()
+  }
+
+  /** Fired when Share notes is pressed. CaseLightNoteSync decides the new state. */
+  get onToggleShareNotes(): PublicApi<void> {
+    return this._onToggleShareNotes.publicApi()
+  }
+
+  /** True while the Share notes toggle shows its on state. */
+  get isShareNotesOn(): boolean {
+    return this.shareButton ? this.shareButton.isOn : this.shareOn
+  }
+
+  /** Mirror the sharing state on the Share notes toggle. Never fires onToggleShareNotes. */
+  setShareNotesState(on: boolean): void {
+    this.shareOn = on
+    this.applyShareState()
   }
 
   /** Fired with the label of the chooser button pressed. */
@@ -237,6 +274,7 @@ export class CaseLightVeteranUI extends BaseScriptComponent {
     flex.onLayoutComplete.add((r) => {
       plate.size = new vec2(r.containerWidth, r.containerHeight)
     })
+    this.addSharePanel()
 
     // The chooser and the cards live on the case itself (CaseRoot-local), not on this panel.
     const caseRoot = this.sceneObject.getParent() ? this.sceneObject.getParent()! : this.sceneObject
@@ -304,6 +342,69 @@ export class CaseLightVeteranUI extends BaseScriptComponent {
     item.overrideWidth = this.toggleWidthCm
     item.overrideHeight = this.buttonHeightCm
     return item
+  }
+
+  /**
+   * Share notes on its own plate, right of the Veteran mode plate (a child of this panel, so it
+   * moves and scales with it). The same one-pinch-one-button rule as Veteran mode.
+   */
+  private addSharePanel(): void {
+    const root = global.scene.createSceneObject("ShareNotesPanel")
+    root.setParent(this.sceneObject)
+    const veteranPlateW = this.toggleWidthCm + 2 * PAD_CM
+    const sharePlateW = this.shareWidthCm + 2 * PAD_CM
+    root.getTransform().setLocalPosition(new vec3(veteranPlateW / 2 + SHARE_PLATE_GAP_CM + sharePlateW / 2, 0, 0))
+    root.createComponent("Component.Canvas")
+    const plate = root.createComponent(BackPlate.getTypeName()) as BackPlate
+    const content = global.scene.createSceneObject("Content")
+    content.setParent(root)
+    content.getTransform().setLocalPosition(new vec3(0, 0, CONTENT_Z))
+    const flex = this.column(content)
+    const name = "ShareNotesButton"
+    const so = global.scene.createSceneObject(name)
+    so.setParent(content)
+    const size = new vec3(this.shareWidthCm, this.buttonHeightCm, 1)
+    const btn = so.createComponent(Button.getTypeName()) as Button
+    btn.setIsToggleable(true)
+    btn.size = size
+    btn.onInitialized.add(() => {
+      btn.size = size
+      this.applyShareState()
+    })
+    btn.onTriggerDown.add(() => {
+      this.armedButton = name
+    })
+    // As Veteran mode: a write from setShareNotesState is skipped, a flip from a pinch that did
+    // not start here is put back, and each armed pinch reports one press.
+    btn.onValueChange.add(() => {
+      if (this.syncing) return
+      if (this.armedButton !== name) {
+        this.strayReleases++
+        this.applyShareState()
+        return
+      }
+      this.armedButton = ""
+      this.applyShareState()
+      this._onToggleShareNotes.invoke()
+    })
+    this.shareButton = btn
+    this.addButtonLabel(so, this.shareNotesLabel, this.shareWidthCm - 0.5, this.buttonHeightCm - 0.6)
+    const item = so.createComponent(FlexItem.getTypeName()) as FlexItem
+    item.overrideWidth = this.shareWidthCm
+    item.overrideHeight = this.buttonHeightCm
+    flex.addItems([item])
+    flex.onLayoutComplete.add((r) => {
+      plate.size = new vec2(r.containerWidth, r.containerHeight)
+    })
+  }
+
+  private applyShareState(): void {
+    const btn = this.shareButton
+    if (btn && btn.isOn !== this.shareOn) {
+      this.syncing = true
+      btn.isOn = this.shareOn
+      this.syncing = false
+    }
   }
 
   /** One column of up to four buttons; its labels are set each time it is shown. */

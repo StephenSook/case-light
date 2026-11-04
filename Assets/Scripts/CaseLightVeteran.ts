@@ -1,5 +1,5 @@
-// Owns: Veteran mode (on or off), the slot being edited, and keeping the shown reminder cards in step with the note rule; it keeps the shared slot-pinch target live while Veteran mode is on.
-// Talks to: CaseLightMain (build, refresh, setMode, setRoute, onModeChanged, read-outs), CaseLightSlotPinch (the shared slot-pinch target), CaseLightVeteranUI (toggle state, chooser, cards), CaseLightNotes (note store and show rule), CaseLightGeometry (card and chooser positions).
+// Owns: Veteran mode (on or off), the slot being edited, and keeping the shown reminder cards in step with the note rule; it keeps the shared slot-pinch target live while Veteran mode is on, reports each note the person changes, and applies notes shared from a Connected Lenses session to the route in use.
+// Talks to: CaseLightMain (build, refresh, setMode, setRoute, onModeChanged, read-outs), CaseLightSlotPinch (the shared slot-pinch target), CaseLightVeteranUI (toggle state, chooser, cards), CaseLightNotes (note store and show rule), CaseLightNoteShare (the shared-note rules), CaseLightGeometry (card and chooser positions); CaseLightNoteSync subscribes to onLocalNoteChanged and calls applySharedNote / sharedNotesNow.
 // Must not: create text, place or move letters, change any count, or decide when a pass runs (CaseLightMain pauses the letters while Veteran mode is on).
 
 /**
@@ -13,6 +13,7 @@ import WorldCameraFinderProvider from "SpectaclesInteractionKit.lspkg/Providers/
 import Event, { PublicApi } from "SpectaclesInteractionKit.lspkg/Utils/Event"
 import { CaseGeometry, NO_SLOT, SEP_PITCH_CM } from "./CaseLightGeometry"
 import { chooserOptions, NoteStore, notesToShow, NoteViewMode, RouteNotes } from "./CaseLightNotes"
+import { allSharedNotes, applySharedNote, SharedNote } from "./CaseLightNoteShare"
 import { SlotPinchTarget } from "./CaseLightSlotPinch"
 import { CaseLightVeteranUI, NoteCard } from "./CaseLightVeteranUI"
 
@@ -57,6 +58,7 @@ export class CaseLightVeteran extends BaseScriptComponent {
   @ui.group_end
 
   private readonly _onModeChanged = new Event<boolean>()
+  private readonly _onLocalNoteChanged = new Event<SharedNote>()
   private readonly routeNotes = new RouteNotes()
   /** The notes of the route in use (Route 1 until CaseLightMain says otherwise). */
   private store: NoteStore = this.routeNotes.storeFor(1)
@@ -75,6 +77,11 @@ export class CaseLightVeteran extends BaseScriptComponent {
   /** Fired after Veteran mode changed (true = on). */
   get onModeChanged(): PublicApi<boolean> {
     return this._onModeChanged.publicApi()
+  }
+
+  /** Fired after the person changed a note with the chooser: the slot and its reminder ("" = removed). Never fired for an applied shared note. */
+  get onLocalNoteChanged(): PublicApi<SharedNote> {
+    return this._onLocalNoteChanged.publicApi()
   }
 
   get isOn(): boolean {
@@ -152,6 +159,18 @@ export class CaseLightVeteran extends BaseScriptComponent {
     this.refresh()
   }
 
+  /** Apply a note shared by someone else to the route in use and refresh the cards. Returns whether anything changed. */
+  applySharedNote(n: SharedNote): boolean {
+    const changed = applySharedNote(this.store, n)
+    if (changed) this.refresh()
+    return changed
+  }
+
+  /** Every note of the route in use, as shared notes (ascending by slot). */
+  sharedNotesNow(): SharedNote[] {
+    return allSharedNotes(this.store)
+  }
+
   /** The route whose notes are in use. */
   get routeId(): number {
     return this._route
@@ -210,9 +229,14 @@ export class CaseLightVeteran extends BaseScriptComponent {
 
   private onPick(label: string): void {
     if (!this._on || this._selected === NO_SLOT) return
-    this.store.applyPick(this._selected, label)
+    const slot = this._selected
+    const changed = this.store.applyPick(slot, label)
     this.closeChooser()
     this.refresh()
+    if (changed) {
+      const now = this.store.noteFor(slot)
+      this._onLocalNoteChanged.invoke({ slot, note: now === null ? "" : now })
+    }
   }
 
   /** Card centre for a slot (CaseRoot-local): inside the opening, above its label strip, on the case. */

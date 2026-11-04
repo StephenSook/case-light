@@ -244,3 +244,6 @@ Restored build:
 # Wall off-axis guard break (coordinator, approved by the orchestrating session): CaseLightPlacement without this._hitTests++ (the product's hit-test count frozen), wall setup:
 15:45:01.046 FAILED: extra-wall-placement - AssertionError: aiming 40 deg off axis: no hit within 3000 ms (count did not advance: 0 new hit tests in 3000 ms (frozen)) Expected: "true" - Received: "false"
 # restored byte-identical (cmp + SHA-256 against mutation-backup-a4g)
+# Learning-curve break (session 48): CaseLightHistory.curvePoints with slot * (HISTORY_MAX - 0.5 - i) (the points drawn newest left):
+18:16:27.995 FAILED: extra-learning-curve - AssertionError: after pass 2: label 1 right of label 0 (oldest left) Expected: "true" - Received: "false"
+# restored byte-identical (cmp + SHA-256 against mutation-backup-a4h)

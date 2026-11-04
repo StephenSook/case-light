@@ -1,0 +1,61 @@
+- !<AssetImportMetadata/e184be21-981e-4a16-88b3-804627e60d14>
+  ImportedAssetIds:
+    TypeScriptAsset: !<reference> 7674409c-2dcd-4423-806b-a0119fc9a316
+  ImporterName: TypeScriptAssetImporter
+  PrimaryAsset: !<reference> 7674409c-2dcd-4423-806b-a0119fc9a316
+  PackageType: NotAPackage
+  LegacyPackagePolicy: ~
+  ExtraData:
+    {}
+  AssetDataMap:
+    TypeScriptAsset: !<own> d17ad67b-9aa9-4299-b407-cc4b3a7aea1c
+  DependentFiles:
+    []
+  ImporterSettings: !<AssetImporterSettings>
+    {}
+  CompressionSettings: !<own> 00000000-0000-0000-0000-000000000000
+- !<TypeScriptAssetData/d17ad67b-9aa9-4299-b407-cc4b3a7aea1c>
+  SvgIcon: ""
+  SetupScript:
+    code: ""
+  Description: ""
+  VersionMajor: 0
+  VersionMinor: 0
+  VersionPatch: 0
+  VersionPrerelease: ""
+  UpdateOrder: 0
+  ComponentUid: d95dc55a-9094-47a7-ad7f-5b17982d7896
+  ExportUid: 00000000-0000-0000-0000-000000000000
+  PackagePolicy: CanBeUnpacked
+  ScriptInputsHidden:
+    main: false
+    soloCheckSeconds: false
+    veteran: false
+  ScriptTypesHidden:
+    {}
+  ReadMe: !<reference> 00000000-0000-0000-0000-000000000000
+  DeclarationFile: !<reference> 00000000-0000-0000-0000-000000000000
+  Tags:
+    []
+  Attachments:
+    []
+  DefaultScriptInputs:
+    - veteran: !<MappingBased.AssignableType_1> 00000000-0000-0000-0000-000000000000
+      main: !<MappingBased.AssignableType_2> 00000000-0000-0000-0000-000000000000
+      soloCheckSeconds: !<float> 5.000000
+  ScriptTypes:
+    -
+      {}
+  InputLines:
+    - '// @ui {"widget":"label", "label":"<span style=\"color: #60A5FA;\">CaseLightNoteSync - share Veteran notes in a Connected Lenses session</span>"}'
+    - '// @ui {"widget":"separator"}'
+    - '// @ui {"widget":"label", "label":"<span style=\"color: #60A5FA;\">References</span>"}'
+    - '// @ui {"widget":"group_start", "label":"References"}'
+    - '// @input AssignableType_1 veteran {"hint":"Veteran mode: the notes this shares and the notes it receives (its UI holds the Share notes toggle)"}'
+    - '// @input AssignableType_2 main {"hint":"The orchestrator (writes the note-sent and note-received log lines)"}'
+    - '// @ui {"widget":"group_end"}'
+    - '// @ui {"widget":"separator"}'
+    - '// @ui {"widget":"label", "label":"<span style=\"color: #60A5FA;\">Debug</span>"}'
+    - '// @ui {"widget":"group_start", "label":"Debug"}'
+    - '// @input float soloCheckSeconds = 5 {"hint":"Seconds after Lens start for the second session-state log line (the solo evidence); 0 logs only at start", "widget":"slider", "min":0, "max":30, "step":1}'
+    - '// @ui {"widget":"group_end"}'

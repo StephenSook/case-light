@@ -1,5 +1,5 @@
 // Owns: all session state (mode, pass order, top/held piece, lit slot, helped/unaided/total) and every right/wrong decision.
-// Talks to: CaseLightBundle, CaseLightHighlight, CaseLightViewCue, CaseLightCaseLabelsUI, CaseLightControlsUI, CaseLightCaseMesh, CaseLightRipple, CaseLightAudio, CaseLightPace, CaseLightExitUI, CaseLightMixUp, CaseLightPlacement, CaseLightVeteran, CaseLightRouteUI (all wired as @inputs); CaseLightRoute (route data and the route choice rule); CaseLightLog (placement log lines, printed here); CaseLightDemo (the demo replay's recorded steps and checks); CaseLightCaseCheck (the Case check rules); CaseLightSlotPinch (the shared slot-pinch target, made here); CaseLightMastery (the mastery map rules) and CaseLightMasteryView (its drawing, made here); CaseLightProgress (saved progress rules) through CaseLightProgressStore (the persistent store, made here); CaseLightPinchHintRule (when the opening pinch hint shows and ends) and CaseLightPinchHintUI (its drawing, an @input); CaseLightControlScale (the scale of the CaseControls group, the controls that ride with the case, by eye distance).
+// Talks to: CaseLightBundle, CaseLightHighlight, CaseLightViewCue, CaseLightCaseLabelsUI, CaseLightControlsUI, CaseLightCaseMesh, CaseLightRipple, CaseLightAudio, CaseLightPace, CaseLightExitUI, CaseLightMixUp, CaseLightPlacement, CaseLightVeteran, CaseLightRouteUI (all wired as @inputs); CaseLightRoute (route data and the route choice rule); CaseLightLog (placement log lines, printed here); CaseLightDemo (the demo replay's recorded steps and checks); CaseLightCaseCheck (the Case check rules); CaseLightSlotPinch (the shared slot-pinch target, made here); CaseLightMastery (the mastery map rules) and CaseLightMasteryView (its drawing, made here); CaseLightProgress (saved progress rules) through CaseLightProgressStore (the persistent store, made here); CaseLightPinchHintRule (when the opening pinch hint shows and ends) and CaseLightPinchHintUI (its drawing, an @input); CaseLightControlScale (the scale of the CaseControls group, the controls that ride with the case, by eye distance); CaseLightNoteSync, which writes its shared-note lines through logNoteShare; CaseLightHistory (the learning curve's rules) and CaseLightHistoryView (its drawing beside the route picker, made here).
 // Must not: draw anything itself or create text.
 // Size: long because it is the one owner of session state and the whole LEAF read-out surface; drawing, layout and audio live in the focused modules.
 
@@ -103,7 +103,9 @@ import { CASE_CHECK_COUNT, CaseCheckRound, caseCheckCardText as caseCheckLine, c
 import { SlotPinchTarget } from "./CaseLightSlotPinch"
 import { MasteryMap, MasteryState, RowCounts, rowLabel, rowStateOf } from "./CaseLightMastery"
 import { CaseLightMasteryView } from "./CaseLightMasteryView"
-import { emptyProgress, encodeLast, encodeRoute, hasProgress, loadProgress, mergeRows, nextLast, ourKeys, Progress, routeKey, LAST_KEY, welcomeLines, welcomeVisible } from "./CaseLightProgress"
+import { emptyProgress, encodeLast, encodeRoute, hasProgress, historyKey, loadProgress, mergeRows, nextLast, ourKeys, Progress, routeKey, LAST_KEY, welcomeLines, welcomeVisible } from "./CaseLightProgress"
+import { appendHistory, curveVisible, encodeHistory, HistoryScore, loadHistory, passScore } from "./CaseLightHistory"
+import { CaseLightHistoryView } from "./CaseLightHistoryView"
 import { ProgressStore } from "./CaseLightProgressStore"
 import { nextPinchHint, openingPinchHint, PinchHintEnd, PinchHintEvent, PinchHintState } from "./CaseLightPinchHintRule"
 import { CaseLightPinchHintUI } from "./CaseLightPinchHintUI"
@@ -112,7 +114,7 @@ import { CaseLightHighlight } from "./CaseLightHighlight"
 import { buildBundle, cellLabels, chooseRoute, DEFAULT_ROUTE, holdAddressOf, practiceOrder, recallOrder, ROUTE_IDS, RouteId, routeStreets, SamplePiece } from "./CaseLightRoute"
 import { CaseLightRouteUI } from "./CaseLightRouteUI"
 import { designDistanceCm, nextControlScale } from "./CaseLightControlScale"
-import { CaseCheckEnd, formatCaseCheckEnd, formatCaseCheckPinch, formatCaseCheckStart, formatMasteryIgnored, formatMasteryMap, formatOptionsIgnored, formatPassEnd, formatProgressBadData, formatProgressFull, formatProgressLoaded, formatProgressReset, formatProgressSaved, formatPassStart, formatPinchHintEnd, formatPinchHintStart, formatStandIn, formatPlacement, formatRouteSwitch, LogBuffer, LogHead, LogResult, placedToken, randomToken, rightToken, sessionId } from "./CaseLightLog"
+import { CaseCheckEnd, formatCaseCheckEnd, formatCaseCheckPinch, formatCaseCheckStart, formatMasteryIgnored, formatMasteryMap, formatOptionsIgnored, formatPassEnd, formatProgressBadData, formatProgressFull, formatProgressLoaded, formatProgressReset, formatProgressSaved, formatPassStart, formatPinchHintEnd, formatPinchHintStart, formatStandIn, formatPlacement, formatRouteSwitch, formatNoteShare, formatHistorySaved, LogBuffer, LogHead, LogResult, NoteShareDirection, placedToken, randomToken, rightToken, sessionId } from "./CaseLightLog"
 import { attemptMismatch, DEMO_LABEL_TEXT, DemoScene, dropCellOf, formatDemoLine, passEndMismatch, recordedReplay, replaySessionId, ReplayStep, sceneOf } from "./CaseLightDemo"
 import { CaseLightAudio } from "./CaseLightAudio"
 import { CaseLightPace } from "./CaseLightPace"
@@ -340,6 +342,12 @@ export class CaseLightMain extends BaseScriptComponent {
   private _optionsIgnored = 0
   /** Saved progress: the store adapter (made in onStart) and what it holds now. */
   private progressStore: ProgressStore | null = null
+  /** The learning curve per route (oldest at the start), as saved and as added this session. */
+  private history = new Map<number, HistoryScore[]>()
+  private historyView: CaseLightHistoryView | null = null
+  /** The session score when the running pass began (a pass's point is the change over it). */
+  private passStartUnaided = 0
+  private passStartTotal = 0
   private progress: Progress = emptyProgress()
   private _progressSaves = 0
   /** What the welcome panel's rule needs (CaseLightProgress.welcomeVisible); Veteran mode is read live. */
@@ -1004,6 +1012,22 @@ export class CaseLightMain extends BaseScriptComponent {
     return this.progress.last ? { x: this.progress.last.x, y: this.progress.last.y } : null
   }
 
+  /** True while the learning curve is drawn. */
+  get learningCurveShown(): boolean {
+    return this.historyView ? this.historyView.isShown : false
+  }
+
+  /** Today's route's learning curve points (oldest at the start), as kept (saved and added this session). */
+  get learningCurvePoints(): { x: number; y: number }[] {
+    const list = this.history.get(this._route) || []
+    return list.map((s) => ({ x: s.x, y: s.y }))
+  }
+
+  /** The curve's score labels as drawn, left to right (empty while hidden). */
+  get learningCurveLabels(): string[] {
+    return this.historyView ? this.historyView.labelTexts : []
+  }
+
   /** Saves made this session (one per completed recall pass). */
   get progressSaveCount(): number {
     return this._progressSaves
@@ -1190,6 +1214,8 @@ export class CaseLightMain extends BaseScriptComponent {
     }
     this.pace.setOn(!this.pace.isOn)
     this.controls.setPaceState(this.pace.isOn, this.pace.rate, this.pace.lightColor)
+    // The pace caption stands where the learning curve stands.
+    this.refreshHistory()
   }
 
   /**
@@ -1335,6 +1361,7 @@ export class CaseLightMain extends BaseScriptComponent {
     if (this.pace && this.pace.isOn) {
       this.pace.setOn(false)
       this.controls.setPaceState(false, this.pace.rate, this.pace.lightColor)
+      this.refreshHistory()
     }
     if (this.ripples) this.ripples.stopAll()
     // A Case check ended by Done: its line stays readable on the card for resultSeconds.
@@ -1436,6 +1463,7 @@ export class CaseLightMain extends BaseScriptComponent {
     this.retirement = new Retirement(this.pieces.length)
     this.mastery = new MasteryMap(this.pieces.length)
     this.masteryView = new CaseLightMasteryView(this.caseRoot, this.geo, this.lineMaterial)
+    if (this.routePicker) this.historyView = new CaseLightHistoryView(this.routePicker.getSceneObject(), this.lineMaterial)
     this.configureStepPads()
 
     // The pinch hint hears every grab and release ahead of the pass logic (it ends on the grab of any letter).
@@ -1496,6 +1524,8 @@ export class CaseLightMain extends BaseScriptComponent {
   // ── Pass flow ──────────────────────────────────────────────────────────────────────────
 
   private beginPass(mode: CaseLightMode, order: number[]): void {
+    this.passStartUnaided = this.score.unaided
+    this.passStartTotal = this.score.total
     // Set ahead of turning Veteran mode off below, so that change cannot bring the welcome back.
     this._openingStartPressed = true
     // A Start press closes the Options panel (it is reopened from the row at any time).
@@ -1678,7 +1708,10 @@ export class CaseLightMain extends BaseScriptComponent {
     end.mode = finished
     const recall = finished === "recall"
     this.writeLog(formatPassEnd(end, this.pass ? this.pass.placedCount : 0, recall ? this.caseLabels.resultString : "", recall ? this.caseLabels.cameBackString : ""))
-    if (recall) this.saveProgress()
+    if (recall) {
+      this.saveHistory()
+      this.saveProgress()
+    }
   }
 
   /** The fields every log line starts with (takes the next seq). */
@@ -1690,6 +1723,11 @@ export class CaseLightMain extends BaseScriptComponent {
   private writeLog(line: string): void {
     print(line)
     this.logBuffer.push(line)
+  }
+
+  /** One line per note shared in a Connected Lenses session, sent or received (CaseLightNoteSync calls this). */
+  logNoteShare(direction: NoteShareDirection, slot: number, note: string): void {
+    this.writeLog(formatNoteShare(this.logHead(), direction, slot, note))
   }
 
   private logPlacement(piece: number, slot: number, result: LogResult, memory: boolean): void {
@@ -1894,6 +1932,7 @@ export class CaseLightMain extends BaseScriptComponent {
     this.order = practiceOrder(this.pieces.length)
     this.bundle.layout(this.order)
     if (this.routePicker) this.routePicker.setRoute(route)
+    this.refreshHistory()
     // The on-screen score starts again on the new route: a log reader resets its count here.
     this.writeLog(formatRouteSwitch(this.logHead(), fromRoute))
     print(`CaseLightMain: route ${route} (${this.routeStreetNames.join(", ")}); score, come-backs and retirement reset.`)
@@ -1942,6 +1981,10 @@ export class CaseLightMain extends BaseScriptComponent {
     this.writeLog(formatProgressLoaded(this.logHead(), routes, this.progress.last))
     this._welcomeSavedAtStart = hasProgress(this.progress)
     this.applyWelcome()
+    const curve = loadHistory((key) => store.read(key), ROUTE_IDS)
+    this.history = curve.history
+    for (const key of curve.badKeys) this.writeLog(formatProgressBadData(this.logHead(), key))
+    this.refreshHistory()
   }
 
   /**
@@ -2019,11 +2062,31 @@ export class CaseLightMain extends BaseScriptComponent {
     this.writeLog(formatProgressSaved(this.logHead(), rows, last ? last.x : null, last ? last.y : null))
   }
 
-  /** Reset progress: remove only our keys; this session's map and score are untouched. */
+  /** A completed recall pass: its point joins today's route's learning curve (newest five kept). */
+  private saveHistory(): void {
+    const point = passScore(this.passStartUnaided, this.passStartTotal, this.score.unaided, this.score.total)
+    if (!point) return
+    const list = appendHistory(this.history.get(this._route) || null, point)
+    this.history.set(this._route, list)
+    if (this.progressStore) this.progressStore.write(historyKey(this._route), encodeHistory(list))
+    this.writeLog(formatHistorySaved(this.logHead(), point.x, point.y, list.length))
+    this.refreshHistory()
+  }
+
+  /** Draw today's route's learning curve by its rule (CaseLightHistory.curveVisible). */
+  private refreshHistory(): void {
+    if (!this.historyView) return
+    const list = this.history.get(this._route) || null
+    this.historyView.show(curveVisible(list, this.isPaceOn) && list ? list : [])
+  }
+
+  /** Reset progress: remove only our keys (the learning curves too); this session's map and score are untouched. */
   private resetProgress(): void {
     let removed = 0
     if (this.progressStore) for (const key of ourKeys(ROUTE_IDS)) if (this.progressStore.remove(key)) removed++
     this.progress = emptyProgress()
+    this.history = new Map<number, HistoryScore[]>()
+    this.refreshHistory()
     this._progressResetPressed = true
     this.applyWelcome()
     this.writeLog(formatProgressReset(this.logHead(), removed))
